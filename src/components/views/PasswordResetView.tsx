@@ -38,7 +38,7 @@ const PasswordResetView: React.FC<Props> = ({ userId, secret, onDone }) => {
                 window.location.href = '/';
             }, 2000);
         } catch (err: any) {
-            setError(err?.message || 'Failed to reset password. The link may have expired.');
+            setError(err?.message || 'Couldn\'t reset your password. The link may have expired.');
         } finally {
             setIsLoading(false);
         }
@@ -59,7 +59,7 @@ const PasswordResetView: React.FC<Props> = ({ userId, secret, onDone }) => {
                         Set a new password
                     </h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Choose a strong password for your account.
+                        Pick something you&apos;ll remember (but hard to guess).
                     </p>
                 </div>
 
@@ -143,7 +143,7 @@ const PasswordResetView: React.FC<Props> = ({ userId, secret, onDone }) => {
                 </div>
 
                 <p className="text-xs text-center text-zinc-400 dark:text-zinc-600">
-                    Reset links expire after 1 hour.
+                    Reset links expire in 1 hour.
                 </p>
             </div>
         </div>

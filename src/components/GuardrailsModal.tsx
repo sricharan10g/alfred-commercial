@@ -36,7 +36,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
                 <ShieldCheck size={20} className="text-zinc-900 dark:text-white" />
                 Boundaries
             </h2>
-            <p className="text-zinc-500 text-xs mt-1">These rules apply to ALL agents and ALL styles.</p>
+            <p className="text-zinc-500 text-xs mt-1">These apply everywhere, no matter the style.</p>
           </div>
           <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
             <X size={20} />
@@ -49,12 +49,12 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
             <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
                     <ShieldCheck size={16} />
-                    ALWAYS DO
+                    Always
                 </label>
                 <textarea
                     value={dos}
                     onChange={(e) => setDos(e.target.value)}
-                    placeholder="e.g. Always include source links, Maintain a professional tone..."
+                    placeholder="e.g. Include source links, Keep a professional tone..."
                     className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-green-500/50 dark:focus:border-green-900/50 focus:ring-1 focus:ring-green-500/50 dark:focus:ring-green-900/50 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
                 />
             </div>
@@ -63,12 +63,12 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
             <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
                     <ShieldAlert size={16} />
-                    NEVER DO
+                    Never
                 </label>
                 <textarea
                     value={donts}
                     onChange={(e) => setDonts(e.target.value)}
-                    placeholder="e.g. Never mention competitors, Avoid using emojis..."
+                    placeholder="e.g. Don't mention competitors, No emojis..."
                     className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-red-500/50 dark:focus:border-red-900/50 focus:ring-1 focus:ring-red-500/50 dark:focus:ring-red-900/50 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
                 />
             </div>
@@ -81,7 +81,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
             className="flex items-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Save size={16} />
-            Update Rules
+            Save
           </button>
         </div>
       </div>

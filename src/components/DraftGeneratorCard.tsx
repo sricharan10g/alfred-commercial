@@ -18,7 +18,7 @@ const DraftGeneratorCard: React.FC<Props> = ({ onGenerate, isGenerating = false 
         </div>
         <div>
             <h4 className="font-medium text-sm text-zinc-700 dark:text-zinc-300 transition-colors duration-300 ease-in-out">Generate Variations</h4>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-500 max-w-[180px] mx-auto mt-2 leading-relaxed transition-colors duration-300 ease-in-out">Agent 2 will draft new options based on your feedback.</p>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-500 max-w-[180px] mx-auto mt-2 leading-relaxed transition-colors duration-300 ease-in-out">Get fresh takes based on your feedback.</p>
         </div>
       </div>
 
@@ -26,7 +26,7 @@ const DraftGeneratorCard: React.FC<Props> = ({ onGenerate, isGenerating = false 
         <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Feedback (e.g., 'Shorter sentences')"
+            placeholder="e.g. Shorter sentences, more casual..."
             className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 text-sm text-zinc-800 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 resize-none h-16 placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-300 ease-in-out"
         />
         <button

@@ -22,8 +22,8 @@ const AgentConfigModal: React.FC<Props> = ({ isOpen, onClose, configs, onSave })
       <div className="bg-zinc-950 border border-zinc-800 w-full max-w-4xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-6 border-b border-zinc-900">
           <div>
-            <h2 className="text-lg font-semibold text-white">Agent Configuration</h2>
-            <p className="text-zinc-500 text-xs mt-1">Fine-tune the system instructions.</p>
+            <h2 className="text-lg font-semibold text-white">Agent prompts</h2>
+            <p className="text-zinc-500 text-xs mt-1">Edit what each agent is told before it writes.</p>
           </div>
           <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
             <X size={20} />
@@ -61,7 +61,7 @@ const AgentConfigModal: React.FC<Props> = ({ isOpen, onClose, configs, onSave })
             className="flex items-center gap-2 bg-white hover:bg-zinc-200 text-black px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Save size={16} />
-            Save Changes
+            Save
           </button>
         </div>
       </div>

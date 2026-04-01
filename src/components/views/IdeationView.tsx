@@ -76,10 +76,10 @@ const IdeationView: React.FC<Props> = ({
         style={{ animationDuration: '1000ms' }}
       >
         <div>
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Concept Selection</h2>
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Pick your angle</h2>
           <p className="text-zinc-500 text-sm mt-1 transition-colors duration-300 ease-in-out">
               Style: <span className="text-zinc-800 dark:text-white font-medium">{activeSession.writingStyle}</span>. 
-              {isNewsletter ? " Select a Subject Line AND a Body Concept." : " Review hooks and select the best angles."}
+              {isNewsletter ? " Choose a subject line and a body concept." : " Review the options and approve what works."}
           </p>
         </div>
         <button 
@@ -93,7 +93,7 @@ const IdeationView: React.FC<Props> = ({
 
       {(activeSession.isProcessing || activeSession.isRefining) && (
         <div className="flex items-center justify-center py-8 text-zinc-500 animate-pulse text-sm">
-          <Loader2 className="mr-2 animate-spin" size={16} /> Processing...
+          <Loader2 className="mr-2 animate-spin" size={16} /> Thinking...
         </div>
       )}
 
@@ -127,7 +127,7 @@ const IdeationView: React.FC<Props> = ({
                       })}
                   </div>
                   {(!activeSession.newsletterSubjectLines || activeSession.newsletterSubjectLines.length === 0) && !activeSession.isProcessing && (
-                           <div className="text-center py-8 text-zinc-500 text-sm italic">No subject lines generated.</div>
+                           <div className="text-center py-8 text-zinc-500 text-sm italic">No subject lines yet.</div>
                   )}
               </div>
 
@@ -149,7 +149,7 @@ const IdeationView: React.FC<Props> = ({
                       ))}
                   </div>
                   {activeSession.ideas.length === 0 && !activeSession.isProcessing && (
-                      <div className="text-center py-8 text-zinc-500 text-sm italic">No concepts generated.</div>
+                      <div className="text-center py-8 text-zinc-500 text-sm italic">No concepts yet.</div>
                   )}
               </div>
 
@@ -175,7 +175,7 @@ const IdeationView: React.FC<Props> = ({
                 className="col-span-2 text-center text-zinc-500 dark:text-zinc-600 py-12 text-sm animate-in fade-in zoom-in-95 transition-colors duration-300 ease-in-out"
                 style={{ animationDuration: '700ms' }}
             >
-                No ideas left. Generate more?
+                All cleared out. Generate fresh ones?
             </div>
             )}
         </div>

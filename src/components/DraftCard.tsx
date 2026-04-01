@@ -181,13 +181,13 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
               <div className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black rounded-lg shadow-xl p-2 flex flex-col gap-2 border border-zinc-700 dark:border-zinc-200">
                   <div className="flex items-center gap-1.5 px-1">
                       <Wand2 size={12} className="text-purple-400 dark:text-purple-600" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider">Refine Selection</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider">Refine this</span>
                   </div>
                   <div className="flex gap-1">
-                      <input 
+                      <input
                         value={selectionFeedback}
                         onChange={(e) => setSelectionFeedback(e.target.value)}
-                        placeholder="e.g. Make punchier..."
+                        placeholder="e.g. Shorter, punchier..."
                         className="flex-1 bg-black/50 dark:bg-white/50 border border-zinc-700 dark:border-zinc-300 rounded px-2 py-1 text-xs text-white dark:text-black placeholder:text-zinc-500 dark:placeholder:text-zinc-500 focus:outline-none focus:border-purple-500"
                         autoFocus
                         onKeyDown={(e) => e.key === 'Enter' && handleSelectionRefine()}
@@ -225,21 +225,21 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
                <button 
                     onClick={() => setIsEditing(true)}
                     className="p-1.5 text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                    title="Edit Text"
+                    title="Edit"
                >
                    <Pencil size={14} />
                </button>
                <button
                     onClick={handleDownload}
                     className="p-1.5 text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                    title="Download Draft"
+                    title="Download"
                >
                    <Download size={14} />
                </button>
                <button
                     onClick={() => onDelete(draft.id)}
                     className="p-1.5 text-zinc-400 hover:text-red-500 transition-colors"
-                    title="Delete Draft"
+                    title="Delete"
                >
                    <Trash2 size={14} />
                </button>
@@ -267,7 +267,7 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
                            onClick={handleSaveEdit}
                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-black dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 transition-opacity"
                        >
-                           <Save size={12} /> Save Changes
+                           <Save size={12} /> Save
                        </button>
                    </div>
                </div>
@@ -290,7 +290,7 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
                  <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 animate-in fade-in slide-in-from-top-2 duration-200">
                      <div className="flex items-center gap-2 mb-2">
                          <Sparkles size={12} className="text-blue-500" />
-                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Tweak entire draft</span>
+                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Tweak the whole thing</span>
                      </div>
                      <div className="flex gap-2">
                          <input 
@@ -298,7 +298,7 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
                              value={refineFeedback}
                              onChange={(e) => setRefineFeedback(e.target.value)}
                              onKeyDown={(e) => e.key === 'Enter' && handleTriggerRefine()}
-                             placeholder="e.g. Make it punchier, remove emojis..."
+                             placeholder="e.g. Tighter sentences, lose the emojis..."
                              autoFocus
                              className="flex-1 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600"
                          />
@@ -319,7 +319,7 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
                         onClick={() => setIsRefining(true)}
                         className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-black dark:hover:text-white transition-colors bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 px-3 py-1.5 rounded-lg border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700"
                      >
-                         <Sparkles size={12} /> Tweak / Refine
+                         <Sparkles size={12} /> Tweak
                      </button>
                  )}
                  {isRefining && (

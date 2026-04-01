@@ -31,9 +31,9 @@ interface Props {
 }
 
 const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string }[] = [
-    { id: 'gemini', name: 'Google Gemini', description: 'Fast and efficient. Required for live web research.', model: 'gemini-2.5-flash' },
-    { id: 'claude', name: 'Claude Sonnet', description: 'Best at creative writing, persona matching, and precise editing.', model: 'claude-sonnet-4-6' },
-    { id: 'openai', name: 'GPT', description: 'Strong analytical scoring and concise text generation.', model: 'gpt-4.1' },
+    { id: 'gemini', name: 'Google Gemini', description: 'Fast. Required for web research.', model: 'gemini-2.5-flash' },
+    { id: 'claude', name: 'Claude Sonnet', description: 'Best for creative writing and editing.', model: 'claude-sonnet-4-6' },
+    { id: 'openai', name: 'GPT', description: 'Good for analysis and clean output.', model: 'gpt-4.1' },
 ];
 
 const SettingsModal: React.FC<Props> = ({
@@ -115,7 +115,7 @@ const SettingsModal: React.FC<Props> = ({
   const handleLogout = async () => {
       setIsLoggingOut(true);
       try {
-          showToast('Signed out successfully.', 'info');
+          showToast('Signed out.', 'info');
           await logout();
           onClose();
       } finally {
@@ -139,7 +139,7 @@ const SettingsModal: React.FC<Props> = ({
           }
       } catch (err) {
           console.error('[Settings] Checkout error:', err);
-          showToast('Something went wrong. Please try again.', 'error');
+          showToast('Checkout failed. Please try again.', 'error');
           setLoadingUpgrade(null);
       }
   };
@@ -211,12 +211,12 @@ const SettingsModal: React.FC<Props> = ({
                     </div>
                     <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl flex items-center justify-between transition-colors duration-200">
                     <div>
-                        <p className="text-sm text-zinc-700 dark:text-zinc-300">Delete all chats permanently</p>
+                        <p className="text-sm text-zinc-700 dark:text-zinc-300">Wipe all chats</p>
                         <p className="text-[11px] text-zinc-500 mt-1"></p>
                     </div>
                     <button 
                         onClick={() => {
-                        if(confirm("Are you sure you want to clear all history? This cannot be undone.")) {
+                        if(confirm("Delete all chats? This can't be undone.")) {
                             onClearHistory();
                         }
                         }}
@@ -251,14 +251,14 @@ const SettingsModal: React.FC<Props> = ({
                                         <button 
                                             onClick={() => onEditStyle(style)}
                                             className="p-2 text-zinc-500 hover:text-black dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-md transition-all"
-                                            title="Edit prompts"
+                                            title="Edit"
                                         >
                                             <Pencil size={16} />
                                         </button>
                                         <button 
                                             onClick={() => onDeleteStyle(style.id)}
                                             className="p-2 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md transition-all"
-                                            title="Delete style"
+                                            title="Delete"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -269,12 +269,12 @@ const SettingsModal: React.FC<Props> = ({
                     </div>
                     ) : (
                     <div className="bg-zinc-50 dark:bg-zinc-900/30 border border-dashed border-zinc-200 dark:border-zinc-800 p-8 rounded-xl text-center transition-colors duration-200">
-                        <p className="text-xs text-zinc-500">No custom styles added yet.</p>
+                        <p className="text-xs text-zinc-500">No custom styles yet. Create one from the main screen.</p>
                     </div>
                     )}
                     
                     <p className="text-[10px] text-zinc-500 dark:text-zinc-600 leading-relaxed italic">
-                    * Note: Default styles (Alfred, Abdullah) cannot be removed.
+                    Alfred and Abdullah are built-in — they can&apos;t be removed.
                     </p>
                 </section>
               </div>
@@ -283,7 +283,7 @@ const SettingsModal: React.FC<Props> = ({
           {activeTab === 'ai-model' && (
               <div className="space-y-6">
                 <div>
-                    <p className="text-sm text-zinc-500 mb-4">Choose which AI model powers your content generation. Research always uses Gemini (it's the only one that can search the web).</p>
+                    <p className="text-sm text-zinc-500 mb-4">Pick the AI behind your drafts. Web research always runs on Gemini.</p>
                 </div>
 
                 <div className="space-y-3">
@@ -323,7 +323,7 @@ const SettingsModal: React.FC<Props> = ({
 
                 <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-3 rounded-xl transition-colors duration-200">
                     <p className="text-[11px] text-zinc-500 leading-relaxed">
-                        Web research always uses Google Gemini regardless of your selection. Make sure the API key for your chosen provider is configured in the environment variables.
+                        Web research always uses Gemini, regardless of your selection here.
                     </p>
                 </div>
               </div>

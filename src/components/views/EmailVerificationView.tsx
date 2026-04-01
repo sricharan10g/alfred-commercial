@@ -24,10 +24,10 @@ const EmailVerificationView: React.FC = () => {
         setMessage('');
         try {
             await sendVerification();
-            setMessage('Verification email sent! Check your inbox.');
+            setMessage('Sent! Check your inbox.');
             setCooldown(RESEND_COOLDOWN);
         } catch (err: any) {
-            setMessage(err?.message || 'Failed to resend. Please try again.');
+            setMessage(err?.message || 'Couldn\'t send. Try again in a moment.');
         } finally {
             setIsSending(false);
         }
@@ -57,7 +57,7 @@ const EmailVerificationView: React.FC = () => {
                         Verify your email
                     </h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Almost there — just one more step.
+                        One quick step left.
                     </p>
                 </div>
 
@@ -74,7 +74,7 @@ const EmailVerificationView: React.FC = () => {
                             <span className="font-medium text-zinc-900 dark:text-zinc-100">
                                 {user?.email}
                             </span>
-                            .<br />Click the link in that email to activate your account.
+                            .<br />Click the link to activate your account.
                         </p>
                     </div>
 
@@ -116,7 +116,7 @@ const EmailVerificationView: React.FC = () => {
                             {isLoggingOut
                                 ? <Loader2 size={14} className="animate-spin" />
                                 : <LogOut size={14} />}
-                            Log out and use a different email
+                            Use a different email
                         </button>
                     </div>
                 </div>

@@ -36,14 +36,14 @@ const PLACEHOLDERS = [
 ];
 
 const SUFFIXES = [
-    ", at service",
+    ", at your service",
     ", ready to draft",
     ", standing by",
     ", online",
-    ", awaiting input",
     ", in the zone",
     ", at your command",
-    ", ready to cook"
+    ", ready to cook",
+    ", eyes on you"
 ];
 
 // QWERTY adjacency map for realistic typos
@@ -276,19 +276,19 @@ function queueTyping(queue: any[], textToType: string) {
 const PERSONA_INFO: Record<string, { role: string; desc: string }> = {
     [WritingStyle.DEFAULT]: {
         role: "The Strategist",
-        desc: "Optimized for high-viral potential. Writes like a tech influencer: simple language (5th grade level), punchy sentences, and high-value drops."
+        desc: "Built for reach. Punchy sentences, simple words, ideas that spread."
     },
     [WritingStyle.ABDULLAH]: {
         role: "The Philosopher",
-        desc: "Authoritative and high-agency. Focuses on systems thinking, first principles, and deep mastery. Explains complex topics to smart teenagers."
+        desc: "Big ideas, stripped down. First principles with zero filler."
     },
     [WritingStyle.JOY]: {
         role: "The Poet",
-        desc: "Witty, metaphorical, and thoughtful. Explains the world through clever analogies and simple, warm English."
+        desc: "Warm and witty. Makes complex things feel obvious."
     },
     "custom": {
         role: "Custom Persona",
-        desc: "A unique writing style generated from your own training data or description."
+        desc: "Your voice. Your rules."
     }
 };
 
@@ -529,7 +529,7 @@ const BriefView: React.FC<Props> = ({
                           <Globe size={16} /> Live Research Deck
                       </h4>
                       <span className="text-sm text-zinc-500 hidden sm:inline">
-                          Select 1 concept to focus the agent.
+                          Pick one to focus on.
                       </span>
                    </div>
                    <button 
@@ -589,7 +589,7 @@ const BriefView: React.FC<Props> = ({
                       className="text-sm text-zinc-500 hover:text-black dark:hover:text-white flex items-center gap-2 px-5 py-2.5 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all"
                   >
                       {activeSession.isResearching ? <Loader2 size={14} className="animate-spin" /> : <ArrowDownCircle size={16} />}
-                      Load More Updates
+                      Load more
                   </button>
                </div>
                {/* ... (Sources logic same) ... */}

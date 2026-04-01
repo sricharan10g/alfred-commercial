@@ -20,8 +20,8 @@ const CommentsModal: React.FC<Props> = ({ isOpen, onClose, comments }) => {
                 <MessageSquareQuote size={18} className="text-zinc-900 dark:text-white" />
             </div>
             <div>
-                <h2 className="text-base font-semibold text-zinc-900 dark:text-white transition-colors duration-200">Generated Comments</h2>
-                <p className="text-zinc-500 text-xs">Engagement options for this draft.</p>
+                <h2 className="text-base font-semibold text-zinc-900 dark:text-white transition-colors duration-200">Comments</h2>
+                <p className="text-zinc-500 text-xs">Ready-to-post replies for this draft.</p>
             </div>
           </div>
           <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg">

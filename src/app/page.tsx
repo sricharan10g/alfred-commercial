@@ -826,7 +826,7 @@ function Dashboard() {
                         'alfred_provider',
                     ];
                     userKeys.forEach(k => localStorage.removeItem(k));
-                    showToast('Signed out successfully.', 'info');
+                    showToast('Signed out.', 'info');
                     await logout();
                 }}
                 theme={theme}

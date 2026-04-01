@@ -128,13 +128,13 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
                     onClick={() => setMode('csv')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-md transition-all ${mode === 'csv' ? 'bg-white dark:bg-zinc-800 shadow-sm text-black dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
                 >
-                    <FileText size={14} /> Upload Data (CSV)
+                    <FileText size={14} /> Upload CSV
                 </button>
                 <button
                     onClick={() => setMode('prompt')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-md transition-all ${mode === 'prompt' ? 'bg-white dark:bg-zinc-800 shadow-sm text-black dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
                 >
-                    <Type size={14} /> Describe Style
+                    <Type size={14} /> Describe it
                 </button>
             </div>
 
@@ -152,7 +152,7 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
             {mode === 'csv' ? (
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-xs text-zinc-500 mb-1.5 font-medium">Training Data Format</label>
+                        <label className="block text-xs text-zinc-500 mb-1.5 font-medium">Format</label>
                         <div className="relative">
                             <select
                                 value={selectedFormat}
@@ -166,8 +166,7 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
                             <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                         </div>
                         <p className="text-[10px] text-zinc-500 mt-1.5 leading-relaxed">
-                            Selecting the correct format allows the AI to perfectly mimic the structure of your data.
-                            When generating content in this format later, we will use your native style rules instead of the default system rules.
+                            Match this to your data so the AI can nail the structure when writing.
                         </p>
                     </div>
 
@@ -191,11 +190,11 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
                                         <div className="bg-zinc-100 dark:bg-zinc-900 p-2 rounded-full border border-zinc-200 dark:border-zinc-800">
                                             <Upload size={16} className="text-zinc-500" />
                                         </div>
-                                        <span className="text-zinc-500 dark:text-zinc-400 text-xs">Click to upload CSV</span>
+                                        <span className="text-zinc-500 dark:text-zinc-400 text-xs">Click to upload</span>
                                     </>
                                 )}
                                 <div className="flex flex-col items-center gap-0.5">
-                                    <span className="text-[10px] text-zinc-400 dark:text-zinc-600">Required column: 'Content'</span>
+                                    <span className="text-[10px] text-zinc-400 dark:text-zinc-600">Needs a &apos;Content&apos; column</span>
                                 </div>
                             </label>
                         </div>
@@ -207,7 +206,7 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Describe the persona's voice, tone, and personality"
+                        placeholder="Voice, tone, personality — describe it."
                         className="w-full h-32 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg p-3 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-500 dark:focus:border-zinc-600 resize-none transition-colors duration-200 leading-relaxed"
                     />
                 </div>
@@ -225,9 +224,9 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
                 disabled={!styleName || (mode === 'csv' && !file) || (mode === 'prompt' && !description) || (status !== 'IDLE' && status !== 'ERROR')}
                 className="w-full bg-black dark:bg-white text-white dark:text-black py-2.5 rounded-lg font-semibold text-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
             >
-                {status === 'PARSING' && <><Loader2 size={16} className="animate-spin" /> Reading CSV...</>}
-                {status === 'ANALYZING' && <><Loader2 size={16} className="animate-spin" /> {mode === 'csv' ? 'Analyzing Patterns...' : 'Generating Persona...'}</>}
-                {(status === 'IDLE' || status === 'ERROR') && "Create Persona"}
+                {status === 'PARSING' && <><Loader2 size={16} className="animate-spin" /> Reading file...</>}
+                {status === 'ANALYZING' && <><Loader2 size={16} className="animate-spin" /> {mode === 'csv' ? 'Learning your style...' : 'Building your persona...'}</>}
+                {(status === 'IDLE' || status === 'ERROR') && "Create style"}
             </button>
         </div>
     );

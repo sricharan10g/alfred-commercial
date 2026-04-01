@@ -46,7 +46,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
             }
         } catch (err) {
             console.error('[PaywallModal] Checkout error:', err);
-            alert('Something went wrong starting checkout. Please try again.');
+            alert('Checkout failed. Please try again.');
             setLoadingPlan(null);
         }
     };
@@ -79,19 +79,19 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                     {reason === 'monthly_limit' ? (
                         <>
                             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
-                                Monthly limit reached
+                                You&apos;ve hit the limit
                             </h2>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                You&apos;ve used all {userUsage?.monthlyLimit ?? 40} generations on your Free plan this month.
+                                You&apos;ve used all {userUsage?.monthlyLimit ?? 40} free generations this month.
                             </p>
                         </>
                     ) : (
                         <>
                             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
-                                Paid plan required
+                                This one&apos;s on a paid plan
                             </h2>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                <span className="font-medium text-zinc-700 dark:text-zinc-300">{format}</span> is only available on Starter and Pro plans.
+                                <span className="font-medium text-zinc-700 dark:text-zinc-300">{format}</span> needs a Starter or Pro plan.
                             </p>
                         </>
                     )}
@@ -111,7 +111,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                             />
                         </div>
                         <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5 text-center">
-                            Resets on the 1st of next month
+                            Resets next month
                         </p>
                     </div>
                 )}
@@ -122,7 +122,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                 {/* Plan cards */}
                 <div className="p-6 space-y-3">
                     <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3">
-                        Upgrade to continue
+                        Pick a plan
                     </p>
 
                     {/* Starter Plan */}
@@ -134,7 +134,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                                 </div>
                                 <div>
                                     <div className="font-semibold text-zinc-900 dark:text-white text-sm">Starter</div>
-                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">350 generations · All formats</div>
+                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">350 generations, every format</div>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -165,7 +165,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                                 </div>
                                 <div>
                                     <div className="font-semibold text-zinc-900 dark:text-white text-sm">Pro</div>
-                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">1,500 generations · All formats</div>
+                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">1,500 generations, every format</div>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -188,7 +188,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                             onClick={onClose}
                             className="text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                         >
-                            Continue with Free plan →
+                            Not now, stay on Free
                         </button>
                     </div>
                 </div>

@@ -24,7 +24,7 @@ const StyleLibraryModal: React.FC<Props> = ({ isOpen, onClose, presets, onSelect
                 <LayoutTemplate size={20} className="text-zinc-900 dark:text-white" />
                 Format Library
             </h2>
-            <p className="text-zinc-500 text-xs mt-1">Developer optimized structures.</p>
+            <p className="text-zinc-500 text-xs mt-1">Pick a structure for your content.</p>
           </div>
           <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
             <X size={20} />

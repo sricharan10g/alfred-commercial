@@ -117,10 +117,10 @@ const DraftingView: React.FC<Props> = ({
       );
 
       onDraftEdit(draftId, updatedContent);
-      showToast("Text updated successfully", "success");
+      showToast("Updated", "success");
     } catch (e) {
       console.error(e);
-      showToast("Failed to update selection", "error");
+      showToast("Couldn't update that section", "error");
     }
   };
 
@@ -155,9 +155,9 @@ const DraftingView: React.FC<Props> = ({
         style={{ animationDuration: '1000ms' }}
       >
         <div>
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Refinement</h2>
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Final polish</h2>
           <p className="text-zinc-500 text-sm mt-1 transition-colors duration-300 ease-in-out">
-            {isNewsletter ? "Final Polish: Subject Lines & Body." : "Review, Edit, and Refine."}
+            {isNewsletter ? "Tweak your subject line and body." : "Read, tweak, and ship."}
           </p>
         </div>
         <div className="flex gap-2 items-center">
@@ -190,7 +190,7 @@ const DraftingView: React.FC<Props> = ({
             style={{ animationDuration: '700ms' }}
           >
             <Loader2 className="animate-spin mb-4 text-black dark:text-white" size={24} />
-            <p className="text-sm">Writing drafts...</p>
+            <p className="text-sm">Drafting...</p>
           </div>
         )}
 
@@ -203,14 +203,14 @@ const DraftingView: React.FC<Props> = ({
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <Mail size={16} className="text-zinc-500" />
-                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Subject Line Options</h3>
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Subject Lines</h3>
                 </div>
                 <button
                   onClick={handleRegenerateSubjectLines}
                   disabled={activeSession.isProcessing}
                   className="text-xs text-zinc-500 hover:text-black dark:hover:text-white flex items-center gap-1"
                 >
-                  <RefreshCw size={12} className={activeSession.isProcessing ? "animate-spin" : ""} /> Regenerate based on Idea
+                  <RefreshCw size={12} className={activeSession.isProcessing ? "animate-spin" : ""} /> New options
                 </button>
               </div>
 
@@ -314,7 +314,7 @@ const DraftingView: React.FC<Props> = ({
                   ) : (
                     <PlusCircle size={16} />
                   )}
-                  Generate more options for "{idea.title}"
+                  More variations for &ldquo;{idea.title}&rdquo;
                 </button>
               </div>
 

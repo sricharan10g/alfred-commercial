@@ -39,7 +39,7 @@ const AuthView: React.FC = () => {
             }
         } catch (err: any) {
             console.error(err);
-            setError(err.message || 'Something went wrong. Please try again.');
+            setError(err.message || 'That didn\'t work. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -74,7 +74,7 @@ const AuthView: React.FC = () => {
                         </div>
                         <h1 className="text-2xl font-semibold tracking-tight">Check your inbox</h1>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            We sent a password reset link to your email.
+                            We sent you a reset link.
                         </p>
                     </div>
 
@@ -84,9 +84,9 @@ const AuthView: React.FC = () => {
                                 <Mail size={28} className="text-zinc-500 dark:text-zinc-400" />
                             </div>
                             <p className="text-sm text-center text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                                Click the link in that email to set a new password.
+                                Click the link to set a new password.
                                 <br />
-                                <span className="text-xs text-zinc-400 dark:text-zinc-600">Links expire after 1 hour.</span>
+                                <span className="text-xs text-zinc-400 dark:text-zinc-600">Expires in 1 hour.</span>
                             </p>
                         </div>
 
@@ -121,7 +121,7 @@ const AuthView: React.FC = () => {
                         </div>
                         <h1 className="text-2xl font-semibold tracking-tight">Reset your password</h1>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Enter your email and we'll send you a reset link.
+                            We&apos;ll send a reset link to your email.
                         </p>
                     </div>
 
@@ -152,7 +152,7 @@ const AuthView: React.FC = () => {
                                 className="w-full bg-black dark:bg-white text-white dark:text-black font-medium py-2.5 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-2"
                             >
                                 {isLoading ? <Loader2 size={18} className="animate-spin" /> : (
-                                    <>Send reset email <ArrowRight size={16} /></>
+                                    <>Send reset link <ArrowRight size={16} /></>
                                 )}
                             </button>
                         </form>
@@ -185,10 +185,10 @@ const AuthView: React.FC = () => {
                         </div>
                     </div>
                     <h1 className="text-2xl font-semibold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-backwards">
-                        {isLogin ? 'Welcome back to Alfred' : 'Create your account'}
+                        {isLogin ? 'Welcome back.' : 'Create account'}
                     </h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-400 fill-mode-backwards">
-                        {isLogin ? 'Enter your credentials to continue.' : 'Start automating your research and content.'}
+                        {isLogin ? 'Sign in to pick up where you left off.' : 'Your AI writing assistant, ready in seconds.'}
                     </p>
                 </div>
 
@@ -213,14 +213,14 @@ const AuthView: React.FC = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {!isLogin && (
                             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-500">
-                                <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Full Name</label>
+                                <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Name</label>
                                 <input
                                     type="text"
                                     required={!isLogin}
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all duration-300"
-                                    placeholder="John Doe"
+                                    placeholder="Your name"
                                 />
                             </div>
                         )}
@@ -285,7 +285,7 @@ const AuthView: React.FC = () => {
                             onClick={isLogin ? switchToSignup : switchToLogin}
                             className="text-sm text-zinc-500 hover:text-black dark:hover:text-white transition-colors duration-300"
                         >
-                            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                            {isLogin ? "New here? Sign up" : "Already have one? Sign in"}
                         </button>
                     </div>
                 </div>
