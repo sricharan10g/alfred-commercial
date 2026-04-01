@@ -24,7 +24,7 @@
 	],
 	"vars": {
 		"NEXT_PUBLIC_APP_ENV": "production",
-		"NEXT_PUBLIC_APP_URL": "https://alfred-commercial.sricharan10g.workers.dev",
+		"NEXT_PUBLIC_APP_URL": "https://alfred.pickandpartner.com",
 		"NEXT_PUBLIC_APPWRITE_ENDPOINT": "https://sgp.cloud.appwrite.io/v1",
 		"NEXT_PUBLIC_APPWRITE_PROJECT_ID": "69a1a3d3001fcc1e57d3",
 		"APPWRITE_DATABASE_ID": "69a39fea0010e0857f59",

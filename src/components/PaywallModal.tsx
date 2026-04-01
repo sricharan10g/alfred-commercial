@@ -72,8 +72,8 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
 
                 {/* Header */}
                 <div className="px-6 pt-6 pb-4 text-center">
-                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
-                        <Lock size={22} className="text-amber-600 dark:text-amber-400" />
+                    <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-3">
+                        <Lock size={22} className="text-zinc-600 dark:text-zinc-400" />
                     </div>
 
                     {reason === 'monthly_limit' ? (
@@ -106,7 +106,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                         </div>
                         <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-amber-500 rounded-full transition-all"
+                                className="h-full bg-zinc-400 dark:bg-zinc-500 rounded-full transition-all"
                                 style={{ width: `${usagePct}%` }}
                             />
                         </div>
@@ -126,11 +126,11 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                     </p>
 
                     {/* Starter Plan */}
-                    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 hover:border-blue-400 dark:hover:border-blue-600 transition-colors">
+                    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
-                                    <Zap size={16} className="text-blue-600 dark:text-blue-400" />
+                                <div className="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                                    <Zap size={16} className="text-zinc-600 dark:text-zinc-400" />
                                 </div>
                                 <div>
                                     <div className="font-semibold text-zinc-900 dark:text-white text-sm">Starter</div>
@@ -145,23 +145,23 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                         <button
                             onClick={() => handleUpgrade('starter')}
                             disabled={loadingPlan !== null}
-                            className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                            className="w-full py-2 rounded-lg bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 dark:hover:bg-zinc-300 disabled:opacity-60 text-white dark:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                         >
                             {loadingPlan === 'starter' ? <><Loader2 size={14} className="animate-spin" /> Redirecting...</> : 'Upgrade to Starter'}
                         </button>
                     </div>
 
                     {/* Pro Plan */}
-                    <div className="relative rounded-xl border-2 border-purple-500 dark:border-purple-600 p-4 bg-purple-50/50 dark:bg-purple-900/10">
+                    <div className="relative rounded-xl border-2 border-zinc-900 dark:border-zinc-300 p-4">
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-                            <span className="px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-semibold uppercase tracking-wider">
+                            <span className="px-2.5 py-0.5 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-semibold uppercase tracking-wider">
                                 Most Popular
                             </span>
                         </div>
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
-                                    <Crown size={16} className="text-purple-600 dark:text-purple-400" />
+                                <div className="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                                    <Crown size={16} className="text-zinc-600 dark:text-zinc-400" />
                                 </div>
                                 <div>
                                     <div className="font-semibold text-zinc-900 dark:text-white text-sm">Pro</div>
@@ -176,7 +176,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                         <button
                             onClick={() => handleUpgrade('pro')}
                             disabled={loadingPlan !== null}
-                            className="w-full py-2 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:opacity-60 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                            className="w-full py-2 rounded-lg bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 dark:hover:bg-zinc-300 disabled:opacity-60 text-white dark:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                         >
                             {loadingPlan === 'pro' ? <><Loader2 size={14} className="animate-spin" /> Redirecting...</> : 'Upgrade to Pro'}
                         </button>

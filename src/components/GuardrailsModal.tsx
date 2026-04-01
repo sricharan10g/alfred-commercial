@@ -47,7 +47,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
             
             {/* DOs */}
             <div className="space-y-2">
-                <label className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
+                <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                     <ShieldCheck size={16} />
                     Always
                 </label>
@@ -55,13 +55,13 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
                     value={dos}
                     onChange={(e) => setDos(e.target.value)}
                     placeholder="e.g. Include source links, Keep a professional tone..."
-                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-green-500/50 dark:focus:border-green-900/50 focus:ring-1 focus:ring-green-500/50 dark:focus:ring-green-900/50 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
+                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
                 />
             </div>
 
             {/* DONTs */}
             <div className="space-y-2">
-                <label className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
+                <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                     <ShieldAlert size={16} />
                     Never
                 </label>
@@ -69,7 +69,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
                     value={donts}
                     onChange={(e) => setDonts(e.target.value)}
                     placeholder="e.g. Don't mention competitors, No emojis..."
-                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-red-500/50 dark:focus:border-red-900/50 focus:ring-1 focus:ring-red-500/50 dark:focus:ring-red-900/50 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
+                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
                 />
             </div>
 
