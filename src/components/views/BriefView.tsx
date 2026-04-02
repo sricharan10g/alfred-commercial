@@ -789,12 +789,12 @@ const BriefView: React.FC<Props> = ({
                         </div>
                     )}
 
-                    {/* Inline research controls — revealed on button click */}
-                    {showResearchControls && researchProfiles.length > 0 && (
+                    {/* Controls replace button when open */}
+                    {showResearchControls && researchProfiles.length > 0 ? (
                         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out flex items-center gap-2 px-3 py-2 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                             <Globe size={13} className="text-zinc-400 shrink-0 ml-1" />
                             <select
-                                className="bg-transparent text-xs text-zinc-600 dark:text-zinc-300 border-none outline-none cursor-pointer max-w-[130px] truncate"
+                                className="bg-transparent text-xs text-zinc-600 dark:text-zinc-300 border-none outline-none cursor-pointer max-w-[130px] truncate dark:[color-scheme:dark]"
                                 value={activeSession.activeProfileId || ""}
                                 onChange={(e) => onUpdateSession({ activeProfileId: e.target.value || undefined, researchResults: undefined, researchSources: undefined })}
                             >
@@ -805,7 +805,7 @@ const BriefView: React.FC<Props> = ({
                             </select>
                             <div className="w-px h-3 bg-zinc-200 dark:bg-zinc-700 shrink-0" />
                             <select
-                                className="bg-transparent text-xs text-zinc-600 dark:text-zinc-300 border-none outline-none cursor-pointer"
+                                className="bg-transparent text-xs text-zinc-600 dark:text-zinc-300 border-none outline-none cursor-pointer dark:[color-scheme:dark]"
                                 value={activeSession.researchTimeRange}
                                 onChange={(e) => onUpdateSession({ researchTimeRange: e.target.value as ResearchTimeRange, researchResults: undefined })}
                             >
@@ -823,28 +823,28 @@ const BriefView: React.FC<Props> = ({
                                 Search
                             </button>
                         </div>
+                    ) : (
+                        /* Research trigger button — shown when controls are hidden */
+                        <button
+                            onClick={() => {
+                                setShowResearchHint(false);
+                                localStorage.setItem('alfred_seen_research_hint', 'true');
+                                if (researchProfiles.length === 0) {
+                                    onOpenResearchSettings();
+                                } else {
+                                    setShowResearchControls(true);
+                                }
+                            }}
+                            className="group flex items-center gap-3 pl-1 pr-4 py-1 rounded-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-sm hover:shadow-md"
+                        >
+                            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                <Globe size={14} className="text-zinc-600 dark:text-zinc-300 animate-spin" style={{ animationDuration: '3s' }} />
+                            </div>
+                            <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors">
+                                Find what&apos;s trending
+                            </span>
+                        </button>
                     )}
-
-                    {/* Research trigger button — always visible */}
-                    <button
-                        onClick={() => {
-                            setShowResearchHint(false);
-                            localStorage.setItem('alfred_seen_research_hint', 'true');
-                            if (researchProfiles.length === 0) {
-                                onOpenResearchSettings();
-                            } else {
-                                setShowResearchControls(prev => !prev);
-                            }
-                        }}
-                        className="group flex items-center gap-3 pl-1 pr-4 py-1 rounded-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-sm hover:shadow-md"
-                    >
-                        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                            <Globe size={14} className="text-zinc-600 dark:text-zinc-300 animate-spin" style={{ animationDuration: '3s' }} />
-                        </div>
-                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors">
-                            Find what&apos;s trending
-                        </span>
-                    </button>
                 </div>
             )}
         </div>
