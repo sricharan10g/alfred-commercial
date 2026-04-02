@@ -52,7 +52,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4">
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
@@ -60,7 +60,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-md bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-t-2xl md:rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in slide-in-from-bottom md:zoom-in-95 duration-200 max-h-[85vh]">
 
                 {/* Close button */}
                 <button
@@ -116,7 +116,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                 <div className="border-t border-zinc-100/50 dark:border-zinc-800/30 mx-6" />
 
                 {/* Plan options */}
-                <div className="p-6 space-y-3">
+                <div className="p-6 space-y-3" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
                     <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-3">
                         Pick a plan
                     </p>

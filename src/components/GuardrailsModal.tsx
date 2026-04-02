@@ -28,8 +28,8 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-lg rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200" style={{ minHeight: '420px' }}>
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm md:p-4 animate-in fade-in duration-200">
+      <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-lg rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 duration-200 max-h-[85vh]" style={{ minHeight: '320px' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-zinc-100/50 dark:border-zinc-800/30">
@@ -79,7 +79,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
         </div>
 
         {/* Footer */}
-        <div className="px-7 py-5 border-t border-zinc-100/50 dark:border-zinc-800/30 flex justify-end">
+        <div className="px-7 py-5 border-t border-zinc-100/50 dark:border-zinc-800/30 flex justify-end" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 20px)' }}>
           <button
             onClick={handleSave}
             className="flex items-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-5 py-2 rounded-lg text-sm font-semibold transition-colors"

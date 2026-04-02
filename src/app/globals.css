@@ -3,9 +3,17 @@
 @tailwind utilities;
 
 html {
-  zoom: 0.9;
-  height: calc(100% / 0.9);
   overflow: hidden;
+  /* Allow content to extend behind Safari's bottom toolbar */
+  min-height: -webkit-fill-available;
+}
+
+/* Zoom out slightly on desktop only — mobile stays at native scale */
+@media (min-width: 768px) {
+  html {
+    zoom: 0.9;
+    height: calc(100% / 0.9);
+  }
 }
 
 :root {
