@@ -313,6 +313,7 @@ const BriefView: React.FC<Props> = ({
   // Hover State for Style Dropdown
   const [hoveredStyle, setHoveredStyle] = useState<string | null>(null);
   const [showResearchHint, setShowResearchHint] = useState(false);
+  const [showResearchControls, setShowResearchControls] = useState(false);
 
   const styleDropdownRef = useRef<HTMLDivElement>(null);
   const formatDropdownRef = useRef<HTMLDivElement>(null);
