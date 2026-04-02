@@ -68,7 +68,7 @@ const IdeaCard: React.FC<Props> = ({ idea, onApprove, onReject }) => {
                type="text"
                value={feedback}
                onChange={(e) => setFeedback(e.target.value)}
-               placeholder="Any tweaks? (optional)"
+               placeholder="Any tweaks?"
                className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-md py-2.5 pl-9 pr-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors duration-300 ease-in-out placeholder:text-zinc-400 dark:placeholder:text-zinc-700"
              />
           </div>

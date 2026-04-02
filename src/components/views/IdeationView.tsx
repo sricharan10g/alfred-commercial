@@ -76,10 +76,10 @@ const IdeationView: React.FC<Props> = ({
         style={{ animationDuration: '1000ms' }}
       >
         <div>
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Pick your angle</h2>
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Pick your idea</h2>
           <p className="text-zinc-500 text-sm mt-1 transition-colors duration-300 ease-in-out">
               Style: <span className="text-zinc-800 dark:text-white font-medium">{activeSession.writingStyle}</span>. 
-              {isNewsletter ? " Choose a subject line and a body concept." : " Review the options and approve what works."}
+              {isNewsletter ? " Choose a subject line and a body concept." : " Review & approve what works."}
           </p>
         </div>
         <button 

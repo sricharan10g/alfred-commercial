@@ -244,7 +244,7 @@ const Sidebar: React.FC<Props> = ({
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300" onClick={() => setIsMobileOpen(false)} />
         
         {/* Drawer Content */}
-        <div className={`absolute top-0 left-0 bottom-0 w-[280px] bg-white dark:bg-black border-r border-zinc-200 dark:border-zinc-800 flex flex-col shadow-2xl transition-transform duration-300 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`absolute top-0 left-0 bottom-0 w-[280px] bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-r border-white/20 dark:border-zinc-700/30 flex flex-col shadow-2xl transition-transform duration-300 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <SidebarContent mobile={true} />
         </div>
       </div>
@@ -268,31 +268,30 @@ const Sidebar: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Mobile Header - Always Visible on Mobile */}
-      <div 
-        className="md:hidden px-4 pb-4 border-b border-white/10 dark:border-zinc-800/20 flex justify-between items-center bg-white/20 dark:bg-black/20 backdrop-blur-2xl shrink-0 sticky top-0 z-30 transition-colors duration-300 ease-in-out"
-        style={{ paddingTop: 'calc(env(safe-area-inset-top) + 20px)' }}
+      {/* Mobile Header - Floating buttons, no bar */}
+      <div
+        className="md:hidden px-4 flex justify-between items-center shrink-0 absolute top-0 left-0 right-0 z-30"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top) + 12px)' }}
       >
-         <div className="flex items-center gap-3">
-             <button 
-                onClick={() => setIsMobileOpen(true)}
-                className="p-1 -ml-1 text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white"
-             >
-                <Menu size={24} />
-             </button>
-             <div>
-                <h1 className="font-semibold text-lg text-black dark:text-white leading-none transition-colors duration-300 ease-in-out">Alfred</h1>
-                {sessionName !== "New Brief" && <span className="text-[10px] text-zinc-500 block mt-0.5 truncate max-w-[120px] transition-colors duration-300 ease-in-out">{sessionName}</span>}
-             </div>
-         </div>
-         <div className="flex gap-3 items-center">
-             <button 
+         <button
+            onClick={() => setIsMobileOpen(true)}
+            className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
+         >
+            <Menu size={20} />
+         </button>
+         <div className="flex gap-2.5 items-center">
+             <button
                 onClick={onToggleTheme}
-                className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
              </button>
-             <button onClick={onNewSession} className="p-2 bg-black dark:bg-white text-white dark:text-black rounded-lg transition-colors duration-300 ease-in-out"><Plus size={16}/></button>
+             <button
+                onClick={onNewSession}
+                className="p-2.5 rounded-full bg-black/80 dark:bg-white/80 backdrop-blur-md text-white dark:text-black transition-all"
+             >
+                <Plus size={18} />
+             </button>
          </div>
       </div>
     </>

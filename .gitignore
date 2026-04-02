@@ -38,3 +38,6 @@ tsconfig.tsbuildinfo
 # Claude local settings
 .claude/
 
+# Duplicate inner folder (was accidentally created)
+alfred-commercial/
+

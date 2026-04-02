@@ -814,14 +814,15 @@ function Dashboard() {
     return (
         <div className="flex flex-col md:flex-row h-full bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out relative">
 
-            {/* Vanta.js Clouds Background - Full page, behind everything */}
             {/* Vanta.js Clouds Background — full opacity on Brief, subtle on other steps */}
             <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${activeSession.step === 'BRIEF' ? 'opacity-100' : 'opacity-30'}`} style={{ pointerEvents: 'none' }}>
                 <VantaClouds />
-                {/* Top fade — smooth transition behind the transparent mobile header */}
-                <div className="absolute top-0 left-0 right-0 h-28 md:hidden bg-gradient-to-t from-transparent to-white/60 dark:to-black/60 z-[1]" />
-                {/* Bottom fade — smooth transition into Safari's toolbar on mobile */}
-                <div className="absolute bottom-0 left-0 right-0 h-24 md:hidden bg-gradient-to-b from-transparent to-white dark:to-black" />
+            </div>
+
+            {/* Edge fades — always full strength on mobile, independent of Vanta opacity */}
+            <div className="absolute inset-0 z-[1] pointer-events-none md:hidden">
+                <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-t from-transparent to-white/60 dark:to-black/60" />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-white dark:to-black" />
             </div>
 
             {/* Global Progress Bar */}
