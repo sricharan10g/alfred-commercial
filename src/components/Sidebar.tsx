@@ -270,7 +270,7 @@ const Sidebar: React.FC<Props> = ({
 
       {/* Mobile Header - Always Visible on Mobile */}
       <div 
-        className="md:hidden px-4 pb-4 border-b border-zinc-200/30 dark:border-zinc-800/30 flex justify-between items-center bg-white/50 dark:bg-black/50 backdrop-blur-2xl shrink-0 sticky top-0 z-30 transition-colors duration-300 ease-in-out"
+        className="md:hidden px-4 pb-4 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-black shrink-0 sticky top-0 z-30 transition-colors duration-300 ease-in-out"
         style={{ paddingTop: 'calc(env(safe-area-inset-top) + 20px)' }}
       >
          <div className="flex items-center gap-3">

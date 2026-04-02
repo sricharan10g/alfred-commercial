@@ -152,30 +152,30 @@ const SettingsModal: React.FC<Props> = ({
       <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 duration-200 max-h-[85vh] md:max-h-[90vh] transition-colors duration-200">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 shrink-0">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Settings</h2>
+        <div className="flex items-center justify-between px-5 md:px-6 pt-5 md:pt-6 pb-3 md:pb-4 shrink-0">
+          <h2 className="text-base md:text-lg font-semibold text-zinc-900 dark:text-white">Settings</h2>
           <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-zinc-100/50 dark:border-zinc-800/30 px-6 shrink-0">
+        <div className="flex border-b border-zinc-100/50 dark:border-zinc-800/30 px-3 md:px-6 shrink-0 overflow-x-auto">
             <button onClick={() => setActiveTab('general')}
-                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors duration-200 ${activeTab === 'general' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
+                className={`py-2.5 md:py-3 px-2.5 md:px-3 text-xs md:text-sm font-medium border-b-2 transition-colors duration-200 whitespace-nowrap ${activeTab === 'general' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
                 General
             </button>
             <button onClick={() => setActiveTab('research')}
-                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-2 ${activeTab === 'research' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
-                <Globe size={14} /> Auto Research
+                className={`py-2.5 md:py-3 px-2.5 md:px-3 text-xs md:text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-1.5 md:gap-2 whitespace-nowrap ${activeTab === 'research' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
+                <Globe size={12} className="md:w-3.5 md:h-3.5" /> Research
             </button>
             <button onClick={() => setActiveTab('ai-model')}
-                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-2 ${activeTab === 'ai-model' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
-                <Cpu size={14} /> AI Model
+                className={`py-2.5 md:py-3 px-2.5 md:px-3 text-xs md:text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-1.5 md:gap-2 whitespace-nowrap ${activeTab === 'ai-model' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
+                <Cpu size={12} className="md:w-3.5 md:h-3.5" /> AI Model
             </button>
             <button onClick={() => setActiveTab('account')}
-                className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-2 ${activeTab === 'account' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
-                <User size={14} /> Account
+                className={`py-2.5 md:py-3 px-2.5 md:px-3 text-xs md:text-sm font-medium border-b-2 transition-colors duration-200 flex items-center gap-1.5 md:gap-2 whitespace-nowrap ${activeTab === 'account' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
+                <User size={12} className="md:w-3.5 md:h-3.5" /> Account
             </button>
         </div>
 

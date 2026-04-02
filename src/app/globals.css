@@ -8,7 +8,12 @@ html {
   min-height: -webkit-fill-available;
 }
 
-/* Zoom out slightly on desktop only — mobile stays at native scale */
+/* Slight zoom-out on mobile, more on desktop */
+html {
+  zoom: 0.92;
+  height: calc(100% / 0.92);
+}
+
 @media (min-width: 768px) {
   html {
     zoom: 0.9;
