@@ -797,7 +797,7 @@ function Dashboard() {
     // --- Render ---
 
     return (
-        <div className="flex flex-col md:flex-row h-screen supports-[height:100dvh]:h-[100dvh] bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out relative">
+        <div className="flex flex-col md:flex-row h-full bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out relative">
 
             {/* Vanta.js Clouds Background - Full page, behind everything */}
             {activeSession.step === 'BRIEF' && <VantaClouds />}
@@ -1012,7 +1012,7 @@ function AppGate() {
 
     if (loading || verifying) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-black">
+            <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-black">
                 <Loader2 className="animate-spin text-zinc-400" size={24} />
             </div>
         );
