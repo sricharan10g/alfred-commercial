@@ -2,14 +2,12 @@ import { Client, Account, ID } from 'appwrite';
 
 const client = new Client();
 
-import { getPublicConfig } from '../config';
+const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
+const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 
-const { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID } = getPublicConfig();
-
-client
-    .setEndpoint(APPWRITE_ENDPOINT)
-    .setProject(APPWRITE_PROJECT_ID);
-
+if (endpoint && projectId) {
+    client.setEndpoint(endpoint).setProject(projectId);
+}
 
 export const account = new Account(client);
 export { ID, Client };
