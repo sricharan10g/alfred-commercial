@@ -104,7 +104,7 @@ export default function VantaClouds() {
       />
       <div
         ref={vantaRef}
-        className="absolute inset-0 -z-10 rounded-2xl overflow-hidden"
+        className="absolute inset-0 z-0 overflow-hidden"
         style={{ pointerEvents: 'none' }}
       />
     </>

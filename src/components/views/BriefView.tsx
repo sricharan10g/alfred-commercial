@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Session, WritingStyle, CustomStyle, ResearchProfile, ResearchTimeRange, WritingFormat, AIProvider } from '../../types';
 import { BookOpen, Plus, Globe, Clock, Loader2, RefreshCw, X, CheckCircle, Circle, Link, ArrowUp, ArrowDownCircle, Settings, ChevronDown, Sparkles, LayoutTemplate, ChevronRight, Info, User, Cpu } from 'lucide-react';
 import { FORMAT_LIBRARY } from '../../constants';
-import VantaClouds from '../ui/VantaClouds';
 
 const PROVIDER_LABELS: Record<AIProvider, string> = {
     gemini: 'Gemini',
@@ -434,9 +433,6 @@ const BriefView: React.FC<Props> = ({
 
   return (
     <div className="space-y-6 pt-8 md:pt-16 min-h-[60vh] flex flex-col relative">
-
-      {/* Vanta.js Clouds Background */}
-      <VantaClouds />
 
       {/* Workflow Breadcrumbs */}
       {(hasIdeas || hasDrafts) && (

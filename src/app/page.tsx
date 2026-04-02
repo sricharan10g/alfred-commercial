@@ -24,6 +24,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useThrottledCallback } from '@/hooks/useDebounce';
 import { ApiError, fetchUsage } from '@/services/aiClient';
 import PaywallModal from '@/components/PaywallModal';
+import VantaClouds from '@/components/ui/VantaClouds';
 
 // Helper to create a new empty session
 const createNewSession = (): Session => ({
@@ -835,18 +836,21 @@ function Dashboard() {
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+                {/* Vanta.js Clouds Background - Only on Brief step */}
+                {activeSession.step === 'BRIEF' && <VantaClouds />}
+
                 {/* Toggle Theme Button - Top Right Absolute - HIDDEN ON MOBILE */}
                 <div className="absolute top-3 right-3 md:top-4 md:right-4 z-40 hidden md:block">
                     <button
                         onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-                        className="p-2 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white shadow-sm transition-all hover:scale-105"
+                        className="p-2 rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white shadow-sm transition-all hover:scale-105"
                         title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                     >
                         {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth">
+                <div className={`flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth relative z-10 ${activeSession.step === 'BRIEF' ? 'bg-transparent' : ''}`}>
                     <div className="max-w-4xl mx-auto">
 
                         {activeSession.step === 'BRIEF' && (
