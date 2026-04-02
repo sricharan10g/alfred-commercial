@@ -428,10 +428,6 @@ const SettingsModal: React.FC<Props> = ({
                                         </div>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <div className="flex gap-2">
-                                            <span className="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded shrink-0">Topics</span>
-                                            <p className="text-xs text-zinc-600 dark:text-zinc-400 truncate">{profile.topics}</p>
-                                        </div>
                                         {profile.audience && (
                                             <div className="flex gap-2">
                                                 <span className="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded shrink-0">Audience</span>
