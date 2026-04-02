@@ -111,7 +111,7 @@ const Sidebar: React.FC<Props> = ({
     <>
         {/* Header */}
         <div 
-          className={`p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center transition-colors duration-300 ease-in-out ${isCollapsed && !mobile ? 'justify-center' : 'justify-between'}`}
+          className={`p-6 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${isCollapsed && !mobile ? 'justify-center' : 'justify-between'}`}
           style={mobile ? { paddingTop: 'calc(env(safe-area-inset-top) + 24px)' } : {}}
         >
           {(!isCollapsed || mobile) && (
@@ -208,7 +208,7 @@ const Sidebar: React.FC<Props> = ({
 
         {/* Footer Actions */}
         <div 
-          className="mt-auto p-4 border-t border-zinc-200 dark:border-zinc-800 space-y-1 transition-colors duration-300 ease-in-out"
+          className="mt-auto p-4 border-t border-zinc-200/30 dark:border-zinc-800/30 space-y-1 transition-colors duration-300 ease-in-out"
           style={mobile ? { paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' } : {}}
         >
            <button 
@@ -221,9 +221,9 @@ const Sidebar: React.FC<Props> = ({
            <button
              onClick={() => mobile ? handleMobileAction(onOpenSettings) : onOpenSettings()}
              className={`w-full flex items-center gap-2 py-2 text-zinc-500 hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
-             title="Preferences"
+             title="Settings"
            >
-             <Settings size={20} /> {(!isCollapsed || mobile) && "Preferences"}
+             <Settings size={20} /> {(!isCollapsed || mobile) && "Settings"}
            </button>
            <button
              onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
@@ -252,7 +252,7 @@ const Sidebar: React.FC<Props> = ({
       {/* Desktop Sidebar */}
       <div 
         ref={sidebarRef}
-        className={`relative z-10 border-r border-zinc-200/50 dark:border-zinc-800/50 bg-white/70 dark:bg-black/70 backdrop-blur-xl flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
+        className={`relative z-10 border-r border-white/20 dark:border-zinc-700/30 bg-white/40 dark:bg-black/40 backdrop-blur-2xl flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
         style={{ width: isCollapsed ? COLLAPSED_WIDTH : width }}
       >
         <SidebarContent />

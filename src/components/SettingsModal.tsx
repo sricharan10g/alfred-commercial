@@ -31,9 +31,9 @@ interface Props {
 }
 
 const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string }[] = [
-    { id: 'gemini', name: 'Google Gemini', description: 'Fast. Required for web research.', model: 'gemini-2.5-flash' },
-    { id: 'claude', name: 'Claude Sonnet', description: 'Best for creative writing and editing.', model: 'claude-sonnet-4-6' },
-    { id: 'openai', name: 'GPT', description: 'Good for analysis and clean output.', model: 'gpt-4.1' },
+    { id: 'gemini', name: 'Gemini', description: 'Fast', model: 'gemini-2.5-flash' },
+    { id: 'claude', name: 'Claude', description: 'Creative', model: 'claude-sonnet-4-6' },
+    { id: 'openai', name: 'GPT', description: 'Analysis', model: 'gpt-4.1' },
 ];
 
 const SettingsModal: React.FC<Props> = ({
@@ -146,18 +146,18 @@ const SettingsModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 transition-colors duration-200">
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 w-full max-w-xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] transition-colors duration-200">
+      <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] transition-colors duration-200">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 shrink-0">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Preferences</h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Settings</h2>
           <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
             <X size={20} />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-zinc-100 dark:border-zinc-900 px-6 shrink-0">
+        <div className="flex border-b border-zinc-100/50 dark:border-zinc-800/30 px-6 shrink-0">
             <button onClick={() => setActiveTab('general')}
                 className={`py-3 px-3 text-sm font-medium border-b-2 transition-colors duration-200 ${activeTab === 'general' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
                 General
@@ -231,10 +231,6 @@ const SettingsModal: React.FC<Props> = ({
                     ) : (
                         <p className="text-xs text-zinc-400 dark:text-zinc-600 py-3">No custom styles yet. Create one from the main screen.</p>
                     )}
-
-                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 mt-4 italic">
-                        Alfred and Abdullah are built-in — they can&apos;t be removed.
-                    </p>
                 </section>
               </div>
           )}
@@ -242,14 +238,14 @@ const SettingsModal: React.FC<Props> = ({
           {/* ── AI Model ── */}
           {activeTab === 'ai-model' && (
               <div className="space-y-6">
-                <p className="text-sm text-zinc-500 mb-4">Pick the AI behind your drafts. Web research always runs on Gemini.</p>
+                <p className="text-sm text-zinc-500 mb-4">Pick your writer</p>
                 <div className="space-y-3">
                     {AI_PROVIDERS.map(provider => (
                         <button key={provider.id} onClick={() => onProviderChange(provider.id)}
-                            className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+                            className={`w-full text-left p-4 rounded-xl border border-transparent transition-all duration-200 ${
                                 selectedProvider === provider.id
-                                    ? 'border-black dark:border-white bg-zinc-50 dark:bg-zinc-900'
-                                    : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 bg-white dark:bg-zinc-950'
+                                    ? 'bg-zinc-100/80 dark:bg-zinc-800/50'
+                                    : 'hover:bg-zinc-50/80 dark:hover:bg-zinc-900/30'
                             }`}>
                             <div className="flex items-center justify-between">
                                 <div>
@@ -262,7 +258,7 @@ const SettingsModal: React.FC<Props> = ({
                                     <p className="text-xs text-zinc-500 mt-1">{provider.description}</p>
                                 </div>
                                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                    selectedProvider === provider.id ? 'border-black dark:border-white bg-black dark:bg-white' : 'border-zinc-300 dark:border-zinc-700'
+                                    selectedProvider === provider.id ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100' : 'border-zinc-300 dark:border-zinc-600'
                                 }`}>
                                     {selectedProvider === provider.id && <div className="w-2 h-2 rounded-full bg-white dark:bg-black" />}
                                 </div>
@@ -315,8 +311,8 @@ const SettingsModal: React.FC<Props> = ({
                             {/* Starter */}
                             <div className="flex items-center justify-between py-4">
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-900 dark:text-white">Starter</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">350 generations · All formats · $9/mo</p>
+                                    <p className="text-sm font-medium text-zinc-900 dark:text-white">Starter    $9/mo</p>
+                                    <p className="text-xs text-zinc-500 mt-0.5">350 generations · All formats</p>
                                 </div>
                                 <button
                                     onClick={() => handleUpgrade('starter')}
@@ -331,10 +327,9 @@ const SettingsModal: React.FC<Props> = ({
                             <div className="flex items-center justify-between py-4">
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <p className="text-sm font-medium text-zinc-900 dark:text-white">Pro</p>
-                                        <span className="text-[9px] bg-[#FF7400] text-white px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">Popular</span>
+                                        <p className="text-sm font-medium text-zinc-900 dark:text-white">Pro    $29/mo</p>
                                     </div>
-                                    <p className="text-xs text-zinc-500 mt-0.5">1,500 generations · All formats · $29/mo</p>
+                                    <p className="text-xs text-zinc-500 mt-0.5">1,500 generations · All formats</p>
                                 </div>
                                 <button
                                     onClick={() => handleUpgrade('pro')}
@@ -349,11 +344,35 @@ const SettingsModal: React.FC<Props> = ({
                     </section>
                 )}
 
+                {/* Manage subscription — paid users */}
+                {!isFree && userUsage && (
+                    <section>
+                        <div className="flex items-center gap-2 mb-4">
+                            <Zap size={15} className="text-zinc-400" />
+                            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Subscription</span>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-zinc-900 dark:text-white">{planLabel} Plan</p>
+                                    <p className="text-xs text-zinc-500 mt-0.5">{userUsage.monthCount} / {userUsage.monthlyLimit} generations used this month</p>
+                                </div>
+                            </div>
+                            <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5">
+                                <div
+                                    className="bg-zinc-900 dark:bg-zinc-100 h-1.5 rounded-full transition-all"
+                                    style={{ width: `${Math.min(100, (userUsage.monthCount / userUsage.monthlyLimit) * 100)}%` }}
+                                />
+                            </div>
+                            <p className="text-[11px] text-zinc-400">{userUsage.remaining} generations remaining</p>
+                        </div>
+                    </section>
+                )}
+
                 {/* Sign out — flat */}
-                <section className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-900">
+                <section className="flex items-center justify-between pt-2 border-t border-zinc-100/50 dark:border-zinc-800/30">
                     <div>
-                        <p className="text-sm text-zinc-700 dark:text-zinc-300">Sign out of Alfred</p>
-                        <p className="text-xs text-zinc-500 mt-0.5">You&apos;ll need to sign back in.</p>
+                        <p className="text-sm text-zinc-700 dark:text-zinc-300">Leave</p>
                     </div>
                     <button
                         onClick={handleLogout}
@@ -361,7 +380,7 @@ const SettingsModal: React.FC<Props> = ({
                         className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-black dark:hover:text-white transition-colors disabled:opacity-50 font-medium"
                     >
                         {isLoggingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
-                        Sign Out
+                        Sign out
                     </button>
                 </section>
               </div>
@@ -455,7 +474,7 @@ const SettingsModal: React.FC<Props> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-zinc-100 dark:border-zinc-900 flex justify-end shrink-0">
+        <div className="px-6 py-4 border-t border-zinc-100/50 dark:border-zinc-800/30 flex justify-end shrink-0">
           <button onClick={onClose}
             className="bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-6 py-2 rounded-lg text-sm font-semibold transition-colors">
             Done

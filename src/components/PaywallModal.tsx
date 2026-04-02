@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, Lock, Zap, Crown, Loader2 } from 'lucide-react';
+import { X, Loader2, ArrowRight } from 'lucide-react';
 
 interface UserUsage {
     plan: string;
@@ -55,43 +55,39 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
                 onClick={onClose}
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+            <div className="relative w-full max-w-md bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-1.5 rounded-full text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors z-10"
+                    className="absolute top-4 right-4 p-1.5 rounded-full text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors z-10"
                 >
                     <X size={18} />
                 </button>
 
                 {/* Header */}
-                <div className="px-6 pt-6 pb-4 text-center">
-                    <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-3">
-                        <Lock size={22} className="text-zinc-600 dark:text-zinc-400" />
-                    </div>
-
+                <div className="px-6 pt-8 pb-4 text-center">
                     {reason === 'monthly_limit' ? (
                         <>
                             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
                                 You&apos;ve hit the limit
                             </h2>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                You&apos;ve used all {userUsage?.monthlyLimit ?? 40} free generations this month.
+                                All {userUsage?.monthlyLimit ?? 40} free generations used this month.
                             </p>
                         </>
                     ) : (
                         <>
                             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
-                                This one&apos;s on a paid plan
+                                Unlock {format}
                             </h2>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                <span className="font-medium text-zinc-700 dark:text-zinc-300">{format}</span> needs a Starter or Pro plan.
+                                This format requires a Starter or Pro plan.
                             </p>
                         </>
                     )}
@@ -104,91 +100,77 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                             <span>{userUsage.monthCount} used</span>
                             <span>{userUsage.monthlyLimit} total</span>
                         </div>
-                        <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-zinc-400 dark:bg-zinc-500 rounded-full transition-all"
+                                className="h-full bg-zinc-900 dark:bg-zinc-100 rounded-full transition-all"
                                 style={{ width: `${usagePct}%` }}
                             />
                         </div>
-                        <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5 text-center">
+                        <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1.5 text-center">
                             Resets next month
                         </p>
                     </div>
                 )}
 
                 {/* Divider */}
-                <div className="border-t border-zinc-100 dark:border-zinc-800 mx-6" />
+                <div className="border-t border-zinc-100/50 dark:border-zinc-800/30 mx-6" />
 
-                {/* Plan cards */}
+                {/* Plan options */}
                 <div className="p-6 space-y-3">
-                    <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3">
+                    <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mb-3">
                         Pick a plan
                     </p>
 
                     {/* Starter Plan */}
-                    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
-                                    <Zap size={16} className="text-zinc-600 dark:text-zinc-400" />
+                    <button
+                        onClick={() => handleUpgrade('starter')}
+                        disabled={loadingPlan !== null}
+                        className="w-full text-left p-4 rounded-xl border border-transparent hover:bg-zinc-50/80 dark:hover:bg-zinc-800/30 transition-all duration-200 disabled:opacity-60 group"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-semibold text-zinc-900 dark:text-white">Starter</p>
+                                    <span className="text-xs text-zinc-500">$9/mo</span>
                                 </div>
-                                <div>
-                                    <div className="font-semibold text-zinc-900 dark:text-white text-sm">Starter</div>
-                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">350 generations, every format</div>
-                                </div>
+                                <p className="text-xs text-zinc-500 mt-0.5">350 generations, every format</p>
                             </div>
-                            <div className="text-right">
-                                <div className="font-bold text-zinc-900 dark:text-white">$9</div>
-                                <div className="text-xs text-zinc-400">/month</div>
+                            <div className="text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
+                                {loadingPlan === 'starter' ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
                             </div>
                         </div>
-                        <button
-                            onClick={() => handleUpgrade('starter')}
-                            disabled={loadingPlan !== null}
-                            className="w-full py-2 rounded-lg bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 dark:hover:bg-zinc-300 disabled:opacity-60 text-white dark:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                        >
-                            {loadingPlan === 'starter' ? <><Loader2 size={14} className="animate-spin" /> Redirecting...</> : 'Upgrade to Starter'}
-                        </button>
-                    </div>
+                    </button>
 
                     {/* Pro Plan */}
-                    <div className="relative rounded-xl border-2 border-zinc-900 dark:border-zinc-300 p-4">
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-                            <span className="px-2.5 py-0.5 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[10px] font-semibold uppercase tracking-wider">
-                                Most Popular
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0">
-                                    <Crown size={16} className="text-zinc-600 dark:text-zinc-400" />
+                    <button
+                        onClick={() => handleUpgrade('pro')}
+                        disabled={loadingPlan !== null}
+                        className="w-full text-left p-4 rounded-xl bg-zinc-100/80 dark:bg-zinc-800/50 transition-all duration-200 disabled:opacity-60 group"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-semibold text-zinc-900 dark:text-white">Pro</p>
+                                    <span className="text-xs text-zinc-500">$29/mo</span>
+                                    <span className="text-[9px] bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+                                        Popular
+                                    </span>
                                 </div>
-                                <div>
-                                    <div className="font-semibold text-zinc-900 dark:text-white text-sm">Pro</div>
-                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">1,500 generations, every format</div>
-                                </div>
+                                <p className="text-xs text-zinc-500 mt-0.5">1,500 generations, every format</p>
                             </div>
-                            <div className="text-right">
-                                <div className="font-bold text-zinc-900 dark:text-white">$29</div>
-                                <div className="text-xs text-zinc-400">/month</div>
+                            <div className="text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
+                                {loadingPlan === 'pro' ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
                             </div>
                         </div>
-                        <button
-                            onClick={() => handleUpgrade('pro')}
-                            disabled={loadingPlan !== null}
-                            className="w-full py-2 rounded-lg bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 dark:hover:bg-zinc-300 disabled:opacity-60 text-white dark:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                        >
-                            {loadingPlan === 'pro' ? <><Loader2 size={14} className="animate-spin" /> Redirecting...</> : 'Upgrade to Pro'}
-                        </button>
-                    </div>
+                    </button>
 
-                    {/* Stay on free */}
-                    <div className="text-center pt-1">
+                    {/* Dismiss */}
+                    <div className="text-center pt-2">
                         <button
                             onClick={onClose}
                             className="text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
                         >
-                            Not now, stay on Free
+                            Not now
                         </button>
                     </div>
                 </div>

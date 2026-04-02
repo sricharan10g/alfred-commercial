@@ -269,6 +269,15 @@ function Dashboard() {
     };
 
     const handleNewSession = () => {
+        // Don't create multiple empty briefs — reuse an existing empty one
+        const existingEmpty = sessions.find(s => s.brief === '' && s.step === 'BRIEF' && s.ideas.length === 0);
+        if (existingEmpty) {
+            setActiveSessionId(existingEmpty.id);
+            setSessions(prev => prev.map(s =>
+                s.id === existingEmpty.id ? { ...s, lastAccessedAt: Date.now() } : s
+            ));
+            return;
+        }
         const newSession = createNewSession();
         setSessions(prev => [newSession, ...prev]);
         setActiveSessionId(newSession.id);
@@ -276,9 +285,15 @@ function Dashboard() {
 
     const handleSelectSession = (id: string) => {
         setActiveSessionId(id);
-        setSessions(prev => prev.map(s =>
-            s.id === id ? { ...s, lastAccessedAt: Date.now() } : s
-        ));
+        setSessions(prev => {
+            // Clean up any empty briefs that aren't the one being selected
+            const cleaned = prev.filter(s =>
+                s.id === id || s.brief !== '' || s.step !== 'BRIEF' || s.ideas.length > 0
+            );
+            return cleaned.map(s =>
+                s.id === id ? { ...s, lastAccessedAt: Date.now() } : s
+            );
+        });
     };
 
     const handlePinSession = (id: string) => {
@@ -800,7 +815,10 @@ function Dashboard() {
         <div className="flex flex-col md:flex-row h-full bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out relative">
 
             {/* Vanta.js Clouds Background - Full page, behind everything */}
-            {activeSession.step === 'BRIEF' && <VantaClouds />}
+            {/* Vanta.js Clouds Background — full opacity on Brief, subtle on other steps */}
+            <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${activeSession.step === 'BRIEF' ? 'opacity-100' : 'opacity-30'}`} style={{ pointerEvents: 'none' }}>
+                <VantaClouds />
+            </div>
 
             {/* Global Progress Bar */}
             <ProgressBar isLoading={isGlobalLoading} />
