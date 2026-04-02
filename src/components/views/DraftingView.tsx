@@ -179,7 +179,6 @@ const DraftingView: React.FC<Props> = ({
               </button>
             </div>
           )}
-          <button onClick={onNewSession} className="text-zinc-500 hover:text-black dark:hover:text-white px-3 py-1.5 text-sm transition-colors">New Brief</button>
         </div>
       </div>
 

@@ -8,7 +8,14 @@ html {
   min-height: -webkit-fill-available;
 }
 
-/* Zoom out slightly on desktop only — mobile stays at native scale */
+/* Slightly smaller base font on mobile */
+@media (max-width: 767px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Zoom out slightly on desktop only */
 @media (min-width: 768px) {
   html {
     zoom: 0.9;

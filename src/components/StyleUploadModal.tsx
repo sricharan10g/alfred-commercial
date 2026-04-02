@@ -335,7 +335,7 @@ const StyleUploadModal: React.FC<Props> = ({ isOpen, onClose, onStyleCreated, gu
     return (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm md:p-4 transition-colors duration-200">
             <div
-                className={`bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full rounded-t-2xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col ${status === 'REVIEW' ? 'max-w-4xl max-h-[85vh] md:h-[550px] p-0' : 'max-w-md max-h-[85vh] p-0'}`}
+                className={`bg-white dark:bg-zinc-950/90 backdrop-blur-2xl border border-zinc-200 dark:border-zinc-700/30 w-full rounded-t-2xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col ${status === 'REVIEW' ? 'max-w-4xl max-h-[85vh] md:h-[550px] p-0' : 'max-w-md max-h-[85vh] p-0'}`}
             >
 
                 {/* Header - Only show title in upload mode, review mode has its own header */}
