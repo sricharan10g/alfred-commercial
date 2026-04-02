@@ -28,59 +28,63 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200 transition-colors duration-200">
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 w-full max-w-2xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 transition-colors duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-zinc-100 dark:border-zinc-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 w-full max-w-lg rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200" style={{ minHeight: '420px' }}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-zinc-100 dark:border-zinc-900">
           <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white flex items-center gap-2 transition-colors duration-200">
-                <ShieldCheck size={20} className="text-zinc-900 dark:text-white" />
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+                <ShieldCheck size={18} className="text-zinc-500" />
                 Boundaries
             </h2>
-            <p className="text-zinc-500 text-xs mt-1">These apply everywhere, no matter the style.</p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">These apply everywhere, no matter the style.</p>
           </div>
-          <button onClick={onClose} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
-            <X size={20} />
+          <button onClick={onClose} className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
+            <X size={18} />
           </button>
         </div>
-        
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            
-            {/* DOs */}
-            <div className="space-y-2">
-                <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <ShieldCheck size={16} />
-                    Always
-                </label>
-                <textarea
-                    value={dos}
-                    onChange={(e) => setDos(e.target.value)}
-                    placeholder="e.g. Include source links, Keep a professional tone..."
-                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
-                />
-            </div>
 
-            {/* DONTs */}
-            <div className="space-y-2">
-                <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    <ShieldAlert size={16} />
-                    Never
-                </label>
-                <textarea
-                    value={donts}
-                    onChange={(e) => setDonts(e.target.value)}
-                    placeholder="e.g. Don't mention competitors, No emojis..."
-                    className="w-full h-32 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-300 dark:focus:ring-zinc-700 resize-none placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-colors duration-200"
-                />
-            </div>
-
+        {/* Always */}
+        <div className="px-7 pt-6 pb-2 flex-1 flex flex-col">
+          <label className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3">
+              <ShieldCheck size={13} />
+              Always
+          </label>
+          <textarea
+              value={dos}
+              onChange={(e) => setDos(e.target.value)}
+              placeholder="e.g. Include source links, Keep a professional tone..."
+              className="flex-1 w-full bg-transparent text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none resize-none placeholder:text-zinc-300 dark:placeholder:text-zinc-700 leading-relaxed"
+              style={{ minHeight: '100px' }}
+          />
         </div>
 
-        <div className="p-6 border-t border-zinc-100 dark:border-zinc-900 flex justify-end transition-colors duration-200">
-          <button 
+        {/* Divider */}
+        <div className="mx-7 border-t border-zinc-100 dark:border-zinc-900" />
+
+        {/* Never */}
+        <div className="px-7 pt-5 pb-2 flex-1 flex flex-col">
+          <label className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-3">
+              <ShieldAlert size={13} />
+              Never
+          </label>
+          <textarea
+              value={donts}
+              onChange={(e) => setDonts(e.target.value)}
+              placeholder="e.g. Don't mention competitors, No emojis..."
+              className="flex-1 w-full bg-transparent text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none resize-none placeholder:text-zinc-300 dark:placeholder:text-zinc-700 leading-relaxed"
+              style={{ minHeight: '100px' }}
+          />
+        </div>
+
+        {/* Footer */}
+        <div className="px-7 py-5 border-t border-zinc-100 dark:border-zinc-900 flex justify-end">
+          <button
             onClick={handleSave}
-            className="flex items-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
+            className="flex items-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-5 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
-            <Save size={16} />
+            <Save size={14} />
             Save
           </button>
         </div>
