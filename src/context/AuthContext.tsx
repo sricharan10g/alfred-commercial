@@ -22,7 +22,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkUserStatus();
+        // After Google OAuth, Appwrite redirects back with ?userId=&secret= in the URL.
+        // We exchange those params for a real session (works in Safari — no cross-origin cookie needed).
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('userId');
+        const secret = params.get('secret');
+
+        if (userId && secret) {
+            // Clean the URL immediately so params don't linger
+            window.history.replaceState({}, '', window.location.pathname);
+            account.createSession(userId, secret)
+                .then(() => {
+                    sessionStorage.setItem('alfred_just_logged_in', '1');
+                    checkUserStatus();
+                })
+                .catch(() => {
+                    setUser(null);
+                    setLoading(false);
+                });
+        } else {
+            checkUserStatus();
+        }
     }, []);
 
     const checkUserStatus = async () => {
@@ -45,9 +65,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const loginWithGoogle = () => {
         const origin = window.location.origin;
-        account.createOAuth2Session(
+        account.createOAuth2Token(
             OAuthProvider.Google,
-            origin + '/',   // success — back to the app
+            origin + '/',   // success — Appwrite appends ?userId=&secret= to this URL
             origin + '/'    // failure — same, app will show auth screen
         );
     };
