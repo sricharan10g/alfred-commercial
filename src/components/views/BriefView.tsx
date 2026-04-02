@@ -432,7 +432,7 @@ const BriefView: React.FC<Props> = ({
   const quickFormats = FORMAT_LIBRARY.slice(0, 3);
 
   return (
-    <div className="space-y-6 pt-8 md:pt-16 min-h-[60vh] flex flex-col relative">
+    <div className="space-y-6 pt-8 md:pt-16 flex flex-col relative">
 
       {/* Workflow Breadcrumbs */}
       {(hasIdeas || hasDrafts) && (
