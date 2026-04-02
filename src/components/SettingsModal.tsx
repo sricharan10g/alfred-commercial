@@ -485,14 +485,6 @@ const SettingsModal: React.FC<Props> = ({
               </div>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-zinc-100/50 dark:border-zinc-800/30 flex justify-end shrink-0">
-          <button onClick={onClose}
-            className="bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black px-6 py-2 rounded-lg text-sm font-semibold transition-colors">
-            Done
-          </button>
-        </div>
       </div>
     </div>
   );
