@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 html {
+  zoom: 0.9;
   overflow: hidden;
 }
 

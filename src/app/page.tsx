@@ -797,7 +797,10 @@ function Dashboard() {
     // --- Render ---
 
     return (
-        <div className="flex flex-col md:flex-row h-screen supports-[height:100dvh]:h-[100dvh] bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out">
+        <div className="flex flex-col md:flex-row h-screen supports-[height:100dvh]:h-[100dvh] bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out relative">
+
+            {/* Vanta.js Clouds Background - Full page, behind everything */}
+            {activeSession.step === 'BRIEF' && <VantaClouds />}
 
             {/* Global Progress Bar */}
             <ProgressBar isLoading={isGlobalLoading} />
@@ -835,10 +838,7 @@ function Dashboard() {
             />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-                {/* Vanta.js Clouds Background - Only on Brief step */}
-                {activeSession.step === 'BRIEF' && <VantaClouds />}
-
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative z-10">
                 {/* Toggle Theme Button - Top Right Absolute - HIDDEN ON MOBILE */}
                 <div className="absolute top-3 right-3 md:top-4 md:right-4 z-40 hidden md:block">
                     <button
@@ -850,7 +850,7 @@ function Dashboard() {
                     </button>
                 </div>
 
-                <div className={`flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth relative z-10 ${activeSession.step === 'BRIEF' ? 'bg-transparent' : ''}`}>
+                <div className="flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth relative z-10">
                     <div className="max-w-4xl mx-auto">
 
                         {activeSession.step === 'BRIEF' && (

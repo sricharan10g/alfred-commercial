@@ -252,7 +252,7 @@ const Sidebar: React.FC<Props> = ({
       {/* Desktop Sidebar */}
       <div 
         ref={sidebarRef}
-        className={`relative border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
+        className={`relative z-10 border-r border-zinc-200/50 dark:border-zinc-800/50 bg-white/70 dark:bg-black/70 backdrop-blur-xl flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
         style={{ width: isCollapsed ? COLLAPSED_WIDTH : width }}
       >
         <SidebarContent />
