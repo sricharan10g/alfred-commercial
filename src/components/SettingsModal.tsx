@@ -255,16 +255,16 @@ const SettingsModal: React.FC<Props> = ({
                 <div className="space-y-3">
                     {AI_PROVIDERS.map(provider => (
                         <button key={provider.id} onClick={() => onProviderChange(provider.id)}
-                            className={`w-full text-left p-4 rounded-xl border border-transparent transition-all duration-200 ${
+                            className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${
                                 selectedProvider === provider.id
-                                    ? 'bg-zinc-100/80 dark:bg-zinc-800/50'
-                                    : 'hover:bg-zinc-50/80 dark:hover:bg-zinc-900/30'
+                                    ? 'bg-white/60 dark:bg-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                                    : 'hover:bg-white/40 dark:hover:bg-white/5'
                             }`}>
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <p className="text-sm font-semibold text-zinc-900 dark:text-white">{provider.name}</p>
-                                        <span className="text-[10px] bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-1.5 py-0.5 rounded font-mono">
+                                        <span className="text-[10px] bg-black/5 dark:bg-white/10 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded font-mono">
                                             {provider.model}
                                         </span>
                                     </div>
