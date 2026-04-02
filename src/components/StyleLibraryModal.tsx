@@ -15,7 +15,7 @@ const StyleLibraryModal: React.FC<Props> = ({ isOpen, onClose, presets, onSelect
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200 transition-colors duration-200">
-      <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-2xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 h-[70vh] transition-colors duration-200">
+      <div className="bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-2xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 h-[70vh] transition-colors duration-200">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-zinc-100 dark:border-zinc-900 shrink-0">

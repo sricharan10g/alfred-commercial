@@ -60,7 +60,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-md bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-md bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in zoom-in-95 duration-200">
 
                 {/* Close button */}
                 <button
@@ -133,7 +133,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                                     <p className="text-sm font-semibold text-zinc-900 dark:text-white">Starter</p>
                                     <span className="text-xs text-zinc-500">$9/mo</span>
                                 </div>
-                                <p className="text-xs text-zinc-500 mt-0.5">350 generations, every format</p>
+                                <p className="text-xs text-zinc-500 mt-0.5">350 generations, All formats</p>
                             </div>
                             <div className="text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                                 {loadingPlan === 'starter' ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}
@@ -156,7 +156,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
                                         Popular
                                     </span>
                                 </div>
-                                <p className="text-xs text-zinc-500 mt-0.5">1,500 generations, every format</p>
+                                <p className="text-xs text-zinc-500 mt-0.5">1,500 generations, All formats</p>
                             </div>
                             <div className="text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                                 {loadingPlan === 'pro' ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={16} />}

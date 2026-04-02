@@ -29,7 +29,7 @@ const GuardrailsModal: React.FC<Props> = ({ isOpen, onClose, initialGuardrails, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-lg rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200" style={{ minHeight: '420px' }}>
+      <div className="bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-lg rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200" style={{ minHeight: '420px' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-zinc-100/50 dark:border-zinc-800/30">

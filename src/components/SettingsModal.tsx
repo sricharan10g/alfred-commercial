@@ -28,6 +28,8 @@ interface Props {
   // AI Provider Props
   selectedProvider: AIProvider;
   onProviderChange: (provider: AIProvider) => void;
+  // Style creation
+  onCreateStyle?: () => void;
 }
 
 const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string }[] = [
@@ -42,7 +44,8 @@ const SettingsModal: React.FC<Props> = ({
     customStyles, onDeleteStyle, onEditStyle,
     onClearHistory,
     researchProfiles, onAddResearchProfile, onUpdateResearchProfile, onDeleteResearchProfile,
-    selectedProvider, onProviderChange
+    selectedProvider, onProviderChange,
+    onCreateStyle
 }) => {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
@@ -146,7 +149,7 @@ const SettingsModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm p-4 transition-colors duration-200">
-      <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] transition-colors duration-200">
+      <div className="bg-white/50 dark:bg-zinc-950/50 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] transition-colors duration-200">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 shrink-0">
@@ -202,13 +205,23 @@ const SettingsModal: React.FC<Props> = ({
 
                 {/* Custom Styles */}
                 <section>
-                    <div className="flex items-center gap-2 mb-4">
-                        <Palette size={15} className="text-zinc-400" />
-                        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Writing Styles</span>
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <Palette size={15} className="text-zinc-400" />
+                            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Writing Styles</span>
+                        </div>
+                        {onCreateStyle && (
+                            <button
+                                onClick={onCreateStyle}
+                                className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-black dark:hover:text-white transition-colors font-medium"
+                            >
+                                <Plus size={13} /> New Style
+                            </button>
+                        )}
                     </div>
 
                     {customStyles.length > 0 ? (
-                        <div className="divide-y divide-zinc-100 dark:divide-zinc-900">
+                        <div className="divide-y divide-zinc-100/50 dark:divide-zinc-800/30">
                             {customStyles.map(style => (
                                 <div key={style.id} className="flex items-center justify-between py-3">
                                     <div>
@@ -217,11 +230,11 @@ const SettingsModal: React.FC<Props> = ({
                                     </div>
                                     <div className="flex gap-1">
                                         <button onClick={() => onEditStyle(style)}
-                                            className="p-2 text-zinc-400 hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-all" title="Edit">
+                                            className="p-2 text-zinc-400 hover:text-black dark:hover:text-white hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 rounded-md transition-all" title="Edit">
                                             <Pencil size={14} />
                                         </button>
                                         <button onClick={() => onDeleteStyle(style.id)}
-                                            className="p-2 text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md transition-all" title="Delete">
+                                            className="p-2 text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-950/20 rounded-md transition-all" title="Delete">
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
@@ -229,7 +242,7 @@ const SettingsModal: React.FC<Props> = ({
                             ))}
                         </div>
                     ) : (
-                        <p className="text-xs text-zinc-400 dark:text-zinc-600 py-3">No custom styles yet. Create one from the main screen.</p>
+                        <p className="text-xs text-zinc-400 dark:text-zinc-600 py-3">No custom styles yet.</p>
                     )}
                 </section>
               </div>

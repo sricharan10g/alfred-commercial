@@ -938,6 +938,11 @@ function Dashboard() {
                 onDeleteResearchProfile={handleDeleteResearchProfile}
                 selectedProvider={selectedProvider}
                 onProviderChange={setSelectedProvider}
+                onCreateStyle={() => {
+                    setEditingStyle(null);
+                    setIsSettingsOpen(false);
+                    setIsStyleUploadOpen(true);
+                }}
             />
 
             <StyleUploadModal
