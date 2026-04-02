@@ -796,7 +796,7 @@ function Dashboard() {
     // --- Render ---
 
     return (
-        <div className="flex flex-col md:flex-row h-[125vh] supports-[height:100dvh]:h-[125dvh] bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out">
+        <div className="flex flex-col md:flex-row h-screen supports-[height:100dvh]:h-[100dvh] bg-gray-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-300 ease-in-out">
 
             {/* Global Progress Bar */}
             <ProgressBar isLoading={isGlobalLoading} />
