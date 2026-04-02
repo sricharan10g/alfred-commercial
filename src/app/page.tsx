@@ -818,6 +818,8 @@ function Dashboard() {
             {/* Vanta.js Clouds Background — full opacity on Brief, subtle on other steps */}
             <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${activeSession.step === 'BRIEF' ? 'opacity-100' : 'opacity-30'}`} style={{ pointerEvents: 'none' }}>
                 <VantaClouds />
+                {/* Bottom fade — smooth transition into Safari's toolbar on mobile */}
+                <div className="absolute bottom-0 left-0 right-0 h-24 md:hidden bg-gradient-to-b from-transparent to-white dark:to-black" />
             </div>
 
             {/* Global Progress Bar */}
