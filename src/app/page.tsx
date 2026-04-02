@@ -818,6 +818,8 @@ function Dashboard() {
             {/* Vanta.js Clouds Background — full opacity on Brief, subtle on other steps */}
             <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${activeSession.step === 'BRIEF' ? 'opacity-100' : 'opacity-30'}`} style={{ pointerEvents: 'none' }}>
                 <VantaClouds />
+                {/* Top fade — smooth transition behind the transparent mobile header */}
+                <div className="absolute top-0 left-0 right-0 h-28 md:hidden bg-gradient-to-t from-transparent to-white/60 dark:to-black/60 z-[1]" />
                 {/* Bottom fade — smooth transition into Safari's toolbar on mobile */}
                 <div className="absolute bottom-0 left-0 right-0 h-24 md:hidden bg-gradient-to-b from-transparent to-white dark:to-black" />
             </div>
@@ -874,6 +876,7 @@ function Dashboard() {
                     <div className="max-w-4xl mx-auto">
 
                         {activeSession.step === 'BRIEF' && (
+                            <div key={`brief-${activeSessionId}`} className="animate-in fade-in duration-500 ease-out">
                             <BriefView
                                 activeSession={activeSession}
                                 customStyles={customStyles}
@@ -891,18 +894,22 @@ function Dashboard() {
                                 onOpenResearchSettings={handleOpenResearchSettings}
                                 selectedProvider={selectedProvider}
                             />
+                            </div>
                         )}
 
                         {activeSession.step === 'IDEATION' && (
+                            <div key={`ideation-${activeSessionId}`} className="animate-in fade-in slide-in-from-right-6 duration-500 ease-out">
                             <IdeationView
                                 activeSession={activeSession}
                                 onUpdateSession={updateActiveSession}
                                 onIdeaDecision={handleIdeaDecision}
                                 onMoveToDrafts={throttledMoveToDrafts}
                             />
+                            </div>
                         )}
 
                         {activeSession.step === 'DRAFTING' && (
+                            <div key={`drafting-${activeSessionId}`} className="animate-in fade-in slide-in-from-right-6 duration-500 ease-out">
                             <DraftingView
                                 activeSession={activeSession}
                                 onUpdateSession={updateActiveSession}
@@ -914,6 +921,7 @@ function Dashboard() {
                                 onDraftEdit={handleDraftEdit}
                                 onDraftRefine={throttledDraftRefine}
                             />
+                            </div>
                         )}
 
                     </div>

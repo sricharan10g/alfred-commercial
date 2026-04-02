@@ -149,7 +149,7 @@ const SettingsModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm md:p-4 transition-colors duration-200">
-      <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 duration-200 max-h-[85vh] md:max-h-[90vh] transition-colors duration-200">
+      <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-xl rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom-8 md:zoom-in-95 duration-500 ease-out max-h-[85vh] md:max-h-[90vh] transition-colors duration-200">
 
         {/* Header */}
         <div className="relative px-5 md:px-6 pt-6 md:pt-7 pb-5 md:pb-5 shrink-0">

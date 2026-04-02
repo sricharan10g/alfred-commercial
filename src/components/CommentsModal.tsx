@@ -12,8 +12,8 @@ const CommentsModal: React.FC<Props> = ({ isOpen, onClose, comments }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm md:p-4 animate-in fade-in duration-200 transition-colors duration-200">
-      <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-2xl max-h-[85vh] md:max-h-[80vh] rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom md:zoom-in-95 duration-200 transition-colors duration-200">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-sm md:p-4 animate-in fade-in duration-300 transition-colors duration-200">
+      <div className="bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/20 dark:border-zinc-700/30 w-full max-w-2xl max-h-[85vh] md:max-h-[80vh] rounded-t-2xl md:rounded-2xl flex flex-col shadow-2xl animate-in slide-in-from-bottom-8 md:zoom-in-95 duration-500 ease-out transition-colors duration-200">
         <div className="flex items-center justify-between p-6 border-b border-zinc-100 dark:border-zinc-900">
           <div className="flex items-center gap-2">
             <div className="bg-zinc-100/50 dark:bg-zinc-800/50 p-2 rounded-lg">

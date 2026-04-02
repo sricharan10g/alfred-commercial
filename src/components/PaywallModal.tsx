@@ -60,7 +60,7 @@ export default function PaywallModal({ isOpen, onClose, reason, format, userUsag
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-md bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-t-2xl md:rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in slide-in-from-bottom md:zoom-in-95 duration-200 max-h-[85vh]">
+            <div className="relative w-full max-w-md bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-t-2xl md:rounded-2xl shadow-2xl border border-white/20 dark:border-zinc-700/30 overflow-hidden animate-in slide-in-from-bottom-8 md:zoom-in-95 duration-500 ease-out max-h-[85vh]">
 
                 {/* Close button */}
                 <button
