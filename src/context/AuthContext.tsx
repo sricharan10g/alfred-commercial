@@ -22,15 +22,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // After Google OAuth, Appwrite redirects back with ?userId=&secret= in the URL.
-        // We exchange those params for a real session (works in Safari — no cross-origin cookie needed).
+        // After Google OAuth, Appwrite redirects back with ?type=oauth&userId=&secret= in the URL.
+        // We exchange those params for a real session. This runs AFTER child effects (AppGate),
+        // but AppGate bails early on type=oauth so the URL is still intact here.
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('userId');
         const secret = params.get('secret');
+        const type   = params.get('type');
 
-        if (userId && secret) {
-            // Clean the URL immediately so params don't linger
+        if (userId && secret && type === 'oauth') {
+            // Clean the URL so params don't linger on refresh
             window.history.replaceState({}, '', window.location.pathname);
+            // Exchange the token for a real session (no cross-origin cookie — works in Safari)
             account.createSession(userId, secret)
                 .then(() => {
                     sessionStorage.setItem('alfred_just_logged_in', '1');
@@ -67,8 +70,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const origin = window.location.origin;
         account.createOAuth2Token(
             OAuthProvider.Google,
-            origin + '/',   // success — Appwrite appends ?userId=&secret= to this URL
-            origin + '/'    // failure — same, app will show auth screen
+            origin + '/?type=oauth',  // success — type=oauth lets us distinguish from email verify
+            origin + '/'              // failure — app will show auth screen
         );
     };
 

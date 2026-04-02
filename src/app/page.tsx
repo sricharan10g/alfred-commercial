@@ -966,6 +966,7 @@ function AppGate() {
     // Handle callback links from email:
     //   • Password recovery:     ?type=recovery&userId=xxx&secret=yyy
     //   • Email verification:    ?userId=xxx&secret=yyy  (no type param)
+    //   • Google OAuth:          ?type=oauth&userId=xxx&secret=yyy  ← handled by AuthContext, skip here
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('userId');
@@ -973,6 +974,10 @@ function AppGate() {
         const type   = params.get('type');
 
         if (!userId || !secret) return;
+
+        // OAuth callback — AuthContext handles this; bail so we don't clean the URL first.
+        // (Child effects run before parent effects in React, so we must leave the URL intact.)
+        if (type === 'oauth') return;
 
         // Clean the URL immediately so refresh doesn't re-trigger
         window.history.replaceState({}, '', window.location.pathname);
