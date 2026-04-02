@@ -850,7 +850,7 @@ function Dashboard() {
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth relative z-10">
+                <div className="flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth">
                     <div className="max-w-4xl mx-auto">
 
                         {activeSession.step === 'BRIEF' && (
