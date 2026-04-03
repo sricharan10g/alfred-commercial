@@ -345,7 +345,7 @@ const OnboardingStepModal: React.FC<Props> = ({
             {samplesStatus === 'processing' && (
                 <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
                     <Loader2 size={14} className="animate-spin shrink-0" />
-                    Alfred is learning your style — this takes about 30 seconds…
+                    A moment please, Alfred is learning your style
                 </div>
             )}
             {samplesStatus === 'error' && (

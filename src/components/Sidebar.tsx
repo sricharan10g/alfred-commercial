@@ -143,17 +143,19 @@ const Sidebar: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Action Button */}
+        {/* Action Button — hidden when already on the BRIEF (home) step */}
+        {activeSessionStep !== 'BRIEF' && (
         <div className="p-4 shrink-0 transition-colors duration-300 ease-in-out">
-             <button 
+             <button
                 onClick={() => mobile ? handleMobileAction(onNewSession) : onNewSession()}
                 className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all mb-4 ${isCollapsed && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
                 title="New Brief"
             >
-                <Plus size={(isCollapsed && !mobile) ? 20 : 16} /> 
+                <Plus size={(isCollapsed && !mobile) ? 20 : 16} />
                 {(!isCollapsed || mobile) && "New Brief"}
             </button>
         </div>
+        )}
 
         {/* Onboarding Checklist */}
         {!onboardingState.completedAt && (
@@ -308,12 +310,14 @@ const Sidebar: React.FC<Props> = ({
              >
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
              </button>
+             {activeSessionStep !== 'BRIEF' && (
              <button
                 onClick={onNewSession}
                 className="p-2.5 rounded-full bg-black/80 dark:bg-white/80 backdrop-blur-md text-white dark:text-black transition-all"
              >
                 <Plus size={18} />
              </button>
+             )}
          </div>
       </div>
     </>
