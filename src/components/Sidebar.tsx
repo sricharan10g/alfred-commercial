@@ -42,7 +42,12 @@ const Sidebar: React.FC<Props> = ({
   onOpenOnboardingStep,
 }) => {
   const activeSession = sessions.find(s => s.id === activeSessionId);
-  const showNewBrief = activeSessionStep !== 'BRIEF' || !!(activeSession?.brief);
+  // Show "New Brief" when:
+  // 1. Not on BRIEF step (in IDEATION or DRAFTING) — always show
+  // 2. On BRIEF step but session has ideas/drafts (revisiting an old session) — show
+  // Hide only when on a fresh empty BRIEF with no progress
+  const hasProgress = (activeSession?.ideas?.length ?? 0) > 0 || (activeSession?.drafts?.length ?? 0) > 0;
+  const showNewBrief = activeSessionStep !== 'BRIEF' || hasProgress;
 
   // Pinned sessions first, then the rest ordered by last accessed / created
   const sortedSessions = [...sessions].sort((a, b) => {
@@ -296,26 +301,26 @@ const Sidebar: React.FC<Props> = ({
         className="md:hidden px-4 flex justify-between items-center shrink-0 absolute top-0 left-0 right-0 z-30"
         style={{ paddingTop: 'calc(env(safe-area-inset-top) + 12px)' }}
       >
+         <button
+            onClick={() => setIsMobileOpen(true)}
+            className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
+         >
+            <Menu size={20} />
+         </button>
          <div className="flex gap-2.5 items-center">
-             <button
-                onClick={() => setIsMobileOpen(true)}
-                className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
-             >
-                <Menu size={20} />
-             </button>
              <button
                 onClick={onNewSession}
                 className={`p-2.5 rounded-full bg-black/80 dark:bg-white/80 backdrop-blur-md text-white dark:text-black transition-all duration-300 ease-in-out ${showNewBrief ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'}`}
              >
                 <Plus size={18} />
              </button>
+             <button
+                onClick={onToggleTheme}
+                className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
+             >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+             </button>
          </div>
-         <button
-            onClick={onToggleTheme}
-            className="p-2.5 rounded-full border border-white/30 dark:border-white/15 bg-white/20 dark:bg-black/20 backdrop-blur-md text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-all"
-         >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-         </button>
       </div>
     </>
   );
