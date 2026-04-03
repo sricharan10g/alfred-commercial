@@ -202,7 +202,6 @@ const AuthView: React.FC = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className={inputClass}
-                                    placeholder="name@example.com"
                                 />
                             </div>
 
@@ -294,7 +293,6 @@ const AuthView: React.FC = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className={inputClass}
-                                placeholder="name@example.com"
                             />
                         </div>
 
@@ -317,7 +315,6 @@ const AuthView: React.FC = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className={inputClass}
-                                placeholder="••••••••"
                             />
                         </div>
 
