@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { Session } from '../types';
 import { Command, Plus, X, ShieldCheck, Settings, PanelLeftClose, PanelLeftOpen, GripVertical, History, Menu, Sun, Moon, LogOut } from 'lucide-react';
 
@@ -232,6 +233,13 @@ const Sidebar: React.FC<Props> = ({
            >
              <LogOut size={20} /> {(!isCollapsed || mobile) && "Sign Out"}
            </button>
+           {(!isCollapsed || mobile) && (
+             <div className="flex items-center gap-2 px-2 pt-2 flex-wrap">
+               <Link href="/privacy" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Privacy</Link>
+               <span className="text-zinc-700 text-[10px]">·</span>
+               <Link href="/terms" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Terms</Link>
+             </div>
+           )}
         </div>
     </>
   );

@@ -85,6 +85,7 @@ const AuthView: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -122,6 +123,7 @@ const AuthView: React.FC = () => {
         setEmail('');
         setPassword('');
         setName('');
+        setAgreedToTerms(false);
     };
 
     // Dark glass input — underline only, white text
@@ -325,10 +327,31 @@ const AuthView: React.FC = () => {
                             </div>
                         )}
 
+                        {!isLogin && (
+                            <label className="flex items-start gap-2.5 cursor-pointer mt-1 animate-in fade-in duration-300">
+                                <input
+                                    type="checkbox"
+                                    checked={agreedToTerms}
+                                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                                    className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border border-white/30 bg-white/10 accent-white cursor-pointer"
+                                />
+                                <span className="text-[11px] text-zinc-400 leading-relaxed">
+                                    I agree to the{' '}
+                                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-zinc-200 underline underline-offset-2 hover:text-white transition-colors">
+                                        Terms of Service
+                                    </a>{' '}
+                                    and{' '}
+                                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-zinc-200 underline underline-offset-2 hover:text-white transition-colors">
+                                        Privacy Policy
+                                    </a>
+                                </span>
+                            </label>
+                        )}
+
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-white text-black font-semibold py-2.5 rounded-xl hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg"
+                            disabled={isLoading || (!isLogin && !agreedToTerms)}
+                            className="w-full bg-white text-black font-semibold py-2.5 rounded-xl hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
                         >
                             {isLoading ? <Loader2 size={18} className="animate-spin text-black" /> : (
                                 <>
@@ -406,6 +429,17 @@ const AuthView: React.FC = () => {
 
             {/* Content — only this part swaps on mode change */}
             {renderContent()}
+
+            {/* Legal footer */}
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">
+                    Privacy Policy
+                </a>
+                <span className="text-zinc-700 text-[10px]">·</span>
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">
+                    Terms of Service
+                </a>
+            </div>
         </div>
     );
 };
