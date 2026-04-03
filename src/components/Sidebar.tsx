@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Session } from '../types';
+import { Session, OnboardingState } from '../types';
 import { Command, Plus, X, ShieldCheck, Settings, PanelLeftClose, PanelLeftOpen, GripVertical, History, Menu, Sun, Moon, LogOut } from 'lucide-react';
+import OnboardingChecklist from './OnboardingChecklist';
 
 interface Props {
   sessions: Session[];
@@ -16,6 +17,8 @@ interface Props {
   onLogout: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
+  onboardingState: OnboardingState;
+  onOpenOnboardingStep: (step: keyof OnboardingState['steps']) => void;
 }
 
 const MIN_WIDTH = 240;
@@ -34,7 +37,9 @@ const Sidebar: React.FC<Props> = ({
   onOpenSettings,
   onLogout,
   theme,
-  onToggleTheme
+  onToggleTheme,
+  onboardingState,
+  onOpenOnboardingStep,
 }) => {
   const activeSession = sessions.find(s => s.id === activeSessionId);
 
@@ -149,6 +154,15 @@ const Sidebar: React.FC<Props> = ({
                 {(!isCollapsed || mobile) && "New Brief"}
             </button>
         </div>
+
+        {/* Onboarding Checklist */}
+        {!onboardingState.completedAt && (
+            <OnboardingChecklist
+                onboardingState={onboardingState}
+                onOpenStep={onOpenOnboardingStep}
+                isCollapsed={isCollapsed && !mobile}
+            />
+        )}
 
         {/* History List */}
         <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 px-2">

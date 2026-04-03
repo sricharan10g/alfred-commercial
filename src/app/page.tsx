@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { AgentType, Idea, Draft, Session, WritingStyle, CustomStyle, Guardrails, ResearchProfile, ResearchTimeRange, FormatDefinition, WritingFormat, AIProvider } from '@/types';
+import { AgentType, Idea, Draft, Session, WritingStyle, CustomStyle, Guardrails, ResearchProfile, ResearchTimeRange, FormatDefinition, WritingFormat, AIProvider, OnboardingState } from '@/types';
 import * as geminiService from '@/services/aiClient';
 import SettingsModal from '@/components/SettingsModal';
 import StyleUploadModal from '@/components/StyleUploadModal';
 import GuardrailsModal from '@/components/GuardrailsModal';
 import StyleLibraryModal from '@/components/StyleLibraryModal';
 import Sidebar from '@/components/Sidebar';
+import OnboardingStepModal from '@/components/OnboardingStepModal';
+import OnboardingCompletionModal from '@/components/OnboardingCompletionModal';
 import BriefView from '@/components/views/BriefView';
 import IdeationView from '@/components/views/IdeationView';
 import DraftingView from '@/components/views/DraftingView';
@@ -87,6 +89,14 @@ function Dashboard() {
     // Usage tracking + Paywall
     const [userUsage, setUserUsage] = useState<{ plan: string; monthCount: number; monthlyLimit: number; remaining: number } | null>(null);
     const [paywallInfo, setPaywallInfo] = useState<{ reason: 'monthly_limit' | 'feature_gated'; format?: string } | null>(null);
+
+    // Onboarding
+    const [onboardingState, setOnboardingState] = useLocalStorage<OnboardingState>('alfred_onboarding', {
+        steps: { formats: false, audience: false, tone: false, samples: false, pillars: false },
+        profile: {},
+    });
+    const [onboardingStep, setOnboardingStep] = useState<keyof OnboardingState['steps'] | null>(null);
+    const [showCompletionReward, setShowCompletionReward] = useState(false);
 
     // Calculate Global Loading State for Progress Bar
     const isGlobalLoading = useMemo(() => {
@@ -364,6 +374,29 @@ function Dashboard() {
             step: 'BRIEF'
         });
         showToast(`Style "${style.name}" saved`, "success");
+    };
+
+    // Onboarding — complete a step and check if all are done
+    const handleOnboardingStepComplete = (
+        step: keyof OnboardingState['steps'],
+        data: Partial<OnboardingState['profile']>
+    ) => {
+        setOnboardingState(prev => {
+            const updatedSteps = { ...prev.steps, [step]: true };
+            const allDone = Object.values(updatedSteps).every(Boolean);
+            return {
+                ...prev,
+                steps: updatedSteps,
+                profile: { ...prev.profile, ...data },
+                ...(allDone && !prev.completedAt ? { completedAt: new Date().toISOString() } : {}),
+            };
+        });
+        setOnboardingStep(null);
+        // Check if this was the last step
+        const updatedSteps = { ...onboardingState.steps, [step]: true };
+        if (Object.values(updatedSteps).every(Boolean) && !onboardingState.completedAt) {
+            setShowCompletionReward(true);
+        }
     };
 
     // Select Format from Library
@@ -851,6 +884,7 @@ function Dashboard() {
                         'alfred_guardrails',
                         'alfred_researchProfiles',
                         'alfred_provider',
+                        'alfred_onboarding',
                     ];
                     userKeys.forEach(k => localStorage.removeItem(k));
                     showToast('Signed out.', 'info');
@@ -858,6 +892,8 @@ function Dashboard() {
                 }}
                 theme={theme}
                 onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                onboardingState={onboardingState}
+                onOpenOnboardingStep={(step) => setOnboardingStep(step)}
             />
 
             {/* Main Content */}
@@ -992,6 +1028,31 @@ function Dashboard() {
                 userEmail={user?.email ?? ''}
                 userName={user?.name}
             />
+
+            {/* Onboarding step modal */}
+            <OnboardingStepModal
+                step={onboardingStep}
+                currentProfile={onboardingState.profile}
+                onClose={() => setOnboardingStep(null)}
+                onComplete={handleOnboardingStepComplete}
+                onStyleCreated={(style) => {
+                    handleStyleSave(style);
+                }}
+            />
+
+            {/* Completion reward */}
+            {showCompletionReward && (
+                <OnboardingCompletionModal
+                    profile={onboardingState.profile}
+                    userName={user?.name}
+                    onStartWriting={(prefill) => {
+                        setShowCompletionReward(false);
+                        if (prefill) {
+                            updateActiveSession({ brief: prefill, step: 'BRIEF' });
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 }

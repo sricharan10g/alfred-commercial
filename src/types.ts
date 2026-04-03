@@ -116,3 +116,25 @@ export interface CsvRow {
   content: string;
   likes: number;
 }
+
+// ── Onboarding ──────────────────────────────────────────────────────────────
+
+export interface OnboardingProfile {
+  formats: string[];      // What they write: ['Tweet', 'Thread', ...]
+  audience: string;       // Who they write for
+  tone: string;           // Writing voice/tone
+  pillars: string[];      // Content pillars (up to 3 topics)
+  samplesStyleId?: string; // ID of the CustomStyle created from their samples
+}
+
+export interface OnboardingState {
+  steps: {
+    formats: boolean;
+    audience: boolean;
+    tone: boolean;
+    samples: boolean;
+    pillars: boolean;
+  };
+  profile: Partial<OnboardingProfile>;
+  completedAt?: string; // ISO string — set when all 5 steps are done
+}
