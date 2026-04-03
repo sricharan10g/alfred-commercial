@@ -13,6 +13,13 @@ const GoogleIcon = () => (
     </svg>
 );
 
+// ⌘ Command Key icon SVG — matches the attached image
+const CommandKeyIcon = () => (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+    </svg>
+);
+
 type Mode = 'login' | 'signup' | 'forgot' | 'forgot-sent';
 
 // Curved loop band configs
@@ -117,10 +124,10 @@ const AuthView: React.FC = () => {
         setName('');
     };
 
-    // Shared underline input classes
-    const inputClass = "w-full bg-transparent border-0 border-b-[1.5px] border-zinc-300 dark:border-zinc-600 rounded-none px-0 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-black dark:focus:border-white transition-colors duration-300";
+    // Dark glass input — underline only, white text
+    const inputClass = "w-full bg-transparent border-0 border-b-[1.5px] border-white/20 rounded-none px-0 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/60 transition-colors duration-300";
 
-    const labelClass = "text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider";
+    const labelClass = "text-[11px] font-semibold text-zinc-400 uppercase tracking-wider";
 
     // ── Render the inner content based on mode ───────────────────────────────
     const renderContent = () => {
@@ -132,38 +139,38 @@ const AuthView: React.FC = () => {
                 <div key="forgot-sent" className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in duration-500 ease-out">
                     <div className="text-center space-y-2">
                         <div className="flex justify-center mb-4">
-                            <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
-                                <Command size={24} />
+                            <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-black shadow-2xl">
+                                <CommandKeyIcon />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                        <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                             Check your inbox
                         </h1>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)] space-y-6">
+                    <div className="bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)] space-y-6">
                         <div className="flex flex-col items-center gap-3 py-2">
-                            <div className="h-14 w-14 rounded-2xl bg-white/40 dark:bg-white/[0.08] backdrop-blur-sm border border-white/30 dark:border-white/[0.1] flex items-center justify-center">
-                                <Mail size={28} className="text-zinc-600 dark:text-zinc-300" />
+                            <div className="h-14 w-14 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center">
+                                <Mail size={28} className="text-zinc-300" />
                             </div>
-                            <p className="text-sm text-center text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                            <p className="text-sm text-center text-zinc-300 leading-relaxed">
                                 We sent you a reset link. Click it to set a new password.
                                 <br />
-                                <span className="text-xs text-zinc-500 dark:text-zinc-400">Expires in 1 hour.</span>
+                                <span className="text-xs text-zinc-500">Expires in 1 hour.</span>
                             </p>
                         </div>
 
-                        <div className="pt-4 border-t border-zinc-200/40 dark:border-white/[0.1] text-center">
+                        <div className="pt-4 border-t border-white/[0.1] text-center">
                             <button
                                 onClick={switchToLogin}
-                                className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors duration-200"
+                                className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"
                             >
                                 Back to sign in
                             </button>
                         </div>
                     </div>
 
-                    <p className="text-xs text-center text-zinc-500 dark:text-zinc-400">
+                    <p className="text-xs text-center text-zinc-500">
                         Can&apos;t find the email? Check your spam folder.
                     </p>
                 </div>
@@ -176,16 +183,16 @@ const AuthView: React.FC = () => {
                 <div key="forgot" className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in duration-500 ease-out">
                     <div className="text-center space-y-2">
                         <div className="flex justify-center mb-4">
-                            <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
-                                <Command size={24} />
+                            <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-black shadow-2xl">
+                                <CommandKeyIcon />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                        <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                             Reset your password
                         </h1>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
+                    <div className="bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-1.5">
                                 <label className={labelClass}>Email</label>
@@ -200,7 +207,7 @@ const AuthView: React.FC = () => {
                             </div>
 
                             {error && (
-                                <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 bg-red-500/10 backdrop-blur-sm p-3 rounded-xl border border-red-500/20">
+                                <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/10 backdrop-blur-sm p-3 rounded-xl border border-red-500/20">
                                     <AlertCircle size={14} className="shrink-0" />
                                     {error}
                                 </div>
@@ -209,7 +216,7 @@ const AuthView: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-black/85 dark:bg-white/90 text-white dark:text-black font-semibold py-2.5 rounded-xl hover:bg-black dark:hover:bg-white transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg"
+                                className="w-full bg-white text-black font-semibold py-2.5 rounded-xl hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg"
                             >
                                 {isLoading ? <Loader2 size={18} className="animate-spin" /> : (
                                     <>Send reset link <ArrowRight size={16} /></>
@@ -217,10 +224,10 @@ const AuthView: React.FC = () => {
                             </button>
                         </form>
 
-                        <div className="mt-6 pt-6 border-t border-zinc-200/40 dark:border-white/[0.1] text-center">
+                        <div className="mt-6 pt-6 border-t border-white/[0.1] text-center">
                             <button
                                 onClick={switchToLogin}
-                                className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors duration-300"
+                                className="text-sm text-zinc-400 hover:text-white transition-colors duration-300"
                             >
                                 Back to sign in
                             </button>
@@ -236,22 +243,22 @@ const AuthView: React.FC = () => {
                 {/* Logo + heading */}
                 <div className="text-center space-y-2">
                     <div className="flex justify-center mb-4">
-                        <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
-                            <Command size={24} />
+                        <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center text-black shadow-2xl">
+                            <CommandKeyIcon />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                    <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                         {isLogin ? 'Alfred, by PickAndPartner' : 'Create account'}
                     </h1>
                 </div>
 
-                {/* Glass card */}
-                <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
+                {/* Dark glass card */}
+                <div className="bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
                     {/* Google OAuth button */}
                     <button
                         type="button"
                         onClick={loginWithGoogle}
-                        className="w-full flex items-center justify-center gap-3 bg-white/60 dark:bg-white/[0.1] border border-zinc-200/60 dark:border-white/[0.15] hover:bg-white/80 dark:hover:bg-white/[0.16] text-zinc-800 dark:text-zinc-100 font-medium py-2.5 rounded-xl transition-all duration-300 mb-5 backdrop-blur-sm"
+                        className="w-full flex items-center justify-center gap-3 bg-white/[0.1] border border-white/[0.15] hover:bg-white/[0.18] text-white font-medium py-2.5 rounded-xl transition-all duration-300 mb-5 backdrop-blur-sm"
                     >
                         <GoogleIcon />
                         Continue with Google
@@ -259,9 +266,9 @@ const AuthView: React.FC = () => {
 
                     {/* Divider */}
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="flex-1 h-px bg-zinc-300/50 dark:bg-white/15" />
-                        <span className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium uppercase tracking-wider">or</span>
-                        <div className="flex-1 h-px bg-zinc-300/50 dark:bg-white/15" />
+                        <div className="flex-1 h-px bg-white/[0.12]" />
+                        <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">or</span>
+                        <div className="flex-1 h-px bg-white/[0.12]" />
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -298,7 +305,7 @@ const AuthView: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => { setMode('forgot'); setError(''); }}
-                                        className="text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors duration-200"
+                                        className="text-[11px] text-zinc-500 hover:text-white transition-colors duration-200"
                                     >
                                         Forgot password?
                                     </button>
@@ -315,7 +322,7 @@ const AuthView: React.FC = () => {
                         </div>
 
                         {error && (
-                            <div className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 bg-red-500/10 backdrop-blur-sm p-3 rounded-xl border border-red-500/20 animate-in shake duration-500">
+                            <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/10 backdrop-blur-sm p-3 rounded-xl border border-red-500/20 animate-in shake duration-500">
                                 <AlertCircle size={14} className="shrink-0" />
                                 {error}
                             </div>
@@ -324,9 +331,9 @@ const AuthView: React.FC = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-black/85 dark:bg-white/90 text-white dark:text-black font-semibold py-2.5 rounded-xl hover:bg-black dark:hover:bg-white transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg"
+                            className="w-full bg-white text-black font-semibold py-2.5 rounded-xl hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 mt-2 shadow-lg"
                         >
-                            {isLoading ? <Loader2 size={18} className="animate-spin" /> : (
+                            {isLoading ? <Loader2 size={18} className="animate-spin text-black" /> : (
                                 <>
                                     {isLogin ? 'Sign In' : 'Create Account'} <ArrowRight size={16} />
                                 </>
@@ -334,10 +341,10 @@ const AuthView: React.FC = () => {
                         </button>
                     </form>
 
-                    <div className="mt-6 pt-6 border-t border-zinc-200/40 dark:border-white/[0.1] text-center">
+                    <div className="mt-6 pt-6 border-t border-white/[0.1] text-center">
                         <button
                             onClick={isLogin ? switchToSignup : switchToLogin}
-                            className="text-sm text-zinc-600 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors duration-300"
+                            className="text-sm text-zinc-400 hover:text-white transition-colors duration-300"
                         >
                             {isLogin ? "New here? Sign up" : "Already have one? Sign in"}
                         </button>
@@ -349,7 +356,7 @@ const AuthView: React.FC = () => {
 
     // ── Single stable wrapper — background never re-mounts ───────────────────
     return (
-        <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+        <div className="h-full w-full flex items-center justify-center text-white overflow-hidden relative">
             {/* Galaxy background — mounted once, never re-renders */}
             <div className="absolute inset-0 z-0">
                 <Galaxy
@@ -393,13 +400,11 @@ const AuthView: React.FC = () => {
             ))}
             <style>{`
                 .curved-loop-band {
-                    fill: currentColor;
+                    fill: rgba(255,255,255,0.9);
                     font-weight: 700;
                     text-transform: uppercase;
                     font-size: 2rem;
                 }
-                .dark .curved-loop-band { color: rgba(255,255,255,0.9); }
-                .curved-loop-band { color: rgba(0,0,0,0.85); }
             `}</style>
 
             {/* Content — only this part swaps on mode change */}

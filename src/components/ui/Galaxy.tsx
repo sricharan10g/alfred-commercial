@@ -116,10 +116,10 @@ export default function Galaxy({
         program.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;
       }
 
-      const lerpFactor = 0.05;
+      const lerpFactor = 0.15;
       smoothMousePos.current.x += (targetMousePos.current.x - smoothMousePos.current.x) * lerpFactor;
       smoothMousePos.current.y += (targetMousePos.current.y - smoothMousePos.current.y) * lerpFactor;
-      smoothMouseActive.current += (targetMouseActive.current - smoothMouseActive.current) * lerpFactor;
+      smoothMouseActive.current += (targetMouseActive.current - smoothMouseActive.current) * 0.12;
 
       program.uniforms.uMouse.value[0] = smoothMousePos.current.x;
       program.uniforms.uMouse.value[1] = smoothMousePos.current.y;
