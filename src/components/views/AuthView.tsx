@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Loader2, Command, ArrowRight, AlertCircle, Mail } from 'lucide-react';
-import VantaClouds from '../ui/VantaClouds';
+import Galaxy from '../ui/Galaxy';
 import CurvedLoop from '../ui/CurvedLoop';
 
 const GoogleIcon = () => (
@@ -15,7 +15,7 @@ const GoogleIcon = () => (
 
 type Mode = 'login' | 'signup' | 'forgot' | 'forgot-sent';
 
-// Curved loop band configs – each band is positioned absolutely around the card
+// Curved loop band configs
 const LOOP_BANDS = [
     {
         text: "Blank Page? Gone. \u2726 Writer's Block? Dead. \u2726 Bad Tweets? Never Again. \u2726 ",
@@ -117,76 +117,37 @@ const AuthView: React.FC = () => {
         setName('');
     };
 
-    // Shared underline input classes — clean bottom-line only, no box
+    // Shared underline input classes
     const inputClass = "w-full bg-transparent border-0 border-b-[1.5px] border-zinc-300 dark:border-zinc-600 rounded-none px-0 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-black dark:focus:border-white transition-colors duration-300";
 
-    // Shared label
     const labelClass = "text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider";
 
-    // Curved loop bands background (shared across all screens)
-    const LoopBackground = () => (
-        <>
-            {LOOP_BANDS.map((band, i) => (
-                <div
-                    key={i}
-                    className="absolute pointer-events-auto z-[1]"
-                    style={{
-                        ...band.position,
-                        transform: `rotate(${band.rotate})`,
-                        opacity: band.opacity,
-                    }}
-                >
-                    <CurvedLoop
-                        marqueeText={band.text}
-                        speed={band.speed}
-                        curveAmount={band.curveAmount}
-                        direction={band.direction}
-                        interactive={true}
-                        className="curved-loop-band"
-                        style={{ fontSize: band.fontSize }}
-                    />
-                </div>
-            ))}
-            {/* SVG style for fill color — dark/light aware */}
-            <style>{`
-                .curved-loop-band {
-                    fill: currentColor;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    font-size: 2rem;
-                }
-                .dark .curved-loop-band { color: rgba(255,255,255,0.9); }
-                .curved-loop-band { color: rgba(0,0,0,0.85); }
-            `}</style>
-        </>
-    );
+    // ── Render the inner content based on mode ───────────────────────────────
+    const renderContent = () => {
+        const isLogin = mode === 'login';
 
-    // ── Forgot-sent confirmation screen ──────────────────────────────────────
-    if (mode === 'forgot-sent') {
-        return (
-            <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
-                {/* Vanta background */}
-                <div className="absolute inset-0 z-0"><VantaClouds /></div>
-                <LoopBackground />
-
-                <div className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in slide-in-from-bottom-8 zoom-in-95 duration-1000 ease-out">
+        // Forgot-sent confirmation
+        if (mode === 'forgot-sent') {
+            return (
+                <div key="forgot-sent" className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in duration-500 ease-out">
                     <div className="text-center space-y-2">
                         <div className="flex justify-center mb-4">
-                            <div className="h-12 w-12 bg-black/80 dark:bg-white/90 rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl backdrop-blur-sm">
+                            <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
                                 <Command size={24} />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">Check your inbox</h1>
-                        <p className="text-sm text-zinc-700 dark:text-zinc-300">We sent you a reset link.</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                            Check your inbox
+                        </h1>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.5)] space-y-6">
+                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)] space-y-6">
                         <div className="flex flex-col items-center gap-3 py-2">
                             <div className="h-14 w-14 rounded-2xl bg-white/40 dark:bg-white/[0.08] backdrop-blur-sm border border-white/30 dark:border-white/[0.1] flex items-center justify-center">
-                                <Mail size={28} className="text-zinc-500 dark:text-zinc-400" />
+                                <Mail size={28} className="text-zinc-600 dark:text-zinc-300" />
                             </div>
                             <p className="text-sm text-center text-zinc-700 dark:text-zinc-300 leading-relaxed">
-                                Click the link to set a new password.
+                                We sent you a reset link. Click it to set a new password.
                                 <br />
                                 <span className="text-xs text-zinc-500 dark:text-zinc-400">Expires in 1 hour.</span>
                             </p>
@@ -206,29 +167,25 @@ const AuthView: React.FC = () => {
                         Can&apos;t find the email? Check your spam folder.
                     </p>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    // ── Forgot password form ──────────────────────────────────────────────────
-    if (mode === 'forgot') {
-        return (
-            <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
-                <div className="absolute inset-0 z-0"><VantaClouds /></div>
-                <LoopBackground />
-
-                <div className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in slide-in-from-bottom-8 zoom-in-95 duration-1000 ease-out">
+        // Forgot password form
+        if (mode === 'forgot') {
+            return (
+                <div key="forgot" className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in duration-500 ease-out">
                     <div className="text-center space-y-2">
                         <div className="flex justify-center mb-4">
-                            <div className="h-12 w-12 bg-black/80 dark:bg-white/90 rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl backdrop-blur-sm">
+                            <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
                                 <Command size={24} />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">Reset your password</h1>
-                        <p className="text-sm text-zinc-700 dark:text-zinc-300">We&apos;ll send a reset link to your email.</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                            Reset your password
+                        </h1>
                     </div>
 
-                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.15)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.5)]">
+                    <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-1.5">
                                 <label className={labelClass}>Email</label>
@@ -270,43 +227,26 @@ const AuthView: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    // ── Login / Signup form ───────────────────────────────────────────────────
-    const isLogin = mode === 'login';
-
-    return (
-        <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
-            {/* Vanta clouds fullscreen background */}
-            <div className="absolute inset-0 z-0">
-                <VantaClouds />
-            </div>
-
-            {/* Curved loop bands — behind the card but above Vanta */}
-            <LoopBackground />
-
-            {/* Login card — above everything */}
-            <div className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in slide-in-from-bottom-8 zoom-in-95 duration-1000 ease-out">
-
+        // Login / Signup form
+        return (
+            <div key={isLogin ? 'login' : 'signup'} className="w-full max-w-md space-y-6 relative z-10 px-4 animate-in fade-in duration-500 ease-out">
                 {/* Logo + heading */}
                 <div className="text-center space-y-2">
                     <div className="flex justify-center mb-4">
-                        <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl animate-in zoom-in duration-1000 delay-200 fill-mode-backwards">
+                        <div className="h-12 w-12 bg-black/90 dark:bg-white rounded-2xl flex items-center justify-center text-white dark:text-black shadow-2xl">
                             <Command size={24} />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-backwards text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
-                        {isLogin ? 'there you are' : 'Create account'}
+                    <h1 className="text-2xl font-bold tracking-tight text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                        {isLogin ? 'Alfred, by PickAndPartner' : 'Create account'}
                     </h1>
-                    <p className="text-sm text-zinc-700 dark:text-zinc-300 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-400 fill-mode-backwards drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_1px_4px_rgba(255,255,255,0.1)]">
-                        {isLogin ? 'pick up where you left off.' : 'Your AI writing assistant, ready in seconds.'}
-                    </p>
                 </div>
 
                 {/* Glass card */}
-                <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-500 fill-mode-backwards">
+                <div className="bg-white/50 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/50 dark:border-white/[0.12] rounded-3xl p-8 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.6)]">
                     {/* Google OAuth button */}
                     <button
                         type="button"
@@ -326,7 +266,7 @@ const AuthView: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {!isLogin && (
-                            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-500">
+                            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <label className={labelClass}>Name</label>
                                 <input
                                     type="text"
@@ -404,6 +344,64 @@ const AuthView: React.FC = () => {
                     </div>
                 </div>
             </div>
+        );
+    };
+
+    // ── Single stable wrapper — background never re-mounts ───────────────────
+    return (
+        <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+            {/* Galaxy background — mounted once, never re-renders */}
+            <div className="absolute inset-0 z-0" style={{ pointerEvents: 'none' }}>
+                <Galaxy
+                    speed={0.3}
+                    density={1.2}
+                    hueShift={200}
+                    rotationSpeed={0.03}
+                    starSpeed={0.4}
+                    glowIntensity={0.4}
+                    twinkleIntensity={0.4}
+                    saturation={0.2}
+                    mouseRepulsion={true}
+                    repulsionStrength={1.5}
+                    transparent={false}
+                />
+            </div>
+
+            {/* Curved loop bands — stable, behind card */}
+            {LOOP_BANDS.map((band, i) => (
+                <div
+                    key={i}
+                    className="absolute pointer-events-auto z-[1]"
+                    style={{
+                        ...band.position,
+                        transform: `rotate(${band.rotate})`,
+                        opacity: band.opacity,
+                    }}
+                >
+                    <CurvedLoop
+                        marqueeText={band.text}
+                        speed={band.speed}
+                        curveAmount={band.curveAmount}
+                        direction={band.direction}
+                        interactive={true}
+                        className="curved-loop-band"
+                        style={{ fontSize: band.fontSize }}
+                    />
+                </div>
+            ))}
+            <style>{`
+                .curved-loop-band {
+                    fill: currentColor;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    font-size: 2rem;
+                }
+                .dark .curved-loop-band { color: rgba(255,255,255,0.9); }
+                .curved-loop-band { color: rgba(0,0,0,0.85); }
+            `}</style>
+
+            {/* Content — only this part swaps on mode change */}
+            {renderContent()}
         </div>
     );
 };
