@@ -32,10 +32,10 @@ interface Props {
   onCreateStyle?: () => void;
 }
 
-const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string }[] = [
+const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string; comingSoon?: boolean }[] = [
     { id: 'gemini', name: 'Gemini', description: 'Fast', model: 'gemini-2.5-flash' },
-    { id: 'claude', name: 'Claude', description: 'Creative', model: 'claude-sonnet-4-6' },
-    { id: 'openai', name: 'GPT', description: 'Analysis', model: 'gpt-4.1' },
+    { id: 'claude', name: 'Claude', description: 'Creative', model: 'claude-sonnet-4-6', comingSoon: true },
+    { id: 'openai', name: 'GPT', description: 'Analysis', model: 'gpt-4.1', comingSoon: true },
 ];
 
 const SettingsModal: React.FC<Props> = ({
@@ -254,26 +254,41 @@ const SettingsModal: React.FC<Props> = ({
                 <p className="text-sm text-zinc-500 mb-4">Pick your writer</p>
                 <div className="space-y-3">
                     {AI_PROVIDERS.map(provider => (
-                        <button key={provider.id} onClick={() => onProviderChange(provider.id)}
+                        <button
+                            key={provider.id}
+                            onClick={() => !provider.comingSoon && onProviderChange(provider.id)}
+                            disabled={provider.comingSoon}
                             className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${
-                                selectedProvider === provider.id
-                                    ? 'bg-white/60 dark:bg-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/10'
-                                    : 'hover:bg-white/40 dark:hover:bg-white/5'
-                            }`}>
+                                provider.comingSoon
+                                    ? 'opacity-50 cursor-not-allowed'
+                                    : selectedProvider === provider.id
+                                        ? 'bg-white/60 dark:bg-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/10'
+                                        : 'hover:bg-white/40 dark:hover:bg-white/5'
+                            }`}
+                        >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                         <p className="text-sm font-semibold text-zinc-900 dark:text-white">{provider.name}</p>
                                         <span className="text-[10px] bg-black/5 dark:bg-white/10 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded font-mono">
                                             {provider.model}
                                         </span>
+                                        {provider.comingSoon && (
+                                            <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 px-1.5 py-0.5 rounded-full tracking-wide">
+                                                Coming Soon
+                                            </span>
+                                        )}
                                     </div>
                                     <p className="text-xs text-zinc-500 mt-1">{provider.description}</p>
                                 </div>
-                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                    selectedProvider === provider.id ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100' : 'border-zinc-300 dark:border-zinc-600'
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
+                                    !provider.comingSoon && selectedProvider === provider.id
+                                        ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100'
+                                        : 'border-zinc-300 dark:border-zinc-600'
                                 }`}>
-                                    {selectedProvider === provider.id && <div className="w-2 h-2 rounded-full bg-white dark:bg-black" />}
+                                    {!provider.comingSoon && selectedProvider === provider.id && (
+                                        <div className="w-2 h-2 rounded-full bg-white dark:bg-black" />
+                                    )}
                                 </div>
                             </div>
                         </button>
