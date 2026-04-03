@@ -42,6 +42,7 @@ const Sidebar: React.FC<Props> = ({
   onOpenOnboardingStep,
 }) => {
   const activeSession = sessions.find(s => s.id === activeSessionId);
+  const showNewBrief = activeSessionStep !== 'BRIEF' || !!(activeSession?.brief);
 
   // Pinned sessions first, then the rest ordered by last accessed / created
   const sortedSessions = [...sessions].sort((a, b) => {
@@ -143,9 +144,8 @@ const Sidebar: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Action Button — hidden when already on the BRIEF (home) step */}
-        {activeSessionStep !== 'BRIEF' && (
-        <div className="p-4 shrink-0 transition-colors duration-300 ease-in-out">
+        {/* Action Button — hidden when on BRIEF with empty input, smooth transition */}
+        <div className={`shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${showNewBrief ? 'max-h-20 opacity-100 p-4' : 'max-h-0 opacity-0 p-0'}`}>
              <button
                 onClick={() => mobile ? handleMobileAction(onNewSession) : onNewSession()}
                 className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all mb-4 ${isCollapsed && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
@@ -155,7 +155,6 @@ const Sidebar: React.FC<Props> = ({
                 {(!isCollapsed || mobile) && "New Brief"}
             </button>
         </div>
-        )}
 
         {/* Onboarding Checklist */}
         {!onboardingState.completedAt && (
@@ -310,14 +309,12 @@ const Sidebar: React.FC<Props> = ({
              >
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
              </button>
-             {activeSessionStep !== 'BRIEF' && (
              <button
                 onClick={onNewSession}
-                className="p-2.5 rounded-full bg-black/80 dark:bg-white/80 backdrop-blur-md text-white dark:text-black transition-all"
+                className={`p-2.5 rounded-full bg-black/80 dark:bg-white/80 backdrop-blur-md text-white dark:text-black transition-all duration-300 ease-in-out ${showNewBrief ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'}`}
              >
                 <Plus size={18} />
              </button>
-             )}
          </div>
       </div>
     </>
