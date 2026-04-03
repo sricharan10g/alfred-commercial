@@ -289,16 +289,24 @@ function Dashboard() {
             return;
         }
         const newSession = createNewSession();
-        setSessions(prev => [newSession, ...prev]);
+        setSessions(prev => {
+            // Clean up any BRIEF-only sessions with no ideas (junk typed but never submitted)
+            const cleaned = prev.filter(s =>
+                s.pinned || s.ideas.length > 0 || s.drafts.length > 0 || s.step !== 'BRIEF'
+            );
+            return [newSession, ...cleaned];
+        });
         setActiveSessionId(newSession.id);
     };
 
     const handleSelectSession = (id: string) => {
         setActiveSessionId(id);
         setSessions(prev => {
-            // Clean up any empty briefs that aren't the one being selected
+            // Clean up briefs that never made it past the BRIEF step (no ideas generated).
+            // This removes both empty briefs and ones where the user typed junk but never submitted.
+            // Keeps: the selected session, pinned sessions, and any session that has ideas/drafts.
             const cleaned = prev.filter(s =>
-                s.id === id || s.brief !== '' || s.step !== 'BRIEF' || s.ideas.length > 0
+                s.id === id || s.pinned || s.ideas.length > 0 || s.drafts.length > 0 || s.step !== 'BRIEF'
             );
             return cleaned.map(s =>
                 s.id === id ? { ...s, lastAccessedAt: Date.now() } : s
