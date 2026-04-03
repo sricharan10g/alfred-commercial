@@ -117,8 +117,8 @@ const AuthView: React.FC = () => {
         setName('');
     };
 
-    // Shared glass input classes
-    const inputClass = "w-full bg-white/70 dark:bg-white/[0.1] border border-zinc-300/60 dark:border-white/[0.15] rounded-xl px-4 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-black/20 dark:focus:ring-white/25 focus:border-transparent backdrop-blur-sm transition-all duration-300";
+    // Shared underline input classes — clean bottom-line only, no box
+    const inputClass = "w-full bg-transparent border-0 border-b-[1.5px] border-zinc-300 dark:border-zinc-600 rounded-none px-0 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-black dark:focus:border-white transition-colors duration-300";
 
     // Shared label
     const labelClass = "text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider";
@@ -164,7 +164,7 @@ const AuthView: React.FC = () => {
     // ── Forgot-sent confirmation screen ──────────────────────────────────────
     if (mode === 'forgot-sent') {
         return (
-            <div className="h-screen w-screen flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+            <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
                 {/* Vanta background */}
                 <div className="absolute inset-0 z-0"><VantaClouds /></div>
                 <LoopBackground />
@@ -213,7 +213,7 @@ const AuthView: React.FC = () => {
     // ── Forgot password form ──────────────────────────────────────────────────
     if (mode === 'forgot') {
         return (
-            <div className="h-screen w-screen flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+            <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
                 <div className="absolute inset-0 z-0"><VantaClouds /></div>
                 <LoopBackground />
 
@@ -278,7 +278,7 @@ const AuthView: React.FC = () => {
     const isLogin = mode === 'login';
 
     return (
-        <div className="h-screen w-screen flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+        <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
             {/* Vanta clouds fullscreen background */}
             <div className="absolute inset-0 z-0">
                 <VantaClouds />
@@ -298,10 +298,10 @@ const AuthView: React.FC = () => {
                         </div>
                     </div>
                     <h1 className="text-2xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 fill-mode-backwards text-black dark:text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
-                        {isLogin ? 'Welcome back.' : 'Create account'}
+                        {isLogin ? 'there you are' : 'Create account'}
                     </h1>
                     <p className="text-sm text-zinc-700 dark:text-zinc-300 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-400 fill-mode-backwards drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_1px_4px_rgba(255,255,255,0.1)]">
-                        {isLogin ? 'Sign in to pick up where you left off.' : 'Your AI writing assistant, ready in seconds.'}
+                        {isLogin ? 'pick up where you left off.' : 'Your AI writing assistant, ready in seconds.'}
                     </p>
                 </div>
 

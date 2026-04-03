@@ -76,7 +76,7 @@ const PasswordResetView: React.FC<Props> = ({ userId, secret, onDone }) => {
                                     Password updated!
                                 </p>
                                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                    Redirecting you to sign in…
+                                    Redirecting you to sign in
                                 </p>
                             </div>
                         </div>

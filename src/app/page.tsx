@@ -115,7 +115,7 @@ function Dashboard() {
         if (sessionStorage.getItem('alfred_just_logged_in')) {
             sessionStorage.removeItem('alfred_just_logged_in');
             const firstName = user?.name?.split(' ')[0] || null;
-            showToast(firstName ? `Welcome back, ${firstName}! 👋` : 'Welcome back! 👋', 'success');
+            showToast(firstName ? `Welcome back, ${firstName}` : 'Welcome back!', 'success');
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
