@@ -351,18 +351,20 @@ const AuthView: React.FC = () => {
     return (
         <div className="h-full w-full flex items-center justify-center text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
             {/* Galaxy background — mounted once, never re-renders */}
-            <div className="absolute inset-0 z-0" style={{ pointerEvents: 'none' }}>
+            <div className="absolute inset-0 z-0">
                 <Galaxy
-                    speed={0.3}
-                    density={1.2}
-                    hueShift={200}
-                    rotationSpeed={0.03}
-                    starSpeed={0.4}
-                    glowIntensity={0.4}
-                    twinkleIntensity={0.4}
-                    saturation={0.2}
+                    speed={1}
+                    density={0.7}
+                    hueShift={140}
+                    rotationSpeed={0.1}
+                    starSpeed={0.5}
+                    glowIntensity={0.2}
+                    twinkleIntensity={0.2}
+                    saturation={0}
+                    mouseInteraction={true}
                     mouseRepulsion={true}
-                    repulsionStrength={1.5}
+                    repulsionStrength={2}
+                    autoCenterRepulsion={0}
                     transparent={false}
                 />
             </div>
