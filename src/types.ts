@@ -110,6 +110,7 @@ export interface FormatDefinition {
   name: string;
   description: string;
   instruction: string; // The formatting rule to inject
+  comingSoon?: boolean;
 }
 
 export interface CsvRow {

@@ -851,7 +851,8 @@ export const FORMAT_LIBRARY: FormatDefinition[] = [
     id: 'fmt_newsletter',
     name: 'Newsletter',
     description: 'High-value email format. Story-driven opening, deep core value, and actionable takeaways.',
-    instruction: FORMAT_INSTRUCTIONS['Newsletter']
+    instruction: FORMAT_INSTRUCTIONS['Newsletter'],
+    comingSoon: true
   },
   {
     id: 'fmt_oneliner',

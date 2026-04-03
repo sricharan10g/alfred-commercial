@@ -35,26 +35,38 @@ const StyleLibraryModal: React.FC<Props> = ({ isOpen, onClose, presets, onSelect
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 custom-scrollbar" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
             {presets.map(preset => {
                 const isSelected = currentFormat === preset.name;
+                const isComingSoon = preset.comingSoon;
                 return (
-                    <div 
-                        key={preset.id} 
-                        onClick={() => !isSelected && onSelect(preset)}
+                    <div
+                        key={preset.id}
+                        onClick={() => !isSelected && !isComingSoon && onSelect(preset)}
                         className={`
-                            border rounded-xl p-5 transition-all duration-200 flex flex-col sm:flex-row gap-4 items-start cursor-pointer group
-                            ${isSelected 
-                                ? 'bg-zinc-50 dark:bg-zinc-900 border-black dark:border-zinc-500 ring-1 ring-black dark:ring-zinc-500' 
-                                : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-sm'
+                            border rounded-xl p-5 transition-all duration-200 flex flex-col sm:flex-row gap-4 items-start group
+                            ${isComingSoon
+                                ? 'bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-100 dark:border-zinc-800/50 opacity-60 cursor-not-allowed'
+                                : isSelected
+                                    ? 'bg-zinc-50 dark:bg-zinc-900 border-black dark:border-zinc-500 ring-1 ring-black dark:ring-zinc-500 cursor-pointer'
+                                    : 'bg-white dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-sm cursor-pointer'
                             }
                         `}
                     >
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                                 <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 transition-colors duration-200">{preset.name}</h3>
+                                {isComingSoon && (
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-full">
+                                        Coming Soon
+                                    </span>
+                                )}
                             </div>
                             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed transition-colors duration-200">{preset.description}</p>
                         </div>
                         <div className="shrink-0 self-center">
-                            {isSelected ? (
+                            {isComingSoon ? (
+                                <div className="text-zinc-300 dark:text-zinc-700">
+                                    <ArrowRight size={20} />
+                                </div>
+                            ) : isSelected ? (
                                 <div className="bg-black dark:bg-white text-white dark:text-black p-2 rounded-full">
                                     <Check size={16} />
                                 </div>
