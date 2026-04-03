@@ -30,37 +30,18 @@ const DraftingView: React.FC<Props> = ({
 }) => {
   const { showToast } = useToast();
 
-  const handleExportAll = (format: 'text' | 'json') => {
+  const handleExportAll = () => {
     const drafts = activeSession.drafts;
     if (drafts.length === 0) return;
 
-    if (format === 'text') {
-      const text = drafts.map((d, i) => `--- Draft ${i + 1} ---\n\n${d.content}`).join('\n\n\n');
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${activeSession.name.replace(/[^a-z0-9]/gi, '_')}_drafts.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else {
-      const data = {
-        sessionName: activeSession.name,
-        style: activeSession.writingStyle,
-        format: activeSession.writingFormat,
-        exportedAt: new Date().toISOString(),
-        drafts: drafts.map(d => ({
-          content: d.content,
-        })),
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${activeSession.name.replace(/[^a-z0-9]/gi, '_')}_drafts.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+    const text = drafts.map((d, i) => `--- Draft ${i + 1} ---\n\n${d.content}`).join('\n\n\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${activeSession.name.replace(/[^a-z0-9]/gi, '')}_drafts.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
     showToast("Drafts exported", "success");
   };
 
@@ -164,18 +145,11 @@ const DraftingView: React.FC<Props> = ({
           {activeSession.drafts.length > 0 && (
             <div className="flex items-center gap-1 mr-2">
               <button
-                onClick={() => handleExportAll('text')}
+                onClick={handleExportAll}
                 className="flex items-center gap-1.5 text-zinc-500 hover:text-black dark:hover:text-white px-2.5 py-1.5 text-xs transition-colors border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-600"
                 title="Export as text"
               >
                 <Download size={12} /> .txt
-              </button>
-              <button
-                onClick={() => handleExportAll('json')}
-                className="flex items-center gap-1.5 text-zinc-500 hover:text-black dark:hover:text-white px-2.5 py-1.5 text-xs transition-colors border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-600"
-                title="Export as JSON"
-              >
-                <Download size={12} /> .json
               </button>
             </div>
           )}
