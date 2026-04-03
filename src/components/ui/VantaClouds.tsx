@@ -18,7 +18,7 @@ const DARK_CONFIG = {
   sunColor: 0x000000,
   sunGlareColor: 0x000000,
   sunlightColor: 0x333333,
-  speed: 1,
+  speed: 0.7,
 };
 
 const LIGHT_CONFIG = {
@@ -29,7 +29,7 @@ const LIGHT_CONFIG = {
   sunColor: 0xff9919,
   sunGlareColor: 0xff6633,
   sunlightColor: 0xff9933,
-  speed: 1,
+  speed: 0.7,
 };
 
 export default function VantaClouds() {

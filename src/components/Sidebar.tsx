@@ -152,7 +152,7 @@ const Sidebar: React.FC<Props> = ({
         {/* History List */}
         <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 px-2">
             {(!isCollapsed || mobile) && (
-                <p className="px-3 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-2 transition-colors duration-300 ease-in-out">
+                <p className={`px-3 text-[10px] font-bold ${mobile ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-400 dark:text-zinc-500'} uppercase tracking-wider mb-2 flex items-center gap-2 transition-colors duration-300 ease-in-out`}>
                     History
                 </p>
             )}
@@ -167,7 +167,7 @@ const Sidebar: React.FC<Props> = ({
                         } ${
                             activeSessionId === session.id
                             ? 'bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white font-medium'
-                            : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'
+                            : `${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-zinc-900 dark:hover:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/50`
                         }`}
                         title={(isCollapsed && !mobile) ? session.name : undefined}
                     >
@@ -213,21 +213,21 @@ const Sidebar: React.FC<Props> = ({
         >
            <button 
              onClick={() => mobile ? handleMobileAction(onOpenGuardrails) : onOpenGuardrails()}
-             className={`w-full flex items-center gap-2 py-2 text-zinc-500 hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Guardrails"
            >
              <ShieldCheck size={20} /> {(!isCollapsed || mobile) && "Boundaries"}
            </button>
            <button
              onClick={() => mobile ? handleMobileAction(onOpenSettings) : onOpenSettings()}
-             className={`w-full flex items-center gap-2 py-2 text-zinc-500 hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Settings"
            >
              <Settings size={20} /> {(!isCollapsed || mobile) && "Settings"}
            </button>
            <button
              onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
-             className={`w-full flex items-center gap-2 py-2 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Sign Out"
            >
              <LogOut size={20} /> {(!isCollapsed || mobile) && "Sign Out"}
@@ -244,7 +244,7 @@ const Sidebar: React.FC<Props> = ({
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300" onClick={() => setIsMobileOpen(false)} />
         
         {/* Drawer Content */}
-        <div className={`absolute top-0 left-0 bottom-0 w-[280px] bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-r border-white/20 dark:border-zinc-700/30 flex flex-col shadow-2xl transition-transform duration-300 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`absolute top-0 left-0 bottom-0 w-[280px] bg-white/90 dark:bg-black/70 backdrop-blur-2xl border-r border-zinc-200 dark:border-zinc-700/30 flex flex-col shadow-2xl transition-transform duration-300 ease-out will-change-transform ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <SidebarContent mobile={true} />
         </div>
       </div>
