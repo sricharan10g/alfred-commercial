@@ -395,10 +395,12 @@ const AuthView: React.FC = () => {
                 />
             </div>
 
-            {/* Edge fades for mobile — smooth blend at top/bottom like the home page */}
+            {/* Edge fades for mobile — blend Safari chrome and bezels into the dark galaxy */}
             <div className="absolute inset-0 z-[1] pointer-events-none md:hidden">
-                <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-t from-transparent to-black/60" />
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
+                <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-black via-black/70 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/70 to-transparent" />
+                <div className="absolute top-0 bottom-0 left-0 w-6 bg-gradient-to-r from-black/40 to-transparent" />
+                <div className="absolute top-0 bottom-0 right-0 w-6 bg-gradient-to-l from-black/40 to-transparent" />
             </div>
 
             {/* Curved loop bands — stable, behind card */}
