@@ -2,10 +2,34 @@ export const runtime = 'nodejs';
 
 import { NextRequest } from 'next/server';
 
-// Simple in-memory rate limiter — max 20 requests per minute per user
+// In-memory rate limiter with periodic cleanup to prevent memory leaks.
+// Max 20 requests per minute per user. Entries auto-expire.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_ENTRIES = 1000;
+
+// Periodic cleanup — runs at most once per minute
+let lastCleanup = 0;
+function cleanupRateLimitMap() {
+    const now = Date.now();
+    if (now - lastCleanup < 60_000) return;
+    lastCleanup = now;
+    for (const [key, entry] of rateLimitMap) {
+        if (now > entry.resetAt) rateLimitMap.delete(key);
+    }
+    // Hard cap: if still too large, drop oldest entries
+    if (rateLimitMap.size > RATE_LIMIT_MAX_ENTRIES) {
+        const excess = rateLimitMap.size - RATE_LIMIT_MAX_ENTRIES;
+        let deleted = 0;
+        for (const key of rateLimitMap.keys()) {
+            if (deleted >= excess) break;
+            rateLimitMap.delete(key);
+            deleted++;
+        }
+    }
+}
+
 import { z } from 'zod';
 import {
     generateIdeas,
@@ -21,12 +45,10 @@ import { createProvider } from '@/services/providers/factory';
 import { serverConfig } from '@/server/config';
 import { AIProvider } from '@/types';
 import { checkAndIncrementUsage } from '@/server/usageService';
+import { verifyJwt } from '@/server/auth';
 
-// Helper: Native JSON response with strict sanitization for Edge
 function jsonResponse(payload: unknown, status = 200) {
-    const safePayload = JSON.parse(JSON.stringify(payload ?? null));
-
-    return new globalThis.Response(JSON.stringify(safePayload), {
+    return new globalThis.Response(JSON.stringify(payload ?? null), {
         status,
         headers: {
             "content-type": "application/json; charset=utf-8",
@@ -39,105 +61,110 @@ const ProviderField = z.enum(['gemini', 'claude', 'openai']).default('gemini');
 
 const GuardrailsSchema = z
     .object({
-        dos: z.string(),
-        donts: z.string(),
+        dos: z.string().max(5_000),
+        donts: z.string().max(5_000),
     })
     .optional();
+
+// Max sizes to prevent abuse / excessive token burn
+const MAX_TEXT = 50_000;      // ~50KB text fields
+const MAX_SHORT = 5_000;      // shorter fields
+const MAX_ARRAY = 100;        // max array items
 
 const CreateStyleFromDescriptionSchema = z.object({
     feature: z.literal('createStyleFromDescription'),
     provider: ProviderField,
-    styleName: z.string(),
-    description: z.string(),
+    styleName: z.string().max(200),
+    description: z.string().max(MAX_SHORT),
     guardrails: GuardrailsSchema,
 });
 
 const CsvRowSchema = z.object({
-    content: z.string(),
+    content: z.string().max(MAX_SHORT),
     likes: z.number(),
 });
 
 const CreateStyleFromDataSchema = z.object({
     feature: z.literal('createStyleFromData'),
     provider: ProviderField,
-    styleName: z.string(),
-    data: z.array(CsvRowSchema),
-    nativeFormat: z.string(),
+    styleName: z.string().max(200),
+    data: z.array(CsvRowSchema).max(MAX_ARRAY),
+    nativeFormat: z.string().max(200),
     guardrails: GuardrailsSchema,
 });
 
 const GenerateIdeasSchema = z.object({
     feature: z.literal('generateIdeas'),
     provider: ProviderField,
-    brief: z.string(),
-    style: z.string(),
-    format: z.string(),
-    existingIdeas: z.array(z.any()).optional(),
-    customPrompts: z.record(z.string()).optional(),
+    brief: z.string().max(MAX_SHORT),
+    style: z.string().max(MAX_SHORT),
+    format: z.string().max(200),
+    existingIdeas: z.array(z.any()).max(MAX_ARRAY).optional(),
+    customPrompts: z.record(z.string().max(MAX_SHORT)).optional(),
     guardrails: GuardrailsSchema,
-    researchContext: z.array(z.any()).optional(),
-    nativeFormat: z.string().optional(),
+    researchContext: z.array(z.any()).max(MAX_ARRAY).optional(),
+    nativeFormat: z.string().max(200).optional(),
 });
 
 const GenerateDraftsSchema = z.object({
     feature: z.literal('generateDrafts'),
     provider: ProviderField,
     idea: z.any(),
-    style: z.string(),
-    format: z.string(),
-    additionalInstructions: z.string().optional(),
-    customPrompts: z.record(z.string()).optional(),
+    style: z.string().max(MAX_SHORT),
+    format: z.string().max(200),
+    additionalInstructions: z.string().max(MAX_SHORT).optional(),
+    customPrompts: z.record(z.string().max(MAX_SHORT)).optional(),
     guardrails: GuardrailsSchema,
-    researchContext: z.array(z.any()).optional(),
-    nativeFormat: z.string().optional(),
-    newsletterSubjectLine: z.string().optional(),
+    researchContext: z.array(z.any()).max(MAX_ARRAY).optional(),
+    nativeFormat: z.string().max(200).optional(),
+    newsletterSubjectLine: z.string().max(500).optional(),
 });
 
 const RefineDraftSchema = z.object({
     feature: z.literal('refineDraft'),
     provider: ProviderField,
-    currentContent: z.string(),
-    feedback: z.string(),
-    style: z.string(),
-    format: z.string(),
-    customPrompts: z.record(z.string()).optional(),
+    currentContent: z.string().max(MAX_TEXT),
+    feedback: z.string().max(MAX_SHORT),
+    style: z.string().max(MAX_SHORT),
+    format: z.string().max(200),
+    customPrompts: z.record(z.string().max(MAX_SHORT)).optional(),
     guardrails: GuardrailsSchema,
-    nativeFormat: z.string().optional(),
+    nativeFormat: z.string().max(200).optional(),
 });
 
 const RefineDraftSelectionSchema = z.object({
     feature: z.literal('refineDraftSelection'),
     provider: ProviderField,
-    fullText: z.string(),
-    selectedText: z.string(),
-    feedback: z.string(),
-    style: z.string(),
-    format: z.string(),
-    customPrompts: z.record(z.string()).optional(),
+    fullText: z.string().max(MAX_TEXT),
+    selectedText: z.string().max(MAX_TEXT),
+    feedback: z.string().max(MAX_SHORT),
+    style: z.string().max(MAX_SHORT),
+    format: z.string().max(200),
+    customPrompts: z.record(z.string().max(MAX_SHORT)).optional(),
     guardrails: GuardrailsSchema,
-    nativeFormat: z.string().optional(),
+    nativeFormat: z.string().max(200).optional(),
 });
 
 const PerformResearchSchema = z.object({
     feature: z.literal('performResearch'),
     // Research always uses Gemini — no provider field needed
-    topics: z.string(),
-    audience: z.string(),
+    topics: z.string().max(MAX_SHORT),
+    audience: z.string().max(MAX_SHORT),
     timeRange: z.enum(['24h', '3d', '7d', '30d']),
-    excludeHeadlines: z.array(z.string()).default([]),
-    specificDomains: z.array(z.string()).default([]),
+    excludeHeadlines: z.array(z.string().max(500)).max(MAX_ARRAY).default([]),
+    specificDomains: z.array(z.string().max(200)).max(20).default([]),
 });
 
 const GenerateSubjectLinesSchema = z.object({
     feature: z.literal('generateSubjectLines'),
     provider: ProviderField,
-    brief: z.string(),
-    style: z.string(),
-    count: z.number().default(5),
-    customPrompts: z.record(z.string()).optional(),
+    brief: z.string().max(MAX_SHORT),
+    style: z.string().max(MAX_SHORT),
+    count: z.number().max(20).default(5),
+    customPrompts: z.record(z.string().max(MAX_SHORT)).optional(),
     guardrails: GuardrailsSchema,
-    researchContext: z.array(z.any()).optional(),
-    baseSubjectLine: z.string().optional(),
+    researchContext: z.array(z.any()).max(MAX_ARRAY).optional(),
+    baseSubjectLine: z.string().max(500).optional(),
 });
 
 const RequestBodySchema = z.discriminatedUnion('feature', [
@@ -172,43 +199,25 @@ export async function POST(req: NextRequest) {
     // userId is lifted out so it's accessible in the main processing block
     let userId = 'unknown';
 
-    // Auth guard — verify Appwrite JWT sent by the client
-    try {
-        const jwt = req.headers.get('x-appwrite-user-jwt') || '';
-        const appwriteEndpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
-        const appwriteProjectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '';
+    // Auth guard — verify Appwrite JWT (cached to avoid round-trips)
+    const authenticatedUserId = await verifyJwt(req);
+    if (!authenticatedUserId) {
+        return jsonResponse({ error: 'Unauthorized. Please log in to use Alfred.' }, 401);
+    }
+    userId = authenticatedUserId;
 
-        if (!jwt) {
-            return jsonResponse({ error: 'Unauthorized. Please log in to use Alfred.' }, 401);
+    // Rate limiting — 20 requests per minute per user
+    cleanupRateLimitMap();
+    const now = Date.now();
+    const userLimit = rateLimitMap.get(userId);
+
+    if (!userLimit || now > userLimit.resetAt) {
+        rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    } else {
+        userLimit.count++;
+        if (userLimit.count > RATE_LIMIT_MAX) {
+            return jsonResponse({ error: 'Too many requests. Please wait a minute and try again.' }, 429);
         }
-
-        const authCheck = await fetch(`${appwriteEndpoint}/account`, {
-            headers: {
-                'X-Appwrite-Project': appwriteProjectId,
-                'X-Appwrite-JWT': jwt,
-            },
-        });
-
-        if (!authCheck.ok) {
-            return jsonResponse({ error: 'Unauthorized. Please log in to use Alfred.' }, 401);
-        }
-
-        // Rate limiting — 20 requests per minute per user
-        const authData = await authCheck.json();
-        userId = authData.$id || 'unknown';
-        const now = Date.now();
-        const userLimit = rateLimitMap.get(userId);
-
-        if (!userLimit || now > userLimit.resetAt) {
-            rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-        } else {
-            userLimit.count++;
-            if (userLimit.count > RATE_LIMIT_MAX) {
-                return jsonResponse({ error: 'Too many requests. Please wait a minute and try again.' }, 429);
-            }
-        }
-    } catch {
-        return jsonResponse({ error: 'Authentication check failed. Please log in.' }, 401);
     }
 
     let featureMethod = 'unknown';

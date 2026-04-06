@@ -2,12 +2,22 @@ export const runtime = 'nodejs';
 
 import { NextRequest } from 'next/server';
 import DodoPayments from 'dodopayments';
+import { verifyJwt } from '@/server/auth';
 
 export async function POST(req: NextRequest) {
     try {
-        const { plan, userId, email, name } = await req.json();
+        // Auth guard — verify the caller is who they claim to be
+        const authenticatedUserId = await verifyJwt(req);
+        if (!authenticatedUserId) {
+            return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        }
 
-        if (!plan || !userId || !email) {
+        const { plan, email, name } = await req.json();
+
+        // Use the authenticated userId, not a client-supplied one
+        const userId = authenticatedUserId;
+
+        if (!plan || !email) {
             return Response.json({ error: 'Missing required fields' }, { status: 400 });
         }
 

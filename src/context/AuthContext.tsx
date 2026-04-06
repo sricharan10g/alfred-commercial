@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { account, ID } from '../services/appwrite';
 import { Models, OAuthProvider } from 'appwrite';
 
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
-    const checkUserStatus = async () => {
+    const checkUserStatus = useCallback(async () => {
         try {
             const currentAccount = await account.get();
             setUser(currentAccount);
@@ -57,66 +57,62 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const login = async (email: string, password: string) => {
+    const login = useCallback(async (email: string, password: string) => {
         await account.createEmailPasswordSession(email, password);
         await checkUserStatus();
-        // Signal Dashboard to show a welcome toast on its first render
         sessionStorage.setItem('alfred_just_logged_in', '1');
-    };
+    }, [checkUserStatus]);
 
-    const loginWithGoogle = () => {
+    const loginWithGoogle = useCallback(() => {
         const origin = window.location.origin;
         account.createOAuth2Token(
             OAuthProvider.Google,
-            origin + '/?type=oauth',  // success — type=oauth lets us distinguish from email verify
-            origin + '/'              // failure — app will show auth screen
+            origin + '/?type=oauth',
+            origin + '/'
         );
-    };
+    }, []);
 
-    const register = async (email: string, password: string, name: string) => {
+    const register = useCallback(async (email: string, password: string, name: string) => {
         await account.create(ID.unique(), email, password, name);
         await login(email, password);
-        // Send verification email after successful signup + login
-        // Use window.location.origin so it works on both localhost and the live URL
         try {
             await account.createVerification(window.location.origin);
         } catch {
-            // Non-fatal — user can resend from the verification screen
             console.warn('[auth] Could not send verification email on signup');
         }
-    };
+    }, [login]);
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         await account.deleteSession('current');
         setUser(null);
-    };
+    }, []);
 
-    // Send (or resend) a verification email to the current user
-    const sendVerification = async () => {
+    const sendVerification = useCallback(async () => {
         await account.createVerification(window.location.origin);
-    };
+    }, []);
 
-    // Confirm verification using the userId + secret from the email link
-    const verifyEmail = async (userId: string, secret: string) => {
+    const verifyEmail = useCallback(async (userId: string, secret: string) => {
         await account.updateVerification(userId, secret);
-        // Re-fetch user so emailVerification flips to true
         await checkUserStatus();
-    };
+    }, [checkUserStatus]);
 
-    // Send a password reset email to the given address
-    const requestPasswordReset = async (email: string) => {
+    const requestPasswordReset = useCallback(async (email: string) => {
         await account.createRecovery(email, window.location.origin + '?type=recovery');
-    };
+    }, []);
 
-    // Confirm the password reset using userId + secret from the email link
-    const confirmPasswordReset = async (userId: string, secret: string, password: string) => {
+    const confirmPasswordReset = useCallback(async (userId: string, secret: string, password: string) => {
         await account.updateRecovery(userId, secret, password);
-    };
+    }, []);
+
+    const value = useMemo(() => ({
+        user, loading, login, loginWithGoogle, register, logout,
+        sendVerification, verifyEmail, requestPasswordReset, confirmPasswordReset,
+    }), [user, loading, login, loginWithGoogle, register, logout, sendVerification, verifyEmail, requestPasswordReset, confirmPasswordReset]);
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout, sendVerification, verifyEmail, requestPasswordReset, confirmPasswordReset }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

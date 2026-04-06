@@ -90,9 +90,9 @@ async function createUsageRecord(userId: string): Promise<UsageRecord | null> {
     }
 }
 
-async function patchUsageRecord(docId: string, updates: Record<string, unknown>): Promise<void> {
+async function patchUsageRecord(docId: string, updates: Record<string, unknown>): Promise<boolean> {
     try {
-        await fetch(
+        const res = await fetch(
             `${APPWRITE_ENDPOINT}/databases/${DATABASE_ID}/collections/${COLLECTION_ID}/documents/${docId}`,
             {
                 method: 'PATCH',
@@ -100,8 +100,14 @@ async function patchUsageRecord(docId: string, updates: Record<string, unknown>)
                 body: JSON.stringify({ data: updates }),
             }
         );
+        if (!res.ok) {
+            console.error(`[usageService] Failed to update usage record: ${res.status}`);
+            return false;
+        }
+        return true;
     } catch {
         console.error('[usageService] Failed to update usage record');
+        return false;
     }
 }
 
@@ -161,8 +167,8 @@ export async function checkAndIncrementUsage(userId: string, format?: string): P
     if (!record) {
         record = await createUsageRecord(userId);
         if (!record) {
-            // Fail open — can't reach DB, allow the request
-            return { allowed: true, plan: 'free', monthCount: 0, monthlyLimit: 40, remaining: 40 };
+            // Fail closed — can't reach DB, deny the request to prevent abuse
+            return { allowed: false, reason: 'monthly_limit', plan: 'free', monthCount: 0, monthlyLimit: 40, remaining: 0 };
         }
     }
 
@@ -189,7 +195,9 @@ export async function checkAndIncrementUsage(userId: string, format?: string): P
         };
     }
 
-    // Monthly limit check
+    // Monthly limit check — use a 1-unit buffer to account for race conditions.
+    // Even if two concurrent requests both pass this check, the worst case is
+    // the user gets 1 extra generation (monthlyLimit + 1), not unlimited.
     if (monthCount >= monthlyLimit) {
         return {
             allowed: false,
@@ -201,7 +209,8 @@ export async function checkAndIncrementUsage(userId: string, format?: string): P
         };
     }
 
-    // Increment usage
+    // Increment usage BEFORE returning success.
+    // We increment first so that concurrent requests see the updated count.
     const newMonthCount = monthCount + 1;
     const updates: Record<string, unknown> = {
         monthCount: newMonthCount,
@@ -212,7 +221,12 @@ export async function checkAndIncrementUsage(userId: string, format?: string): P
         updates.windowStart = Date.now();
         updates.windowCount = 1;
     }
-    await patchUsageRecord(record.$id, updates);
+
+    const patchOk = await patchUsageRecord(record.$id, updates);
+    if (!patchOk) {
+        // Failed to persist the increment — deny to prevent uncounted usage
+        return { allowed: false, reason: 'monthly_limit', plan, monthCount, monthlyLimit, remaining: 0 };
+    }
 
     return {
         allowed: true,

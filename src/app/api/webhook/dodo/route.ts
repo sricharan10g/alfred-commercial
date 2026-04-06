@@ -75,7 +75,8 @@ export async function POST(req: NextRequest) {
         }
     } catch (error) {
         console.error('[webhook/dodo] Failed to process event:', error);
-        // Return 200 anyway to prevent Dodo from retrying non-DB errors
+        // Return 500 so Dodo retries — the user paid, we must not silently drop this
+        return new Response('Processing failed', { status: 500 });
     }
 
     return new Response('OK', { status: 200 });

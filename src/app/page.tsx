@@ -1,18 +1,9 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { AgentType, Idea, Draft, Session, WritingStyle, CustomStyle, Guardrails, ResearchProfile, ResearchTimeRange, FormatDefinition, WritingFormat, AIProvider, OnboardingState } from '@/types';
 import * as geminiService from '@/services/aiClient';
-import SettingsModal from '@/components/SettingsModal';
-import StyleUploadModal from '@/components/StyleUploadModal';
-import GuardrailsModal from '@/components/GuardrailsModal';
-import StyleLibraryModal from '@/components/StyleLibraryModal';
-import Sidebar from '@/components/Sidebar';
-import OnboardingStepModal from '@/components/OnboardingStepModal';
-import OnboardingCompletionModal from '@/components/OnboardingCompletionModal';
-import BriefView from '@/components/views/BriefView';
-import IdeationView from '@/components/views/IdeationView';
-import DraftingView from '@/components/views/DraftingView';
 import { ToastProvider, useToast } from '@/components/ui/Toast';
 import ProgressBar from '@/components/ui/ProgressBar';
 import { FORMAT_LIBRARY, PAID_ONLY_FORMATS } from '@/constants';
@@ -25,8 +16,20 @@ import PasswordResetView from '@/components/views/PasswordResetView';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useThrottledCallback } from '@/hooks/useDebounce';
 import { ApiError, fetchUsage } from '@/services/aiClient';
-import PaywallModal from '@/components/PaywallModal';
-import VantaClouds from '@/components/ui/VantaClouds';
+
+// Lazy-loaded components — only downloaded after auth
+const Sidebar = dynamic(() => import('@/components/Sidebar'), { ssr: false });
+const BriefView = dynamic(() => import('@/components/views/BriefView'), { ssr: false });
+const IdeationView = dynamic(() => import('@/components/views/IdeationView'), { ssr: false });
+const DraftingView = dynamic(() => import('@/components/views/DraftingView'), { ssr: false });
+const SettingsModal = dynamic(() => import('@/components/SettingsModal'), { ssr: false });
+const StyleUploadModal = dynamic(() => import('@/components/StyleUploadModal'), { ssr: false });
+const GuardrailsModal = dynamic(() => import('@/components/GuardrailsModal'), { ssr: false });
+const StyleLibraryModal = dynamic(() => import('@/components/StyleLibraryModal'), { ssr: false });
+const OnboardingStepModal = dynamic(() => import('@/components/OnboardingStepModal'), { ssr: false });
+const OnboardingCompletionModal = dynamic(() => import('@/components/OnboardingCompletionModal'), { ssr: false });
+const PaywallModal = dynamic(() => import('@/components/PaywallModal'), { ssr: false });
+const VantaClouds = dynamic(() => import('@/components/ui/VantaClouds'), { ssr: false });
 
 // Helper to create a new empty session
 const createNewSession = (): Session => ({

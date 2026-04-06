@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Loader2, Command, ArrowRight, AlertCircle, Mail } from 'lucide-react';
 import Galaxy from '../ui/Galaxy';
-import CurvedLoop from '../ui/CurvedLoop';
 
 const GoogleIcon = () => (
     <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -21,60 +20,6 @@ const CommandKeyIcon = () => (
 );
 
 type Mode = 'login' | 'signup' | 'forgot' | 'forgot-sent';
-
-// Curved loop band configs
-const LOOP_BANDS = [
-    {
-        text: "Blank Page? Gone. \u2726 Writer's Block? Dead. \u2726 Bad Tweets? Never Again. \u2726 ",
-        speed: 1.2,
-        curveAmount: 180,
-        direction: 'left' as const,
-        position: { top: '8%', left: '-5%', right: '-5%' },
-        rotate: '-4deg',
-        opacity: 0.12,
-        fontSize: '2.2rem',
-    },
-    {
-        text: "Your Followers Won't Know \u2726 Your Engagement Will \u2726 Powered by Alfred \u2726 ",
-        speed: 0.8,
-        curveAmount: -120,
-        direction: 'right' as const,
-        position: { top: '22%', left: '-8%', right: '-8%' },
-        rotate: '2deg',
-        opacity: 0.08,
-        fontSize: '1.8rem',
-    },
-    {
-        text: "Write. Post. Grow. \u2726 Write. Post. Grow. \u2726 Write. Post. Grow. \u2726 ",
-        speed: 1.5,
-        curveAmount: 140,
-        direction: 'left' as const,
-        position: { bottom: '22%', left: '-6%', right: '-6%' },
-        rotate: '3deg',
-        opacity: 0.1,
-        fontSize: '2rem',
-    },
-    {
-        text: "Write Less \u2726 Post More \u2726 Grow Faster \u2726 Think Bigger \u2726 Alfred Gets It \u2726 ",
-        speed: 1,
-        curveAmount: -160,
-        direction: 'right' as const,
-        position: { bottom: '8%', left: '-4%', right: '-4%' },
-        rotate: '-2.5deg',
-        opacity: 0.07,
-        fontSize: '1.6rem',
-    },
-    {
-        text: "Go Viral \u2726 Own Your Niche \u2726 Build Your Audience \u2726 Tweet Smarter \u2726 ",
-        speed: 0.6,
-        curveAmount: 100,
-        direction: 'left' as const,
-        position: { top: '48%', left: '-10%', right: '-10%' },
-        rotate: '-1deg',
-        opacity: 0.06,
-        fontSize: '1.5rem',
-    },
-];
 
 const AuthView: React.FC = () => {
     const { login, loginWithGoogle, register, requestPasswordReset } = useAuth();
@@ -402,37 +347,6 @@ const AuthView: React.FC = () => {
                 <div className="absolute top-0 bottom-0 left-0 w-6 bg-gradient-to-r from-black/40 to-transparent" />
                 <div className="absolute top-0 bottom-0 right-0 w-6 bg-gradient-to-l from-black/40 to-transparent" />
             </div>
-
-            {/* Curved loop bands — stable, behind card */}
-            {LOOP_BANDS.map((band, i) => (
-                <div
-                    key={i}
-                    className="absolute pointer-events-auto z-[1]"
-                    style={{
-                        ...band.position,
-                        transform: `rotate(${band.rotate})`,
-                        opacity: band.opacity,
-                    }}
-                >
-                    <CurvedLoop
-                        marqueeText={band.text}
-                        speed={band.speed}
-                        curveAmount={band.curveAmount}
-                        direction={band.direction}
-                        interactive={true}
-                        className="curved-loop-band"
-                        style={{ fontSize: band.fontSize }}
-                    />
-                </div>
-            ))}
-            <style>{`
-                .curved-loop-band {
-                    fill: rgba(255,255,255,0.9);
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    font-size: 2rem;
-                }
-            `}</style>
 
             {/* Content — only this part swaps on mode change */}
             {renderContent()}

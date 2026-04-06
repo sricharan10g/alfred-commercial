@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export function useLocalStorage<T>(
     key: string,
@@ -19,13 +19,25 @@ export function useLocalStorage<T>(
         }
     });
 
+    // Debounced write — waits 500ms after the last change before persisting.
+    // Prevents rapid-fire localStorage writes (e.g. sessions array changing often).
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        try {
-            window.localStorage.setItem(key, JSON.stringify(storedValue));
-        } catch (e) {
-            console.warn(`Failed to save to localStorage key "${key}":`, e);
-        }
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+            try {
+                window.localStorage.setItem(key, JSON.stringify(storedValue));
+            } catch (e) {
+                console.warn(`Failed to save to localStorage key "${key}":`, e);
+            }
+        }, 500);
+
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+        };
     }, [key, storedValue]);
 
     return [storedValue, setStoredValue];

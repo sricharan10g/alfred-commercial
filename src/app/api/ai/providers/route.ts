@@ -1,29 +1,13 @@
 export const runtime = 'nodejs';
 
 import { NextRequest } from 'next/server';
+import { verifyJwt } from '@/server/auth';
 
 export async function GET(req: NextRequest) {
-    // Auth guard — same protection as /api/ai/generate
-    try {
-        const cookie = req.headers.get('cookie') || '';
-        const appwriteEndpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
-        const appwriteProjectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '';
-
-        const authCheck = await fetch(`${appwriteEndpoint}/account`, {
-            headers: {
-                'X-Appwrite-Project': appwriteProjectId,
-                'Cookie': cookie,
-            },
-        });
-
-        if (!authCheck.ok) {
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-                status: 401,
-                headers: { 'content-type': 'application/json' },
-            });
-        }
-    } catch {
-        return new Response(JSON.stringify({ error: 'Authentication failed' }), {
+    // Auth guard — verify JWT (consistent with all other routes)
+    const userId = await verifyJwt(req);
+    if (!userId) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
             headers: { 'content-type': 'application/json' },
         });

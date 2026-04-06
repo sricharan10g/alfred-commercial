@@ -108,9 +108,18 @@ export default function Galaxy({
 
     const mesh = new Mesh(gl, { geometry, program });
     let animateId: number;
+    const TARGET_FPS = 30;
+    const FRAME_INTERVAL = 1000 / TARGET_FPS;
+    let lastFrameTime = 0;
 
     function update(t: number) {
       animateId = requestAnimationFrame(update);
+
+      // Throttle to target FPS
+      const elapsed = t - lastFrameTime;
+      if (elapsed < FRAME_INTERVAL) return;
+      lastFrameTime = t - (elapsed % FRAME_INTERVAL);
+
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
         program.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;

@@ -6,8 +6,6 @@ const serverEnvSchema = z.object({
     AI_PROVIDER_KEY: z.string().min(1), // Gemini API key (required for research)
     ANTHROPIC_API_KEY: z.string().optional().transform(v => v || undefined), // Claude API key
     OPENAI_API_KEY: z.string().optional().transform(v => v || undefined), // OpenAI API key
-    STRIPE_SECRET_KEY: z.string().optional(),
-    STRIPE_WEBHOOK_SECRET: z.string().optional(),
     APPWRITE_DATABASE_ID: z.string().optional(),
     APPWRITE_USAGE_COLLECTION_ID: z.string().optional(),
 });
@@ -24,8 +22,6 @@ export function getServerConfig(): ServerConfig {
         AI_PROVIDER_KEY: process.env.AI_PROVIDER_KEY,
         ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-        STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
         APPWRITE_DATABASE_ID: process.env.APPWRITE_DATABASE_ID,
         APPWRITE_USAGE_COLLECTION_ID: process.env.APPWRITE_USAGE_COLLECTION_ID,
     };

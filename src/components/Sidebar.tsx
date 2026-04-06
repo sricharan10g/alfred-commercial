@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { Session, OnboardingState } from '../types';
 import { Command, Plus, X, ShieldCheck, Settings, PanelLeftClose, PanelLeftOpen, GripVertical, History, Menu, Sun, Moon, LogOut } from 'lucide-react';
@@ -50,11 +50,11 @@ const Sidebar: React.FC<Props> = ({
   const showNewBrief = activeSessionStep !== 'BRIEF' || hasProgress;
 
   // Pinned sessions first, then the rest ordered by last accessed / created
-  const sortedSessions = [...sessions].sort((a, b) => {
+  const sortedSessions = useMemo(() => [...sessions].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
     return (b.lastAccessedAt ?? b.createdAt) - (a.lastAccessedAt ?? a.createdAt);
-  });
+  }), [sessions]);
   const sessionName = activeSession?.name || "New Brief";
 
   const [width, setWidth] = useState(260);
