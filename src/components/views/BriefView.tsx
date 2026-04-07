@@ -849,6 +849,13 @@ const BriefView: React.FC<Props> = ({
             )}
         </div>
 
+        {/* AI disclaimer — visible when user has typed a brief */}
+        {activeSession.brief && (
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-600 text-center mt-3 animate-in fade-in duration-500">
+                This is AI and can make mistakes
+            </p>
+        )}
+
       </div>
     </div>
   );
