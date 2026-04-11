@@ -277,18 +277,19 @@ const DraftingView: React.FC<Props> = ({
 
               {/* Bottom "Generate More" Button for this Idea */}
               <div className="flex justify-center pt-2">
-                <button
-                  onClick={() => onGenerateDrafts(idea)}
-                  disabled={activeSession.isProcessing}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {activeSession.isProcessing ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
+                {activeSession.isProcessing ? (
+                  <div className="flex items-center justify-center py-2 text-zinc-500 animate-pulse text-sm">
+                    <Loader2 className="mr-2 animate-spin" size={16} /> Thinking...
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => onGenerateDrafts(idea)}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-sm hover:shadow-md"
+                  >
                     <PlusCircle size={16} />
-                  )}
-                  More variations for &ldquo;{idea.title}&rdquo;
-                </button>
+                    More variations for &ldquo;{idea.title}&rdquo;
+                  </button>
+                )}
               </div>
 
             </div>
