@@ -51,7 +51,7 @@ export class GeminiProvider implements AIProviderAdapter {
     private ai: GoogleGenAI;
     private model: string;
 
-    constructor(apiKey: string, model: string = 'gemini-2.5-flash') {
+    constructor(apiKey: string, model: string = 'gemini-3-flash-preview') {
         this.ai = new GoogleGenAI({ apiKey });
         this.model = model;
     }
@@ -66,6 +66,7 @@ export class GeminiProvider implements AIProviderAdapter {
                 systemInstruction: params.systemPrompt,
                 responseMimeType: 'application/json',
                 responseSchema: geminiSchema,
+                thinkingConfig: { thinkingBudget: -1 },
                 ...(params.temperature !== undefined && { temperature: params.temperature }),
             },
         });

@@ -33,7 +33,7 @@ interface Props {
 }
 
 const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string; comingSoon?: boolean }[] = [
-    { id: 'gemini', name: 'Gemini', description: 'Fast', model: 'gemini-2.5-flash' },
+    { id: 'gemini', name: 'Gemini', description: 'Fast', model: 'gemini-3-flash-preview' },
     { id: 'claude', name: 'Claude', description: 'Creative', model: 'claude-sonnet-4-6', comingSoon: true },
     { id: 'openai', name: 'GPT', description: 'Analysis', model: 'gpt-4.1', comingSoon: true },
 ];
