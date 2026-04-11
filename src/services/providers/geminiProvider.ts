@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 import { AIProviderAdapter, GenerateParams, GenerateResult, SearchResult } from './types';
 
 function convertJsonSchemaToGemini(schema: Record<string, unknown>): any {
@@ -66,7 +66,7 @@ export class GeminiProvider implements AIProviderAdapter {
                 systemInstruction: params.systemPrompt,
                 responseMimeType: 'application/json',
                 responseSchema: geminiSchema,
-                thinkingConfig: { thinkingLevel: 'medium' },
+                thinkingConfig: { thinkingLevel: ThinkingLevel.MEDIUM },
                 ...(params.temperature !== undefined && { temperature: params.temperature }),
             },
         });
