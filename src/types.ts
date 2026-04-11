@@ -88,6 +88,9 @@ export interface Session {
   isProcessing: boolean; // localized loading state
   isRefining?: boolean; // background refinement state
 
+  // Web Search
+  webSearchEnabled?: boolean;
+
   // Newsletter Specifics
   newsletterSubjectLines?: string[]; // Generated subject lines in Ideation
   selectedNewsletterSubjectLine?: string; // The one picked in Ideation

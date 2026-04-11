@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Session, Idea, CustomStyle, AgentType, Guardrails, Draft } from '../../types';
+import { Session, Draft } from '../../types';
 import DraftCard from '../DraftCard';
-import { Loader2, ChevronRight, PlusCircle, Mail, CheckCircle, RefreshCw, Download } from 'lucide-react';
+import { Loader2, ChevronRight, Mail, CheckCircle, RefreshCw, Download } from 'lucide-react';
 import * as geminiService from '../../services/aiClient';
 import { useToast } from '../ui/Toast';
 
@@ -10,7 +10,6 @@ interface Props {
   onUpdateSession: (updates: Partial<Session>) => void;
   onDraftDelete: (id: string) => void;
   onDraftDuplicate: (id: string) => void;
-  onGenerateDrafts: (idea: Idea, feedback?: string) => void;
   onNewSession: () => void;
   onBackToIdeation: () => void;
   onDraftEdit: (id: string, newContent: string) => void;
@@ -22,7 +21,6 @@ const DraftingView: React.FC<Props> = ({
   onUpdateSession,
   onDraftDelete,
   onDraftDuplicate,
-  onGenerateDrafts,
   onNewSession,
   onBackToIdeation,
   onDraftEdit,
@@ -275,22 +273,6 @@ const DraftingView: React.FC<Props> = ({
                 ))}
               </div>
 
-              {/* Bottom "Generate More" Button for this Idea */}
-              <div className="flex justify-center pt-2">
-                {activeSession.isProcessing ? (
-                  <div className="flex items-center justify-center py-2 text-zinc-500 animate-pulse text-sm">
-                    <Loader2 className="mr-2 animate-spin" size={16} /> Thinking...
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => onGenerateDrafts(idea)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-sm hover:shadow-md"
-                  >
-                    <PlusCircle size={16} />
-                    More variations for &ldquo;{idea.title}&rdquo;
-                  </button>
-                )}
-              </div>
 
             </div>
           )

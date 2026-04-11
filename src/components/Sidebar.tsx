@@ -59,6 +59,10 @@ const Sidebar: React.FC<Props> = ({
 
   const [width, setWidth] = useState(260);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  // Separate state for content layout — lags behind isCollapsed when expanding
+  // so the sidebar width grows first before text content appears
+  const [contentCollapsed, setContentCollapsed] = useState(false);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -69,7 +73,16 @@ const Sidebar: React.FC<Props> = ({
   };
 
   const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+    if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    if (isCollapsed) {
+      // Expanding: start width animation immediately, switch content after sidebar is wider
+      setIsCollapsed(false);
+      collapseTimerRef.current = setTimeout(() => setContentCollapsed(false), 180);
+    } else {
+      // Collapsing: switch content immediately (icons appear), then width animates
+      setContentCollapsed(true);
+      setIsCollapsed(true);
+    }
   };
 
   const handleMobileAction = (action: () => void) => {
@@ -86,15 +99,19 @@ const Sidebar: React.FC<Props> = ({
       // Snap to collapse
       if (newWidth < 150) {
           setIsCollapsed(true);
+          setContentCollapsed(true);
           setIsResizing(false);
           return;
       }
 
       if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
       if (newWidth > MAX_WIDTH) newWidth = MAX_WIDTH;
-      
+
       setWidth(newWidth);
-      if (isCollapsed) setIsCollapsed(false);
+      if (isCollapsed) {
+        setIsCollapsed(false);
+        setContentCollapsed(false);
+      }
     };
 
     const handleMouseUp = () => {
@@ -123,21 +140,21 @@ const Sidebar: React.FC<Props> = ({
     <>
         {/* Header */}
         <div 
-          className={`p-6 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${isCollapsed && !mobile ? 'justify-center' : 'justify-between'}`}
+          className={`p-6 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${contentCollapsed && !mobile ? 'justify-center' : 'justify-between'}`}
           style={mobile ? { paddingTop: 'calc(env(safe-area-inset-top) + 24px)' } : {}}
         >
-          {(!isCollapsed || mobile) && (
+          {(!contentCollapsed || mobile) && (
             <h1 className="text-lg font-semibold text-zinc-900 dark:text-white flex items-center gap-2 tracking-tight truncate transition-colors duration-300 ease-in-out">
                 <Command size={20} className="text-zinc-900 dark:text-white shrink-0 transition-colors duration-300 ease-in-out" />
                 Alfred
             </h1>
           )}
-          {isCollapsed && !mobile && (
+          {contentCollapsed && !mobile && (
              <button onClick={toggleCollapse} className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
                 <Command size={24} />
              </button>
           )}
-          {!isCollapsed && !mobile && (
+          {!contentCollapsed && !mobile && (
              <button onClick={toggleCollapse} className="text-zinc-400 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors">
                 <PanelLeftClose size={16} />
              </button>
@@ -153,11 +170,11 @@ const Sidebar: React.FC<Props> = ({
         <div className={`shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${showNewBrief ? 'max-h-20 opacity-100 p-4' : 'max-h-0 opacity-0 p-0'}`}>
              <button
                 onClick={() => mobile ? handleMobileAction(onNewSession) : onNewSession()}
-                className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all mb-4 ${isCollapsed && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
+                className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all mb-4 ${contentCollapsed && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
                 title="New Brief"
             >
-                <Plus size={(isCollapsed && !mobile) ? 20 : 16} />
-                {(!isCollapsed || mobile) && "New Brief"}
+                <Plus size={(contentCollapsed && !mobile) ? 20 : 16} />
+                {(!contentCollapsed || mobile) && "New Brief"}
             </button>
         </div>
 
@@ -166,33 +183,33 @@ const Sidebar: React.FC<Props> = ({
             <OnboardingChecklist
                 onboardingState={onboardingState}
                 onOpenStep={onOpenOnboardingStep}
-                isCollapsed={isCollapsed && !mobile}
+                isCollapsed={contentCollapsed && !mobile}
             />
         )}
 
         {/* History List */}
         <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 px-2">
-            {(!isCollapsed || mobile) && (
+            {(!contentCollapsed || mobile) && (
                 <p className={`px-3 text-[10px] font-bold ${mobile ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-400 dark:text-zinc-500'} uppercase tracking-wider mb-2 flex items-center gap-2 transition-colors duration-300 ease-in-out`}>
                     History
                 </p>
             )}
-            
+
             <div className="space-y-0.5">
                 {sortedSessions.map(session => (
                     <div
                         key={session.id}
                         onClick={() => mobile ? handleMobileAction(() => onSelectSession(session.id)) : onSelectSession(session.id)}
                         className={`group w-full rounded-md transition-colors flex items-center cursor-pointer ${
-                            (isCollapsed && !mobile) ? 'justify-center p-2' : 'px-3 py-2 gap-2 text-sm'
+                            (contentCollapsed && !mobile) ? 'justify-center p-2' : 'px-3 py-2 gap-2 text-sm'
                         } ${
                             activeSessionId === session.id
                             ? 'bg-zinc-100 dark:bg-zinc-900 text-black dark:text-white font-medium'
                             : `${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-zinc-900 dark:hover:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900/50`
                         }`}
-                        title={(isCollapsed && !mobile) ? session.name : undefined}
+                        title={(contentCollapsed && !mobile) ? session.name : undefined}
                     >
-                        {(isCollapsed && !mobile) ? (
+                        {(contentCollapsed && !mobile) ? (
                             // Collapsed: yellow dot for pinned, grey dot otherwise
                             <button
                                 onClick={(e) => { e.stopPropagation(); onPinSession(session.id); }}
@@ -234,26 +251,26 @@ const Sidebar: React.FC<Props> = ({
         >
            <button 
              onClick={() => mobile ? handleMobileAction(onOpenGuardrails) : onOpenGuardrails()}
-             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(contentCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Guardrails"
            >
-             <ShieldCheck size={20} /> {(!isCollapsed || mobile) && "Boundaries"}
+             <ShieldCheck size={20} /> {(!contentCollapsed || mobile) && "Boundaries"}
            </button>
            <button
              onClick={() => mobile ? handleMobileAction(onOpenSettings) : onOpenSettings()}
-             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(contentCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Settings"
            >
-             <Settings size={20} /> {(!isCollapsed || mobile) && "Settings"}
+             <Settings size={20} /> {(!contentCollapsed || mobile) && "Settings"}
            </button>
            <button
              onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
-             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 ${(isCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+             className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 ${(contentCollapsed && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
              title="Sign Out"
            >
-             <LogOut size={20} /> {(!isCollapsed || mobile) && "Sign Out"}
+             <LogOut size={20} /> {(!contentCollapsed || mobile) && "Sign Out"}
            </button>
-           {(!isCollapsed || mobile) && (
+           {(!contentCollapsed || mobile) && (
              <div className="flex items-center gap-2 px-2 pt-2 flex-wrap">
                <Link href="/privacy" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Privacy</Link>
                <span className="text-zinc-700 text-[10px]">·</span>

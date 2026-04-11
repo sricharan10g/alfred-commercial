@@ -135,6 +135,11 @@ export const performResearch = (
     specificDomains: string[] = []
 ): Promise<{ findings: ResearchFinding[]; sources: Array<{ title: string; url: string }> }> =>
     post('performResearch', { topics, audience, timeRange, excludeHeadlines, specificDomains });
+
+export const searchWebForBrief = (
+    brief: string
+): Promise<{ findings: ResearchFinding[]; sources: Array<{ title: string; url: string }> }> =>
+    post('searchWebForBrief', { brief });
     // Research always uses Gemini — no provider parameter needed
 
 export const generateSubjectLines = (

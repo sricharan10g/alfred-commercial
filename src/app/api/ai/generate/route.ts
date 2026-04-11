@@ -38,6 +38,7 @@ import {
     refineDraftSelection,
     performResearch,
     generateSubjectLines,
+    searchWebForBrief,
 } from '@/services/geminiService';
 import { createStyleFromDescription, createStyleFromData } from '@/services/styleAnalyzer';
 import { safeRandomUUID } from '@/server/uuid';
@@ -145,6 +146,11 @@ const RefineDraftSelectionSchema = z.object({
     nativeFormat: z.string().max(200).optional(),
 });
 
+const SearchWebForBriefSchema = z.object({
+    feature: z.literal('searchWebForBrief'),
+    brief: z.string().max(MAX_SHORT),
+});
+
 const PerformResearchSchema = z.object({
     feature: z.literal('performResearch'),
     // Research always uses Gemini — no provider field needed
@@ -176,6 +182,7 @@ const RequestBodySchema = z.discriminatedUnion('feature', [
     RefineDraftSelectionSchema,
     PerformResearchSchema,
     GenerateSubjectLinesSchema,
+    SearchWebForBriefSchema,
 ]);
 
 function getApiKeyForProvider(provider: AIProvider): string {
@@ -282,6 +289,7 @@ export async function POST(req: NextRequest) {
         if (payload.feature === 'refineDraft') promptLength = payload.currentContent.length + payload.feedback.length;
         if (payload.feature === 'refineDraftSelection') promptLength = payload.fullText.length + payload.selectedText.length;
         if (payload.feature === 'performResearch') promptLength = payload.topics.length;
+        if (payload.feature === 'searchWebForBrief') promptLength = payload.brief.length;
         if (payload.feature === 'generateSubjectLines') promptLength = payload.brief.length;
 
         // Resolve provider and create adapter (research always uses Gemini internally)
@@ -376,6 +384,9 @@ export async function POST(req: NextRequest) {
                 );
                 break;
             }
+            case 'searchWebForBrief':
+                result = await searchWebForBrief(payload.brief);
+                break;
             case 'performResearch':
                 // Research always uses Gemini internally — no adapter needed
                 result = await performResearch(

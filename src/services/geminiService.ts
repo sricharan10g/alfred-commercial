@@ -191,6 +191,74 @@ TASK:
     return { findings, sources: uniqueSources };
 };
 
+// --- Web Search for Brief ---
+// Runs a grounded search using the user's brief as the query.
+// Returns findings that can be passed as researchContext to generateIdeas/generateDrafts.
+export const searchWebForBrief = async (
+    brief: string
+): Promise<{ findings: ResearchFinding[]; sources: Array<{ title: string; url: string }> }> => {
+    const gemini = new GeminiProvider(serverConfig.AI_PROVIDER_KEY);
+
+    const prompt = `
+You are a research assistant. The user wants to write content about the following topic:
+
+"${sanitizeUserInput(brief)}"
+
+Search the web and find the most relevant, specific, and useful information for this topic.
+Return 3-5 key findings. For each finding include:
+- A concise headline
+- 2-4 bullet points with specific facts, quotes, statistics, or insights
+- A fullContext paragraph with rich detail that a writer can use
+- A relevanceScore from 0 to 1
+
+Focus on: real examples, data points, recent developments, expert insights, and concrete details that make content more credible and specific.
+`;
+
+    const jsonSchema = {
+        type: 'object',
+        properties: {
+            findings: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    properties: {
+                        headline: { type: 'string' },
+                        bullets: { type: 'array', items: { type: 'string' } },
+                        fullContext: { type: 'string' },
+                        relevanceScore: { type: 'number' },
+                    },
+                    required: ['headline', 'bullets', 'fullContext', 'relevanceScore'],
+                },
+            },
+        },
+        required: ['findings'],
+    };
+
+    const result = await gemini.generateWithSearch!({ prompt, jsonSchema });
+
+    let data: { findings: Array<{ headline: string; bullets: string[]; fullContext?: string; relevanceScore: number }> } | null = null;
+    try {
+        data = JSON.parse(result.text);
+    } catch {
+        data = null;
+    }
+
+    const sources = result.groundingChunks
+        .map((chunk) => chunk?.web?.uri ? { title: chunk.web.title || new URL(chunk.web.uri).hostname, url: chunk.web.uri } : null)
+        .filter((s): s is { title: string; url: string } => Boolean(s));
+    const uniqueSources = Array.from(new Map(sources.map((item) => [item.url, item])).values()).slice(0, 8);
+
+    const findings = (data?.findings || []).map((f) => ({
+        id: safeRandomUUID(),
+        headline: f.headline,
+        bullets: f.bullets || [],
+        fullContext: f.fullContext || '',
+        relevanceScore: Number(f.relevanceScore) || 0,
+    }));
+
+    return { findings, sources: uniqueSources };
+};
+
 // --- Subject Lines ---
 
 export const generateSubjectLines = async (

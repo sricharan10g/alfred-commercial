@@ -540,9 +540,21 @@ function Dashboard() {
 
         updateActiveSession({ isProcessing: true });
 
-        const selectedFindings = activeSession.researchResults?.filter(r =>
+        let selectedFindings = activeSession.researchResults?.filter(r =>
             activeSession.selectedResearchIds?.includes(r.id)
         ) || [];
+
+        // Web search: fetch grounded context before generating if toggle is on
+        if (activeSession.webSearchEnabled && activeSession.brief.trim()) {
+            try {
+                const { findings, sources } = await geminiService.searchWebForBrief(activeSession.brief);
+                selectedFindings = [...selectedFindings, ...findings];
+                // Store sources on session so they can be surfaced in the UI
+                updateActiveSession({ researchSources: sources });
+            } catch (e) {
+                console.warn('[WebSearch] Failed, continuing without web context:', e);
+            }
+        }
 
         try {
             const customStyle = getCustomStyleData(activeSession.writingStyle);
@@ -963,7 +975,6 @@ function Dashboard() {
                                 onUpdateSession={updateActiveSession}
                                 onDraftDelete={handleDraftDelete}
                                 onDraftDuplicate={handleDraftDuplicate}
-                                onGenerateDrafts={(idea, feedback) => processDraftGeneration(activeSession.id, idea, feedback)}
                                 onNewSession={handleNewSession}
                                 onBackToIdeation={() => updateActiveSession({ step: 'IDEATION' })}
                                 onDraftEdit={handleDraftEdit}
