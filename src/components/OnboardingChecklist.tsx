@@ -104,7 +104,7 @@ const OnboardingChecklist: React.FC<Props> = ({ onboardingState, onOpenStep, isC
                             </div>
 
                             {/* Label */}
-                            <span className={`text-xs flex-1 leading-snug ${
+                            <span className={`text-xs flex-1 truncate ${
                                 done
                                     ? 'text-zinc-400 dark:text-zinc-600 line-through'
                                     : 'text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100'
