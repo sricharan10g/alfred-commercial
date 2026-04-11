@@ -84,13 +84,7 @@ const IdeationView: React.FC<Props> = ({
               {isNewsletter ? " Choose a subject line and a body concept." : " Review & approve what works."}
           </p>
         </div>
-        <button
-          onClick={onMoveToDrafts}
-          disabled={isNewsletter ? !isNewsletterReady : !isStandardReady}
-          className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 px-5 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed duration-300 ease-in-out"
-        >
-          Drafting <ChevronRight size={16} />
-        </button>
+        <div />
       </div>
 
       {/* Floating Drafting button — appears when idea is approved, stays visible while scrolling */}

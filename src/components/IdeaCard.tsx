@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Idea } from '../types';
-import { Plus, MessageSquare, Check, CheckCircle2, ListOrdered, Sparkles } from 'lucide-react';
+import { Plus, MessageSquare, Check, CheckCircle2, ListOrdered } from 'lucide-react';
 
 interface Props {
   idea: Idea;
@@ -82,7 +82,6 @@ const IdeaCard: React.FC<Props> = ({ idea, onApprove, onMoreLikeThis }) => {
                             onClick={() => onMoreLikeThis(idea.id)}
                             className="flex items-center gap-1.5 px-3 py-2.5 rounded-md border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-200 text-sm font-medium whitespace-nowrap"
                         >
-                            <Sparkles size={14} />
                             More like this
                         </button>
                     )}
