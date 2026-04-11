@@ -66,6 +66,7 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
   const [isRefineLoading, setIsRefineLoading] = useState(false);
 
   // Selection Refine State
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null); // New Ref for Popover
   const [selection, setSelection] = useState<{ text: string; top: number; left: number } | null>(null);
@@ -75,6 +76,14 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
   const isThreadFormat = format === 'Thread';
   const isThreadContent = (draft.content.includes("1/") || draft.content.includes("1.")) && draft.content.split(/\n\n/).length > 1;
   const isThread = isThreadFormat || isThreadContent;
+
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+      if (isEditing && textareaRef.current) {
+          textareaRef.current.style.height = 'auto';
+          textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      }
+  }, [isEditing, editedContent]);
 
   useEffect(() => {
       const handleSelectionChange = (e: MouseEvent | KeyboardEvent) => {
@@ -251,10 +260,11 @@ const DraftCard: React.FC<Props> = ({ draft, format, onDelete, onUpdateContent, 
       <div className="mb-4 flex-1">
            {isEditing ? (
                <div className="animate-in fade-in duration-200">
-                   <textarea 
+                   <textarea
+                       ref={textareaRef}
                        value={editedContent}
                        onChange={(e) => setEditedContent(e.target.value)}
-                       className="w-full h-[300px] p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-mono focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white resize-none leading-relaxed"
+                       className="w-full p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-base font-sans font-normal focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white resize-none leading-relaxed overflow-hidden"
                    />
                    <div className="flex justify-end gap-2 mt-3">
                        <button 
