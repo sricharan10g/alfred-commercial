@@ -166,6 +166,7 @@ function Dashboard() {
                     setCustomStyles(data.customStyles ?? []);
                     setResearchProfiles(data.researchProfiles ?? []);
                     setGuardrails(data.guardrails ?? { dos: '', donts: '' });
+                    if (data.onboardingState) setOnboardingState(data.onboardingState);
                     const savedActiveId = data.activeSessionId ?? '';
                     const activeStillExists = finalSessions.some(s => s.id === savedActiveId);
                     setActiveSessionId(activeStillExists ? savedActiveId : finalSessions[0]?.id ?? '');
@@ -205,7 +206,7 @@ function Dashboard() {
                 await fetch('/api/user-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'x-appwrite-user-jwt': jwt },
-                    body: JSON.stringify({ sessions, customStyles, researchProfiles, guardrails, activeSessionId }),
+                    body: JSON.stringify({ sessions, customStyles, researchProfiles, guardrails, activeSessionId, onboardingState }),
                 });
             } catch (e) {
                 console.warn('[sync] Save failed:', e);
