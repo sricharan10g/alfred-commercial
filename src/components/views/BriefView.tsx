@@ -22,6 +22,7 @@ interface Props {
   onToggleResearchFinding: (id: string) => void;
   onOpenResearchSettings: () => void;
   selectedProvider: AIProvider;
+  onboardingFormats?: string[];
 }
 
 const PLACEHOLDERS = [
@@ -304,7 +305,8 @@ const BriefView: React.FC<Props> = ({
   onFetchMoreResearch,
   onToggleResearchFinding,
   onOpenResearchSettings,
-  selectedProvider
+  selectedProvider,
+  onboardingFormats,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isStyleDropdownOpen, setIsStyleDropdownOpen] = useState(false);
@@ -429,7 +431,9 @@ const BriefView: React.FC<Props> = ({
 
   const hasIdeas = activeSession.ideas && activeSession.ideas.length > 0;
   const hasDrafts = activeSession.drafts && activeSession.drafts.length > 0;
-  const quickFormats = FORMAT_LIBRARY.slice(0, 3);
+  const quickFormats = onboardingFormats && onboardingFormats.length > 0
+    ? FORMAT_LIBRARY.filter(f => onboardingFormats.includes(f.name) && !f.comingSoon)
+    : FORMAT_LIBRARY.slice(0, 3);
 
   return (
     <div className="space-y-6 pt-8 md:pt-16 flex flex-col relative">

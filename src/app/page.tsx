@@ -941,6 +941,7 @@ function Dashboard() {
                                 onToggleResearchFinding={toggleResearchFinding}
                                 onOpenResearchSettings={handleOpenResearchSettings}
                                 selectedProvider={selectedProvider}
+                                onboardingFormats={onboardingState.profile.formats}
                             />
                             </div>
                         )}

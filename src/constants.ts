@@ -331,6 +331,98 @@ QUALITY CHECKS:
 ✓ Every ## section opens with a claim, not a question
 ✓ Outro does not say "see you next time" or "that's a wrap"
 ✓ Short paragraphs throughout (1-3 sentences max)
+`,
+
+  'Long Tweet': `
+FORMATTING RULES (LONG TWEET / X LONG POST):
+
+STRUCTURE:
+- 500–1,500 characters. Never under 500, never over 1,500.
+- One unbroken post — NOT a thread. No 1/, 2/ numbering.
+- 2–3 paragraphs separated by a single blank line.
+- No hashtags unless specified. Emojis: 0–2 max if it fits the persona.
+
+ANATOMY:
+
+1. THE HOOK (Lines 1–2, max 130 chars):
+   - Must work as a standalone tweet on its own.
+   - Use: bold claim / surprising stat / pattern interrupt / counterintuitive truth.
+   - NEVER start with: "I think", "Here's why", "Let me explain", "A thread on"
+   - No setup. Start with the sharpest version of the idea.
+
+2. THE BUILD (Middle — 60–70% of the post):
+   - Expand the hook with one clear argument or narrative arc.
+   - Alternate: short sentence (3–6 words) → medium sentence (8–12 words).
+   - Use "→" for micro-lists of 3 items max.
+   - Every sentence must earn its place. Cut anything that doesn't add signal.
+   - Concrete specifics over vague claims: names, numbers, events.
+
+3. THE CLOSE (Final 2–3 lines):
+   - Land on the sharpest, most distilled version of the idea.
+   - Do NOT summarize — the reader just read it.
+   - Optional: one question to spark replies (not rhetorical, genuinely open).
+   - CTA: max 8 words, or none at all.
+
+QUALITY CHECKS:
+✓ First 2 lines work as a standalone tweet
+✓ No sentence exceeds 12 words
+✓ 3 paragraphs or fewer total
+✓ Reading aloud takes 30–60 seconds
+✓ Contains at least one non-obvious, concrete insight
+✓ Feels like the best tweet you've ever written, given room to breathe
+`,
+
+  'LinkedIn Post': `
+FORMATTING RULES (LINKEDIN POST):
+
+STRUCTURE:
+- 1,000–1,500 characters. Sweet spot for LinkedIn reach.
+- 4–6 short paragraphs. Single blank line between each.
+- No Roman numerals. No section headers.
+- Emojis: 1–3 max, placed at paragraph starts or for punctuation — never decorative.
+- Hashtags: 0–3, placed at the very end only.
+
+ANATOMY:
+
+1. THE HOOK (First 2 lines — what shows before "...see more"):
+   - This determines everything. If it doesn't stop the scroll, nothing else matters.
+   - Use ONE of these openers:
+     A) THE NUMBER: "In [X years/days/attempts], I learned one thing about [topic]."
+     B) THE CONTRADICTION: "[Common belief.] I disagree."
+     C) THE SCENE: Drop into a real moment. No setup, no context, just action.
+     D) THE CONFESSION: "I [did/believed/said] X. I was wrong."
+   - NEVER: "Excited to share...", "Thrilled to announce...", "Today I...", "I am humbled..."
+   - DO NOT start with "I" as the first word.
+
+2. THE STORY / INSIGHT (Middle 60–70%):
+   - One clear arc: Setup → Tension → Resolution OR Claim → Evidence → Implication.
+   - Max 2 sentences per paragraph. Never 3+ in a row — white space is reach.
+   - Concrete specifics only: real names, real numbers, real dates, real dollar amounts.
+   - Write like you're talking to a smart colleague over coffee — not a press release.
+   - Vary paragraph length: long, short, long, one-liner punch.
+
+3. THE CLOSE (Final paragraph):
+   - One distilled truth or lesson. The "so what" made explicit.
+   - Optional: one open question to drive comments. Genuine, not rhetorical.
+   - CTA options (pick one or none):
+     ✓ "Save this if [reason]."
+     ✓ "What's your take?"
+     ✓ "Follow for more [specific topic]."
+   - NEVER: "Like and share if you agree." — too transactional.
+
+TONE:
+- Professional but unmistakably human.
+- Ambitious without being arrogant. Vulnerable without oversharing.
+- First person. Real experience. Specific details over vague lessons.
+- Sound like the smartest person in the room who has nothing to prove.
+
+QUALITY CHECKS:
+✓ First 2 lines create curiosity without a full reveal
+✓ Every paragraph is max 2 sentences
+✓ Contains at least one concrete specific (number, name, date, dollar amount)
+✓ Closing has a natural conversation-starter or resonant final line
+✓ Does NOT start with "I", "Excited", "Thrilled", "Today", or "Humbled"
+✓ No paragraph uses 3+ sentences in a row
 `
 };
 
@@ -853,6 +945,18 @@ export const FORMAT_LIBRARY: FormatDefinition[] = [
     description: 'High-value email format. Story-driven opening, deep core value, and actionable takeaways.',
     instruction: FORMAT_INSTRUCTIONS['Newsletter'],
     comingSoon: true
+  },
+  {
+    id: 'fmt_long_tweet',
+    name: 'Long Tweet',
+    description: 'One extended X post (500–1,500 chars). Thread-level depth in a single punch.',
+    instruction: FORMAT_INSTRUCTIONS['Long Tweet']
+  },
+  {
+    id: 'fmt_linkedin',
+    name: 'LinkedIn Post',
+    description: 'Professional story-driven post (1,000–1,500 chars). Built for LinkedIn reach.',
+    instruction: FORMAT_INSTRUCTIONS['LinkedIn Post']
   },
   {
     id: 'fmt_oneliner',

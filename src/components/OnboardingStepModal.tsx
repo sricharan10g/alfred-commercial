@@ -39,7 +39,7 @@ const STEPS: { key: StepKey; title: string; subtitle: string }[] = [
     },
 ];
 
-const FORMAT_OPTIONS = ['Tweet', 'Thread', 'LinkedIn Post', 'Newsletter', 'Blog Post'];
+const FORMAT_OPTIONS = ['Tweet', 'Long Tweet', 'Thread', 'LinkedIn Post', 'Newsletter'];
 
 const TONE_OPTIONS = [
     { id: 'bold', label: 'Bold & Direct', desc: 'Short sentences. Strong opinions. No fluff.' },
