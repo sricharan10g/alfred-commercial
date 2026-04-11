@@ -337,7 +337,9 @@ QUALITY CHECKS:
 FORMATTING RULES (LONG TWEET / X LONG POST):
 
 STRUCTURE:
-- 500–1,500 characters. Never under 500, never over 1,500.
+- Target range: 1,000–3,000 characters. Hard ceiling: 3,000 characters — never exceed it.
+- Scale to what the content actually needs. If the idea lands in 1,200 chars, stop there. Don't pad to hit a ceiling.
+- SENTENCE COMPLETION RULE: Never end mid-sentence or mid-word. If you are approaching 3,000 characters, finish the current sentence cleanly and stop. A complete thought at 2,800 chars beats a truncated one at 3,000.
 - One unbroken post — NOT a thread. No 1/, 2/ numbering.
 - 2–3 paragraphs separated by a single blank line.
 - No hashtags unless specified. Emojis: 0–2 max if it fits the persona.
@@ -367,7 +369,8 @@ QUALITY CHECKS:
 ✓ First 2 lines work as a standalone tweet
 ✓ No sentence exceeds 12 words
 ✓ 3 paragraphs or fewer total
-✓ Reading aloud takes 30–60 seconds
+✓ Total character count is between 1,000–3,000 and never exceeds 3,000
+✓ Ends on a complete sentence — never mid-word or mid-thought
 ✓ Contains at least one non-obvious, concrete insight
 ✓ Feels like the best tweet you've ever written, given room to breathe
 `,
@@ -376,7 +379,9 @@ QUALITY CHECKS:
 FORMATTING RULES (LINKEDIN POST):
 
 STRUCTURE:
-- 1,000–1,500 characters. Sweet spot for LinkedIn reach.
+- Target range: 1,000–3,000 characters. Hard ceiling: 3,000 characters — never exceed it.
+- Scale to what the content actually needs. A tight, focused post at 1,200 chars beats a padded one at 2,500. Use the extra length only when the story or argument genuinely needs it.
+- SENTENCE COMPLETION RULE: Never end mid-sentence or mid-word. If you are approaching 3,000 characters, wrap up the current thought in a clean final sentence and stop. A complete post at 2,850 chars is better than a cut-off at 3,000.
 - 4–6 short paragraphs. Single blank line between each.
 - No Roman numerals. No section headers.
 - Emojis: 1–3 max, placed at paragraph starts or for punctuation — never decorative.
@@ -423,6 +428,8 @@ QUALITY CHECKS:
 ✓ Closing has a natural conversation-starter or resonant final line
 ✓ Does NOT start with "I", "Excited", "Thrilled", "Today", or "Humbled"
 ✓ No paragraph uses 3+ sentences in a row
+✓ Total character count is between 1,000–3,000 and never exceeds 3,000
+✓ Ends on a complete sentence — never mid-word or mid-thought
 `
 };
 
@@ -949,13 +956,13 @@ export const FORMAT_LIBRARY: FormatDefinition[] = [
   {
     id: 'fmt_long_tweet',
     name: 'Long Tweet',
-    description: 'One extended X post (500–1,500 chars). Thread-level depth in a single punch.',
+    description: 'One extended X post (1,000–3,000 chars). Thread-level depth in a single punch.',
     instruction: FORMAT_INSTRUCTIONS['Long Tweet']
   },
   {
     id: 'fmt_linkedin',
     name: 'LinkedIn Post',
-    description: 'Professional story-driven post (1,000–1,500 chars). Built for LinkedIn reach.',
+    description: 'Professional story-driven post (1,000–3,000 chars). Built for LinkedIn reach.',
     instruction: FORMAT_INSTRUCTIONS['LinkedIn Post']
   },
   {

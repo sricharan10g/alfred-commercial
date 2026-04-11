@@ -66,7 +66,7 @@ export class GeminiProvider implements AIProviderAdapter {
                 systemInstruction: params.systemPrompt,
                 responseMimeType: 'application/json',
                 responseSchema: geminiSchema,
-                thinkingConfig: { thinkingBudget: -1 },
+                thinkingConfig: { thinkingLevel: 'medium' },
                 ...(params.temperature !== undefined && { temperature: params.temperature }),
             },
         });

@@ -435,6 +435,11 @@ const BriefView: React.FC<Props> = ({
     ? FORMAT_LIBRARY.filter(f => onboardingFormats.includes(f.name) && !f.comingSoon)
     : FORMAT_LIBRARY.slice(0, 3);
 
+  const BRIEF_CHAR_LIMIT = 5000;
+  const briefLength = activeSession.brief.length;
+  const isOverLimit = briefLength > BRIEF_CHAR_LIMIT;
+  const isNearLimit = briefLength > BRIEF_CHAR_LIMIT * 0.8;
+
   return (
     <div className="space-y-6 pt-8 md:pt-16 flex flex-col relative">
 
@@ -735,23 +740,35 @@ const BriefView: React.FC<Props> = ({
                 className="flex-1 w-full bg-transparent border-none focus:ring-0 outline-none focus:outline-none text-base text-zinc-900 dark:text-zinc-200 py-2 pl-4 pr-2 resize-none max-h-[200px] overflow-y-auto leading-relaxed custom-scrollbar min-h-[40px] transition-colors duration-300 ease-in-out relative z-10 placeholder-transparent"
             />
 
-            <button 
+            <button
                 onClick={onGenerateIdeas}
-                disabled={activeSession.isProcessing || (!activeSession.brief && !activeSession.selectedResearchIds?.length)}
+                disabled={activeSession.isProcessing || isOverLimit || (!activeSession.brief && !activeSession.selectedResearchIds?.length)}
                 className={`p-2 rounded-full shrink-0 mb-1 mr-1 transition-all duration-200 ease-out shadow-sm flex items-center justify-center relative z-20 ${
-                    (activeSession.brief || activeSession.selectedResearchIds?.length)
-                    ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95' 
-                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
+                    isOverLimit
+                    ? 'bg-red-500 text-white cursor-not-allowed'
+                    : (activeSession.brief || activeSession.selectedResearchIds?.length)
+                        ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 cursor-not-allowed'
                 }`}
-                title="Generate Concepts"
+                title={isOverLimit ? `Brief exceeds ${BRIEF_CHAR_LIMIT.toLocaleString()} character limit` : 'Generate Concepts'}
             >
                 {activeSession.isProcessing ? (
                     <Loader2 size={20} className="animate-spin" />
                 ) : (
-                    <ArrowUp size={20} strokeWidth={2.5} className={activeSession.selectedResearchIds?.length ? "text-blue-500 dark:text-blue-600" : ""} />
+                    <ArrowUp size={20} strokeWidth={2.5} className={activeSession.selectedResearchIds?.length && !isOverLimit ? "text-blue-500 dark:text-blue-600" : ""} />
                 )}
             </button>
           </div>
+
+          {briefLength > 0 && (
+            <div className="flex justify-end pr-12 mt-0.5">
+              <span className={`text-xs tabular-nums transition-colors duration-200 ${
+                isOverLimit ? 'text-red-500 font-medium' : isNearLimit ? 'text-amber-500' : 'text-zinc-400 dark:text-zinc-600'
+              }`}>
+                {briefLength.toLocaleString()} / {BRIEF_CHAR_LIMIT.toLocaleString()}
+              </span>
+            </div>
+          )}
         </div>
         
         {/* Footer — Research */}
