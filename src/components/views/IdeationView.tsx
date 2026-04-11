@@ -7,6 +7,7 @@ interface Props {
   activeSession: Session;
   onUpdateSession: (updates: Partial<Session>) => void;
   onIdeaDecision: (id: string, decision: 'APPROVE' | 'REJECT', feedback?: string) => void;
+  onMoreLikeThis: (id: string) => void;
   onMoveToDrafts: () => void;
 }
 
@@ -14,6 +15,7 @@ const IdeationView: React.FC<Props> = ({
   activeSession,
   onUpdateSession,
   onIdeaDecision,
+  onMoreLikeThis,
   onMoveToDrafts
 }) => {
   const hasDrafts = activeSession.drafts && activeSession.drafts.length > 0;
@@ -71,18 +73,18 @@ const IdeationView: React.FC<Props> = ({
       </div>
 
       {/* Header */}
-      <div 
+      <div
         className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800 pb-6 transition-colors duration-300 ease-in-out animate-in fade-in slide-in-from-bottom-8 ease-out fill-mode-backwards"
         style={{ animationDuration: '1000ms' }}
       >
         <div>
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight transition-colors duration-300 ease-in-out">Pick your idea</h2>
           <p className="text-zinc-500 text-sm mt-1 transition-colors duration-300 ease-in-out">
-              Style: <span className="text-zinc-800 dark:text-white font-medium">{activeSession.writingStyle}</span>. 
+              Style: <span className="text-zinc-800 dark:text-white font-medium">{activeSession.writingStyle}</span>.
               {isNewsletter ? " Choose a subject line and a body concept." : " Review & approve what works."}
           </p>
         </div>
-        <button 
+        <button
           onClick={onMoveToDrafts}
           disabled={isNewsletter ? !isNewsletterReady : !isStandardReady}
           className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 px-5 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed duration-300 ease-in-out"
@@ -90,6 +92,18 @@ const IdeationView: React.FC<Props> = ({
           Drafting <ChevronRight size={16} />
         </button>
       </div>
+
+      {/* Floating Drafting button — appears when idea is approved, stays visible while scrolling */}
+      {(isStandardReady || isNewsletterReady) && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in zoom-in-90 duration-300">
+          <button
+            onClick={onMoveToDrafts}
+            className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-5 py-3 rounded-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95 transition-all duration-200"
+          >
+            Drafting <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
 
       {(activeSession.isProcessing || activeSession.isRefining) && (
         <div className="flex items-center justify-center py-8 text-zinc-500 animate-pulse text-sm">
@@ -140,10 +154,9 @@ const IdeationView: React.FC<Props> = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {activeSession.ideas.map((idea, index) => (
                           <div key={idea.id} className={activeSession.ideas.some(i => i.isApproved && i.id !== idea.id) ? 'opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300' : ''}>
-                               <IdeaCard 
-                                    idea={idea} 
-                                    onApprove={(id, feedback) => handleSelectFlow(id, feedback)} 
-                                    onReject={(id) => onIdeaDecision(id, 'REJECT')} 
+                               <IdeaCard
+                                    idea={idea}
+                                    onApprove={(id, feedback) => handleSelectFlow(id, feedback)}
                                />
                           </div>
                       ))}
@@ -163,10 +176,10 @@ const IdeationView: React.FC<Props> = ({
                 className="animate-in fade-in slide-in-from-bottom-12 zoom-in-95 ease-out fill-mode-backwards"
                 style={{ animationDelay: `${index * 150}ms`, animationDuration: '1000ms' }}
             >
-                <IdeaCard 
-                idea={idea} 
-                onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)} 
-                onReject={(id) => onIdeaDecision(id, 'REJECT')} 
+                <IdeaCard
+                idea={idea}
+                onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)}
+                onMoreLikeThis={onMoreLikeThis}
                 />
             </div>
             ))}

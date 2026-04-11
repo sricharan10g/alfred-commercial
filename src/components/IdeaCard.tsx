@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Idea } from '../types';
-import { Plus, MessageSquare, Check, CheckCircle2, ListOrdered } from 'lucide-react';
+import { Plus, MessageSquare, Check, CheckCircle2, ListOrdered, Sparkles } from 'lucide-react';
 
 interface Props {
   idea: Idea;
   onApprove: (id: string, feedback?: string) => void;
-  onReject: (id: string) => void;
+  onMoreLikeThis?: (id: string) => void;
 }
 
-const IdeaCard: React.FC<Props> = ({ idea, onApprove, onReject }) => {
+const IdeaCard: React.FC<Props> = ({ idea, onApprove, onMoreLikeThis }) => {
   const [feedback, setFeedback] = useState('');
   const isApproved = idea.isApproved;
 
@@ -77,12 +77,15 @@ const IdeaCard: React.FC<Props> = ({ idea, onApprove, onReject }) => {
         <div className="flex gap-2">
             {!isApproved ? (
                 <>
-                    <button
-                        onClick={() => onReject(idea.id)}
-                        className="px-4 py-2.5 rounded-md text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200 text-sm font-medium"
-                    >
-                        Discard
-                    </button>
+                    {onMoreLikeThis && (
+                        <button
+                            onClick={() => onMoreLikeThis(idea.id)}
+                            className="flex items-center gap-1.5 px-3 py-2.5 rounded-md border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-200 text-sm font-medium whitespace-nowrap"
+                        >
+                            <Sparkles size={14} />
+                            More like this
+                        </button>
+                    )}
                     <button
                         onClick={() => onApprove(idea.id, feedback)}
                         className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors duration-200 text-sm font-semibold"
@@ -93,7 +96,7 @@ const IdeaCard: React.FC<Props> = ({ idea, onApprove, onReject }) => {
                 </>
             ) : (
                 <div className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-sm font-medium cursor-default transition-colors duration-300 ease-in-out">
-                    <CheckCircle2 size={16} /> In the queue
+                    <CheckCircle2 size={16} /> Selected
                 </div>
             )}
         </div>

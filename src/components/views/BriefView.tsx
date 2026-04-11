@@ -753,8 +753,10 @@ const BriefView: React.FC<Props> = ({
             >
                 {activeSession.isProcessing ? (
                     <Loader2 size={20} className="animate-spin" />
+                ) : isOverLimit ? (
+                    <X size={20} strokeWidth={2.5} />
                 ) : (
-                    <ArrowUp size={20} strokeWidth={2.5} className={activeSession.selectedResearchIds?.length && !isOverLimit ? "text-blue-500 dark:text-blue-600" : ""} />
+                    <ArrowUp size={20} strokeWidth={2.5} className={activeSession.selectedResearchIds?.length ? "text-blue-500 dark:text-blue-600" : ""} />
                 )}
             </button>
           </div>

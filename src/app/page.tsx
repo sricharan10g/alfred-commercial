@@ -652,50 +652,47 @@ function Dashboard() {
         }
     };
 
-    const handleIdeaDecision = async (id: string, decision: 'APPROVE' | 'REJECT', feedback?: string) => {
+    const handleIdeaDecision = (id: string, decision: 'APPROVE' | 'REJECT', feedback?: string) => {
         if (decision === 'REJECT') {
             updateActiveSession({ ideas: activeSession.ideas.filter(i => i.id !== id) });
         } else {
             const updatedIdeas = activeSession.ideas.map(i => i.id === id ? { ...i, isApproved: true, userFeedback: feedback } : i);
-            updateActiveSession({ ideas: updatedIdeas, isRefining: true });
+            updateActiveSession({ ideas: updatedIdeas });
+        }
+    };
 
-            // If Newsletter, we don't auto-generate more ideas on approval, we move to drafting eventually
-            if (activeSession.writingFormat === 'Newsletter') {
-                updateActiveSession({ isRefining: false });
-                return;
-            }
+    const handleMoreLikeThis = async (id: string) => {
+        updateActiveSession({ isRefining: true });
 
-            const selectedFindings = activeSession.researchResults?.filter(r =>
-                activeSession.selectedResearchIds?.includes(r.id)
-            ) || [];
+        const selectedFindings = activeSession.researchResults?.filter(r =>
+            activeSession.selectedResearchIds?.includes(r.id)
+        ) || [];
 
-            try {
-                const customStyle = getCustomStyleData(activeSession.writingStyle);
-                const moreIdeas = await geminiService.generateIdeas(
-                    activeSession.brief,
-                    activeSession.writingStyle,
-                    activeSession.writingFormat,
-                    updatedIdeas,
-                    customStyle?.prompts,
-                    guardrails,
-                    selectedFindings,
-                    customStyle?.nativeFormat,
-                    selectedProvider
-                );
-                const twoNew = moreIdeas.slice(0, 2);
+        try {
+            const customStyle = getCustomStyleData(activeSession.writingStyle);
+            const moreIdeas = await geminiService.generateIdeas(
+                activeSession.brief,
+                activeSession.writingStyle,
+                activeSession.writingFormat,
+                activeSession.ideas,
+                customStyle?.prompts,
+                guardrails,
+                selectedFindings,
+                customStyle?.nativeFormat,
+                selectedProvider
+            );
+            const twoNew = moreIdeas.slice(0, 2);
 
-                setSessions(prev => prev.map(s => {
-                    if (s.id === activeSessionId) {
-                        return { ...s, ideas: [...s.ideas, ...twoNew], isRefining: false };
-                    }
-                    return s;
-                }));
-
-            } catch (e) {
-                console.error("Error fetching more ideas", e);
-                showToast("Idea approved, but failed to generate more concepts", "info");
-                updateActiveSession({ isRefining: false });
-            }
+            setSessions(prev => prev.map(s => {
+                if (s.id === activeSessionId) {
+                    return { ...s, ideas: [...s.ideas, ...twoNew], isRefining: false };
+                }
+                return s;
+            }));
+        } catch (e) {
+            console.error("Error fetching more ideas", e);
+            showToast("Failed to generate more concepts", "error");
+            updateActiveSession({ isRefining: false });
         }
     };
 
@@ -953,6 +950,7 @@ function Dashboard() {
                                 activeSession={activeSession}
                                 onUpdateSession={updateActiveSession}
                                 onIdeaDecision={handleIdeaDecision}
+                                onMoreLikeThis={handleMoreLikeThis}
                                 onMoveToDrafts={throttledMoveToDrafts}
                             />
                             </div>
