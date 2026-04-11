@@ -438,7 +438,6 @@ const BriefView: React.FC<Props> = ({
   const BRIEF_CHAR_LIMIT = 5000;
   const briefLength = activeSession.brief.length;
   const isOverLimit = briefLength > BRIEF_CHAR_LIMIT;
-  const isNearLimit = briefLength > BRIEF_CHAR_LIMIT * 0.8;
 
   return (
     <div className="space-y-6 pt-8 md:pt-16 flex flex-col relative">
@@ -760,12 +759,10 @@ const BriefView: React.FC<Props> = ({
             </button>
           </div>
 
-          {briefLength > 0 && (
+          {isOverLimit && (
             <div className="flex justify-end pr-12 mt-0.5">
-              <span className={`text-xs tabular-nums transition-colors duration-200 ${
-                isOverLimit ? 'text-red-500 font-medium' : isNearLimit ? 'text-amber-500' : 'text-zinc-400 dark:text-zinc-600'
-              }`}>
-                {briefLength.toLocaleString()} / {BRIEF_CHAR_LIMIT.toLocaleString()}
+              <span className="text-xs tabular-nums text-red-500 font-medium">
+                {briefLength} / {BRIEF_CHAR_LIMIT}
               </span>
             </div>
           )}
