@@ -278,12 +278,15 @@ const Sidebar: React.FC<Props> = ({
       </div>
 
       {/* Desktop Sidebar */}
-      <div 
+      <div
         ref={sidebarRef}
-        className={`relative z-10 border-r border-white/20 dark:border-zinc-700/30 bg-white/40 dark:bg-black/40 backdrop-blur-2xl flex flex-col hidden md:flex shrink-0 transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
+        className={`relative z-10 border-r border-white/20 dark:border-zinc-700/30 bg-white/40 dark:bg-black/40 backdrop-blur-2xl flex flex-col hidden md:flex shrink-0 overflow-hidden transition-all duration-300 ease-in-out ${isResizing ? 'duration-0' : ''}`}
         style={{ width: isCollapsed ? COLLAPSED_WIDTH : width }}
       >
         <SidebarContent />
+
+        {/* Subtle right-edge gradient — masks text reflow during collapse/expand */}
+        <div className="absolute inset-y-0 right-0 w-6 pointer-events-none bg-gradient-to-r from-transparent to-white/40 dark:to-black/40" />
 
         {/* Resize Handle */}
         {!isCollapsed && (

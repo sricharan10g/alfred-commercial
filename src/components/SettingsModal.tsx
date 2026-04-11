@@ -398,7 +398,7 @@ const SettingsModal: React.FC<Props> = ({
                 )}
 
                 {/* Sign out — flat */}
-                <section className="flex items-center justify-between pt-2 border-t border-zinc-100/50 dark:border-zinc-800/30">
+                <section className="flex items-center justify-end pt-2 border-t border-zinc-100/50 dark:border-zinc-800/30">
                     <button
                         onClick={handleLogout}
                         disabled={isLoggingOut}
@@ -492,6 +492,11 @@ const SettingsModal: React.FC<Props> = ({
                  )}
               </div>
           )}
+          {/* Contact footer — all tabs */}
+          <div className="mt-8 pt-4 border-t border-zinc-100/50 dark:border-zinc-800/30 text-center">
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-600">reach us: picknpartner@gmail.com</p>
+          </div>
+
         </div>
       </div>
     </div>
