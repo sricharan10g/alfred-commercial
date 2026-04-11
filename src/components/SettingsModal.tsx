@@ -399,9 +399,6 @@ const SettingsModal: React.FC<Props> = ({
 
                 {/* Sign out — flat */}
                 <section className="flex items-center justify-between pt-2 border-t border-zinc-100/50 dark:border-zinc-800/30">
-                    <div>
-                        <p className="text-sm text-zinc-700 dark:text-zinc-300">Leave</p>
-                    </div>
                     <button
                         onClick={handleLogout}
                         disabled={isLoggingOut}
