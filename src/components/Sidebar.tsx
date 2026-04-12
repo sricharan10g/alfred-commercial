@@ -86,26 +86,28 @@ const Sidebar: React.FC<Props> = ({
     if (animTimerRef2.current) clearTimeout(animTimerRef2.current);
 
     if (isCollapsed) {
-      // EXPANDING: drop veil + collapsed content instantly → grow sidebar → text fades in
-      setShowVeil(false);
-      setShowCollapsedContent(false);
-      setIsCollapsed(false);
+      // EXPANDING:
+      // T=0    → veil drifts in fast (100ms) to cover the layout snap
+      // T=110ms → snap layout (collapsed→expanded), start sidebar growth, dissolve veil
+      setShowVeil(true);
+      animTimerRef.current = setTimeout(() => {
+        setShowCollapsedContent(false);
+        setIsCollapsed(false);
+        setShowVeil(false);
+      }, 110);
     } else {
       // COLLAPSING:
-      // T=0        → start shrinking width
-      // T=ANIM-80  → veil fades in fast (covers the upcoming layout snap)
-      // T=ANIM     → layout snaps to icon-only under the veil
-      // T=ANIM     → veil starts fading out slowly (smooth reveal of settled state)
+      // T=0        → start shrinking width, content fades via tf()
+      // T=150ms    → veil drifts in fast (100ms) to cover the upcoming layout snap
+      // T=270ms    → veil fully opaque; snap layout, dissolve veil slowly
       setIsCollapsed(true);
-      // T=160ms — veil begins drifting in (sidebar is ~half collapsed)
       animTimerRef.current = setTimeout(() => {
         setShowVeil(true);
-        // T=320ms — sidebar fully collapsed; snap layout under the veil, then let it dissolve
         animTimerRef2.current = setTimeout(() => {
           setShowCollapsedContent(true);
           setShowVeil(false);
-        }, 160);
-      }, ANIM_MS - 140);
+        }, 120);
+      }, ANIM_MS - 150);
     }
   };
 
@@ -166,50 +168,42 @@ const Sidebar: React.FC<Props> = ({
     };
   }, [isResizing, isCollapsed]);
 
-  // Text fade helper — CSS transition-delay sequences the opacity relative to the width animation:
-  //   collapsing → text fades out immediately (duration-150, no delay)
-  //   expanding  → text fades in after sidebar has grown (duration-300, delay-[250ms])
+  // Text/icon fade helper.
+  // Collapsing → fade out over 300ms in sync with the sidebar shrink (no abrupt disappear)
+  // Expanding  → fade in with 50ms delay (content appears while sidebar is still growing)
   // Mobile always renders full opacity.
   const tf = (mobile: boolean) =>
     mobile
       ? ''
-      : `transition-opacity ${isCollapsed ? 'opacity-0 duration-150 delay-0' : 'opacity-100 duration-300 delay-[250ms]'}`;
+      : `transition-opacity duration-300 ease-in-out ${isCollapsed ? 'opacity-0 delay-0' : 'opacity-100 delay-[50ms]'}`;
 
   // --- renderContent: plain render function (NOT a component) so React never
   //     unmounts/remounts the tree when the parent re-renders. ---
   const renderContent = (mobile = false) => (
     <>
-      {/* Header */}
+      {/* Header — always justify-between; elements cross-fade via opacity so nothing jumps */}
       <div
-        className={`p-5 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${showCollapsedContent && !mobile ? 'justify-center' : 'justify-between'}`}
+        className="relative p-5 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center justify-between transition-colors duration-300 ease-in-out"
         style={mobile ? { paddingTop: 'calc(env(safe-area-inset-top) + 24px)' } : {}}
       >
-        {(!showCollapsedContent || mobile) && (
-          <h1 className={`text-lg font-semibold text-zinc-900 dark:text-white flex items-center gap-2 tracking-tight truncate transition-colors duration-300 ease-in-out ${tf(mobile)}`}>
-            <Command size={20} className="text-zinc-900 dark:text-white shrink-0 transition-colors duration-300 ease-in-out" />
-            Alfred
-          </h1>
-        )}
-        {/* Collapsed state: show expand icon only once sidebar has fully shrunk */}
-        {showCollapsedContent && !mobile && (
+        {/* Alfred title — always in DOM, fades when sidebar collapses */}
+        <h1 className={`text-lg font-semibold text-zinc-900 dark:text-white flex items-center gap-2 tracking-tight truncate transition-colors duration-300 ease-in-out ${tf(mobile)}`}>
+          <Command size={20} className="text-zinc-900 dark:text-white shrink-0 transition-colors duration-300 ease-in-out" />
+          Alfred
+        </h1>
+
+        {/* Desktop collapse button — always in DOM, fades with Alfred */}
+        {!mobile && (
           <button
             onClick={toggleCollapse}
-            className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
-            title="Expand sidebar"
-          >
-            <Command size={24} />
-          </button>
-        )}
-        {/* Expanded state: collapse button */}
-        {!showCollapsedContent && !mobile && (
-          <button
-            onClick={toggleCollapse}
-            className={`text-zinc-400 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors ${tf(mobile)}`}
+            className={`text-zinc-400 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors shrink-0 ${tf(mobile)}`}
             title="Collapse sidebar"
           >
             <PanelLeftClose size={16} />
           </button>
         )}
+
+        {/* Mobile close button */}
         {mobile && (
           <button
             onClick={() => setIsMobileOpen(false)}
@@ -218,21 +212,36 @@ const Sidebar: React.FC<Props> = ({
             <X size={20} />
           </button>
         )}
+
+        {/* Collapsed expand button — absolutely centred, cross-fades with showCollapsedContent
+            so it never causes a layout shift; pointer-events disabled when invisible */}
+        {!mobile && (
+          <button
+            onClick={toggleCollapse}
+            title="Expand sidebar"
+            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out ${showCollapsedContent ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
+            <Command size={24} className="text-zinc-900 dark:text-white transition-colors duration-300 ease-in-out" />
+          </button>
+        )}
       </div>
 
       {/* New Brief button — grid-rows animation (no max-height jank) */}
       <div className={`shrink-0 grid transition-all duration-300 ease-in-out ${showNewBrief ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">
           <div className="px-4 pt-3 pb-2">
+            {/* Plus stays centred always (justify-center). "New Brief" text slides in/out via
+                max-width so the icon never jumps position. transition-colors not transition-all
+                so padding changes don't fight the CSS animation on other elements. */}
             <button
               onClick={() => mobile ? handleMobileAction(onNewSession) : onNewSession()}
-              className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all ${showCollapsedContent && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
+              className="w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-colors px-4 py-2.5 text-sm"
               title="New Brief"
             >
-              <Plus size={(showCollapsedContent && !mobile) ? 20 : 16} />
-              {(!showCollapsedContent || mobile) && (
-                <span className={tf(mobile)}>New Brief</span>
-              )}
+              <Plus size={16} className="shrink-0" />
+              <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[120px] opacity-100'} ${tf(mobile)}`}>
+                New Brief
+              </span>
             </button>
           </div>
         </div>
@@ -303,42 +312,48 @@ const Sidebar: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Footer Actions */}
+      {/* Footer Actions
+          Icons use margin-left to smoothly slide between left-aligned (expanded) and centred
+          (collapsed) — no justify-content switching, so icons never jump.
+          Labels use max-width to slide out instead of unmounting — no flash on expand. */}
       <div
         className="mt-auto p-4 border-t border-zinc-200/30 dark:border-zinc-800/30 space-y-1 transition-colors duration-300 ease-in-out"
         style={mobile ? { paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' } : {}}
       >
+        {/* Collapsed centred position: margin-left = (button_width - icon_width) / 2 = (38px - 20px) / 2 = 9px
+            button_width = COLLAPSED_WIDTH(70) - footer_padding(16)*2 = 38px */}
         <button
           onClick={() => mobile ? handleMobileAction(onOpenGuardrails) : onOpenGuardrails()}
-          className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(showCollapsedContent && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
-          title="Guardrails"
+          className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900`}
+          title="Boundaries"
         >
-          <ShieldCheck size={20} />
-          {(!showCollapsedContent || mobile) && <span className={`whitespace-nowrap overflow-hidden ${tf(mobile)}`}>Boundaries</span>}
+          <ShieldCheck size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
+            style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
+          <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Boundaries</span>
         </button>
         <button
           onClick={() => mobile ? handleMobileAction(onOpenSettings) : onOpenSettings()}
-          className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-black dark:hover:text-white font-medium transition-colors rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 ${(showCollapsedContent && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+          className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900`}
           title="Settings"
         >
-          <Settings size={20} />
-          {(!showCollapsedContent || mobile) && <span className={`whitespace-nowrap overflow-hidden ${tf(mobile)}`}>Settings</span>}
+          <Settings size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
+            style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
+          <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Settings</span>
         </button>
         <button
           onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
-          className={`w-full flex items-center gap-2 py-2 ${mobile ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-500'} hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors rounded-md hover:bg-red-50 dark:hover:bg-red-950/20 ${(showCollapsedContent && !mobile) ? 'justify-center px-0' : 'px-2 text-sm'}`}
+          className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20`}
           title="Sign Out"
         >
-          <LogOut size={20} />
-          {(!showCollapsedContent || mobile) && <span className={`whitespace-nowrap overflow-hidden ${tf(mobile)}`}>Sign Out</span>}
+          <LogOut size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
+            style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
+          <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Sign Out</span>
         </button>
-        {(!showCollapsedContent || mobile) && (
-          <div className={`flex items-center gap-2 px-2 pt-2 flex-wrap ${tf(mobile)}`}>
-            <Link href="/privacy" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Privacy</Link>
-            <span className="text-zinc-700 text-[10px]">·</span>
-            <Link href="/terms" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Terms</Link>
-          </div>
-        )}
+        <div className={`flex items-center gap-2 px-2 pt-2 flex-wrap overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-h-0 opacity-0' : 'max-h-[40px] opacity-100'} ${tf(mobile)}`}>
+          <Link href="/privacy" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Privacy</Link>
+          <span className="text-zinc-700 text-[10px]">·</span>
+          <Link href="/terms" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Terms</Link>
+        </div>
       </div>
     </>
   );
@@ -387,7 +402,7 @@ const Sidebar: React.FC<Props> = ({
         {/* Layout-switch veil — same hue as the sidebar background so it reads as
             the sidebar gently solidifying, not a foreign flash.
             Drifts in slowly alongside the shrink, dissolves even slower after the snap. */}
-        <div className={`absolute inset-0 z-20 pointer-events-none bg-white/30 dark:bg-black/40 transition-opacity ease-in-out ${showVeil ? 'opacity-100 duration-[180ms]' : 'opacity-0 duration-[500ms]'}`} />
+        <div className={`absolute inset-0 z-20 pointer-events-none bg-white/30 dark:bg-black/40 transition-opacity ease-in-out ${showVeil ? 'opacity-100 duration-[100ms]' : 'opacity-0 duration-[500ms]'}`} />
 
         {/* Subtle right-edge mask */}
         <div className="absolute inset-y-0 right-0 w-6 pointer-events-none bg-gradient-to-r from-transparent to-white/40 dark:to-black/40" />
