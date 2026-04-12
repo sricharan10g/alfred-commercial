@@ -115,12 +115,19 @@ export const performResearch = async (
     // Research always uses Gemini — it's the only provider with Google Search grounding
     const gemini = new GeminiProvider(serverConfig.AI_PROVIDER_KEY);
 
-    const timeRangeMap: Record<ResearchTimeRange, string> = {
-        '24h': 'Past 24 Hours',
-        '3d': 'Past 3 Days',
-        '7d': 'Past Week',
-        '30d': 'Past Month',
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0]; // e.g. "2025-04-12"
+
+    // Build a concrete cutoff date string so the model can tell Google Search exactly when to start
+    const cutoffDate = new Date(now);
+    const timeRangeMap: Record<ResearchTimeRange, { label: string; days: number }> = {
+        '24h': { label: 'past 24 hours', days: 1 },
+        '3d':  { label: 'past 3 days',   days: 3 },
+        '7d':  { label: 'past 7 days',   days: 7 },
+        '30d': { label: 'past 30 days',  days: 30 },
     };
+    cutoffDate.setDate(cutoffDate.getDate() - timeRangeMap[timeRange].days);
+    const cutoffStr = cutoffDate.toISOString().split('T')[0]; // e.g. "2025-03-13"
 
     const exclusions =
         excludeHeadlines.length > 0
@@ -133,17 +140,24 @@ export const performResearch = async (
             : '';
 
     const prompt = `
-You are an elite Research Assistant.
+You are an elite Research Assistant. Today's date is ${todayStr}.
+
 TOPICS: ${sanitizeUserInput(topics)}
 AUDIENCE: ${sanitizeUserInput(audience)}
-TIME RANGE: ${timeRangeMap[timeRange]}
+TIME RANGE: ${timeRangeMap[timeRange].label} (from ${cutoffStr} to ${todayStr})
 ${domainInstruction}
 ${exclusions}
 
+CRITICAL INSTRUCTIONS:
+- ONLY return stories, events, or developments that were published or occurred between ${cutoffStr} and ${todayStr}.
+- If you cannot find recent stories within this date range, say so — do NOT fall back to older content.
+- Every finding must include an approximate publish date or timeframe (e.g. "April 10, 2025", "this week").
+- Reject any result whose source date falls outside the ${cutoffStr}–${todayStr} window.
+
 TASK:
-1. Find latest high-impact stories.
-2. Return 4 distinct findings.
-3. For each: headline, 3 bullets, detailed fullContext, relevanceScore.
+1. Search for the latest high-impact stories published after ${cutoffStr}.
+2. Return 4 distinct findings, each dated within the required window.
+3. For each: headline (include date/timeframe), 3 bullets with specifics, detailed fullContext, relevanceScore.
 `;
 
     const jsonSchema = {
@@ -199,14 +213,19 @@ export const searchWebForBrief = async (
 ): Promise<{ findings: ResearchFinding[]; sources: Array<{ title: string; url: string }> }> => {
     const gemini = new GeminiProvider(serverConfig.AI_PROVIDER_KEY);
 
-    const prompt = `
-You are a research assistant. The user wants to write content about the following topic:
+    const todayStr = new Date().toISOString().split('T')[0];
 
+    const prompt = `
+You are a research assistant. Today's date is ${todayStr}.
+
+The user wants to write content about the following topic:
 "${sanitizeUserInput(brief)}"
 
-Search the web and find the most relevant, specific, and useful information for this topic.
+Search the web and find the most relevant, specific, and up-to-date information for this topic.
+Strongly prefer sources published in 2025, and especially content from the last 30 days if available.
+
 Return 3-5 key findings. For each finding include:
-- A concise headline
+- A concise headline (include the approximate date if relevant)
 - 2-4 bullet points with specific facts, quotes, statistics, or insights
 - A fullContext paragraph with rich detail that a writer can use
 - A relevanceScore from 0 to 1

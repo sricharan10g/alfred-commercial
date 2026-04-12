@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Session, WritingStyle, CustomStyle, ResearchProfile, ResearchTimeRange, WritingFormat, AIProvider } from '../../types';
-import { BookOpen, Plus, Globe, Clock, Loader2, RefreshCw, X, CheckCircle, Circle, Link, ArrowUp, ArrowDownCircle, Settings, ChevronDown, Sparkles, LayoutTemplate, ChevronRight, Info, User, Cpu } from 'lucide-react';
+import { BookOpen, Plus, Globe, Clock, Loader2, RefreshCw, X, CheckCircle, Circle, Link, ArrowUp, ArrowDownCircle, Settings, ChevronDown, Sparkles, LayoutTemplate, ChevronRight, Info, User, Cpu, TrendingUp } from 'lucide-react';
 import { FORMAT_LIBRARY } from '../../constants';
 
 const PROVIDER_LABELS: Record<AIProvider, string> = {
@@ -871,7 +871,7 @@ const BriefView: React.FC<Props> = ({
                             className="group flex items-center gap-3 pl-1 pr-4 py-1 rounded-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-sm hover:shadow-md"
                         >
                             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                                <Globe size={14} className="text-zinc-600 dark:text-zinc-300 animate-spin" style={{ animationDuration: '3s' }} />
+                                <TrendingUp size={14} className="text-zinc-600 dark:text-zinc-300" />
                             </div>
                             <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors">
                                 Find what&apos;s trending
