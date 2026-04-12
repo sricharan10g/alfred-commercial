@@ -164,7 +164,10 @@ const IdeationView: React.FC<Props> = ({
 
           </div>
       ) : (
-        /* STANDARD LAYOUT — root ideas in 2-col grid; variants grouped below their parent */
+        /* STANDARD LAYOUT
+           All root ideas stay in their original 2-col grid positions (paired into rows
+           of 2). After each row, if any idea in that row has variants, inject the variants
+           block — pushing subsequent rows down without disturbing anything above. */
         (() => {
           const rootIdeas = activeSession.ideas.filter(i => !i.parentId);
           const variantsByParent: Record<string, typeof activeSession.ideas> = {};
@@ -173,66 +176,83 @@ const IdeationView: React.FC<Props> = ({
             variantsByParent[i.parentId!].push(i);
           });
 
+          // Pair root ideas into rows of 2
+          const rows: (typeof rootIdeas)[] = [];
+          for (let i = 0; i < rootIdeas.length; i += 2) {
+            rows.push(rootIdeas.slice(i, i + 2));
+          }
+
+          if (activeSession.ideas.length === 0 && !activeSession.isProcessing) {
+            return (
+              <div className="text-center text-zinc-500 dark:text-zinc-600 py-12 text-sm">
+                All cleared out. Generate fresh ones?
+              </div>
+            );
+          }
+
           return (
             <div className="space-y-4">
-              {/* Root ideas — standard 2-col grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {rootIdeas.map((idea, index) => (
-                  <div
-                    key={idea.id}
-                    className="animate-in fade-in slide-in-from-bottom-12 zoom-in-95 ease-out fill-mode-backwards"
-                    style={{ animationDelay: `${index * 150}ms`, animationDuration: '1000ms' }}
-                  >
-                    <IdeaCard
-                      idea={idea}
-                      onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)}
-                      onMoreLikeThis={onMoreLikeThis}
-                      isLoadingMore={loadingMoreForId === idea.id}
-                    />
-                  </div>
-                ))}
-                {activeSession.ideas.length === 0 && !activeSession.isProcessing && (
-                  <div
-                    className="col-span-2 text-center text-zinc-500 dark:text-zinc-600 py-12 text-sm animate-in fade-in zoom-in-95 transition-colors duration-300 ease-in-out"
-                    style={{ animationDuration: '700ms' }}
-                  >
-                    All cleared out. Generate fresh ones?
-                  </div>
-                )}
-              </div>
+              {rows.map((row, ri) => {
+                // Collect any variant blocks triggered by ideas in this row
+                const variantBlocks = row
+                  .filter(idea => variantsByParent[idea.id]?.length > 0)
+                  .map(idea => ({ parent: idea, variants: variantsByParent[idea.id] }));
 
-              {/* Variant groups — one block per parent that has variants */}
-              {rootIdeas.filter(r => variantsByParent[r.id]?.length > 0).map(parent => (
-                <div
-                  key={`variants-${parent.id}`}
-                  className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/40 p-4 space-y-3 animate-in fade-in slide-in-from-bottom-6 duration-500"
-                >
-                  {/* Group label */}
-                  <div className="flex items-center gap-2">
-                    <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
-                    <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest whitespace-nowrap px-1">
-                      Variations of &ldquo;{parent.title}&rdquo;
-                    </span>
-                    <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
-                  </div>
+                return (
+                  <React.Fragment key={`row-${ri}`}>
+                    {/* The row — ideas stay exactly where they always were */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {row.map((idea, index) => (
+                        <div
+                          key={idea.id}
+                          className="animate-in fade-in slide-in-from-bottom-12 zoom-in-95 ease-out fill-mode-backwards"
+                          style={{ animationDelay: `${(ri * 2 + index) * 150}ms`, animationDuration: '1000ms' }}
+                        >
+                          <IdeaCard
+                            idea={idea}
+                            onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)}
+                            onMoreLikeThis={onMoreLikeThis}
+                            isLoadingMore={loadingMoreForId === idea.id}
+                          />
+                        </div>
+                      ))}
+                    </div>
 
-                  {/* Variants side by side */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {variantsByParent[parent.id].map((variant, vi) => (
+                    {/* Variant blocks injected right after this row, one per triggered parent */}
+                    {variantBlocks.map(({ parent, variants }) => (
                       <div
-                        key={variant.id}
-                        className="animate-in fade-in zoom-in-95 ease-out"
-                        style={{ animationDelay: `${vi * 100}ms`, animationDuration: '500ms' }}
+                        key={`variants-${parent.id}`}
+                        className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/40 px-4 pt-3 pb-4 space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500"
                       >
-                        <IdeaCard
-                          idea={variant}
-                          onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)}
-                        />
+                        {/* Label */}
+                        <div className="flex items-center gap-2">
+                          <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+                          <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest whitespace-nowrap px-1">
+                            Variations of &ldquo;{parent.title}&rdquo;
+                          </span>
+                          <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+                        </div>
+
+                        {/* Variants side by side */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {variants.map((variant, vi) => (
+                            <div
+                              key={variant.id}
+                              className="animate-in fade-in zoom-in-95 ease-out"
+                              style={{ animationDelay: `${vi * 100}ms`, animationDuration: '500ms' }}
+                            >
+                              <IdeaCard
+                                idea={variant}
+                                onApprove={(id, feedback) => onIdeaDecision(id, 'APPROVE', feedback)}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     ))}
-                  </div>
-                </div>
-              ))}
+                  </React.Fragment>
+                );
+              })}
             </div>
           );
         })()
