@@ -129,6 +129,7 @@ export interface OnboardingProfile {
   tone: string;           // Writing voice/tone
   pillars: string[];      // Content pillars (up to 3 topics)
   samplesStyleId?: string; // ID of the CustomStyle created from their samples
+  referralSource?: string; // How they found us
 }
 
 export interface OnboardingState {
@@ -138,7 +139,8 @@ export interface OnboardingState {
     tone: boolean;
     samples: boolean;
     pillars: boolean;
+    referral: boolean;
   };
   profile: Partial<OnboardingProfile>;
-  completedAt?: string; // ISO string — set when all 5 steps are done
+  completedAt?: string; // ISO string — set when all 6 steps are done
 }

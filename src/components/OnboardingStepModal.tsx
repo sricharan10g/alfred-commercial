@@ -37,6 +37,23 @@ const STEPS: { key: StepKey; title: string; subtitle: string }[] = [
         title: 'What do you want to be known for?',
         subtitle: 'Up to 3 topics. Alfred keeps your content focused.',
     },
+    {
+        key: 'referral',
+        title: 'One last thing, how did you find us?',
+        subtitle:'',
+    },
+];
+
+const REFERRAL_OPTIONS = [
+    { id: 'x', label: 'X (formerly Twitter)'},
+    { id: 'linkedin', label: 'LinkedIn'},
+    { id: 'reddit', label: 'Reddit'},
+    { id: 'friend', label: 'A friend told me'},
+    { id: 'producthunt', label: 'Product Hunt' },
+    { id: 'google', label: 'Google / Search'},
+    { id: 'newsletter', label: 'A newsletter' },
+    { id: 'youtube', label: 'YouTube'},
+    { id: 'other', label: 'Something else' },
 ];
 
 const FORMAT_OPTIONS = ['Tweet', 'Long Tweet', 'Thread', 'LinkedIn Post', 'Newsletter'];
@@ -94,6 +111,10 @@ const OnboardingStepModal: React.FC<Props> = ({
         currentProfile.pillars?.[2] ?? '',
     ]);
 
+    // Step 6 — referral
+    const [selectedReferral, setSelectedReferral] = useState(currentProfile.referralSource ?? '');
+    const [referralOther, setReferralOther] = useState('');
+
     if (!step) return null;
 
     const stepMeta = STEPS.find(s => s.key === step)!;
@@ -117,6 +138,9 @@ const OnboardingStepModal: React.FC<Props> = ({
             await handleSaveSamples();
         } else if (step === 'pillars') {
             onComplete('pillars', { pillars: pillars.filter(p => p.trim().length > 0) });
+        } else if (step === 'referral') {
+            const source = selectedReferral === 'other' ? referralOther.trim() : selectedReferral;
+            onComplete('referral', { referralSource: source });
         }
     };
 
@@ -157,6 +181,11 @@ const OnboardingStepModal: React.FC<Props> = ({
             return false;
         }
         if (step === 'pillars') return pillars.some(p => p.trim().length > 0);
+        if (step === 'referral') {
+            if (!selectedReferral) return false;
+            if (selectedReferral === 'other') return referralOther.trim().length > 0;
+            return true;
+        }
         return true;
     };
 
@@ -168,6 +197,7 @@ const OnboardingStepModal: React.FC<Props> = ({
         if (step === 'tone') return renderTone();
         if (step === 'samples') return renderSamples();
         if (step === 'pillars') return renderPillars();
+        if (step === 'referral') return renderReferral();
         return null;
     };
 
@@ -380,6 +410,47 @@ const OnboardingStepModal: React.FC<Props> = ({
         </div>
     );
 
+    const renderReferral = () => (
+        <div className="space-y-2.5">
+            <div className="grid grid-cols-1 gap-2">
+                {REFERRAL_OPTIONS.map(option => {
+                    const active = selectedReferral === option.id;
+                    return (
+                        <button
+                            key={option.id}
+                            onClick={() => setSelectedReferral(option.id)}
+                            className={`w-full text-left px-4 py-3 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
+                                active
+                                    ? 'bg-zinc-900 dark:bg-white/10 border-zinc-900 dark:border-white/30'
+                                    : 'bg-transparent border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                            }`}
+                        >
+                            <span className="text-base leading-none">{option.emoji}</span>
+                            <span className={`text-sm font-medium ${active ? 'text-white' : 'text-zinc-800 dark:text-zinc-200'}`}>
+                                {option.label}
+                            </span>
+                            <div className={`ml-auto w-4 h-4 rounded-full border-2 shrink-0 ${
+                                active ? 'border-white bg-white' : 'border-zinc-300 dark:border-zinc-600'
+                            }`}>
+                                {active && <div className="w-full h-full rounded-full scale-50 bg-zinc-900 dark:bg-black" />}
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+            {selectedReferral === 'other' && (
+                <input
+                    type="text"
+                    value={referralOther}
+                    onChange={e => setReferralOther(e.target.value)}
+                    placeholder="Tell us how you found us…"
+                    autoFocus
+                    className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors mt-1"
+                />
+            )}
+        </div>
+    );
+
     // ── Render ───────────────────────────────────────────────────────────────
 
     const stepIndex = STEPS.findIndex(s => s.key === step);
@@ -439,7 +510,7 @@ const OnboardingStepModal: React.FC<Props> = ({
                         {samplesStatus === 'processing' ? (
                             <><Loader2 size={14} className="animate-spin" /> Learning…</>
                         ) : (
-                            'Save'
+                            step === 'referral' ? 'Done 🎉' : 'Save'
                         )}
                     </button>
                 </div>

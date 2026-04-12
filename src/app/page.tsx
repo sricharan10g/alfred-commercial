@@ -95,7 +95,7 @@ function Dashboard() {
 
     // Onboarding
     const [onboardingState, setOnboardingState] = useLocalStorage<OnboardingState>('alfred_onboarding', {
-        steps: { formats: false, audience: false, tone: false, samples: false, pillars: false },
+        steps: { formats: false, audience: false, tone: false, samples: false, pillars: false, referral: false },
         profile: {},
     });
     const [onboardingStep, setOnboardingStep] = useState<keyof OnboardingState['steps'] | null>(null);

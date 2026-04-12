@@ -17,6 +17,7 @@ const STEP_ITEMS: StepItem[] = [
     { key: 'tone',    label: "What's your voice?" },
     { key: 'samples', label: 'Show Alfred how you write' },
     { key: 'pillars', label: 'Your content pillars' },
+    { key: 'referral', label: 'How did you find us?' },
 ];
 
 interface Props {
