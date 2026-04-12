@@ -494,7 +494,7 @@ const SettingsModal: React.FC<Props> = ({
           )}
           {/* Contact footer — all tabs */}
           <div className="mt-8 pt-4 border-t border-zinc-100/50 dark:border-zinc-800/30 text-center">
-            <p className="text-[11px] text-zinc-400 dark:text-zinc-600">reach us: picknpartner@gmail.com</p>
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-600">reach us: <a href="mailto:picknpartner@gmail.com" className="hover:text-zinc-600 dark:hover:text-zinc-400 underline underline-offset-2 transition-colors">picknpartner@gmail.com</a></p>
           </div>
 
         </div>
