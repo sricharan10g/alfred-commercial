@@ -100,6 +100,7 @@ function Dashboard() {
     });
     const [onboardingStep, setOnboardingStep] = useState<keyof OnboardingState['steps'] | null>(null);
     const [showCompletionReward, setShowCompletionReward] = useState(false);
+    const [loadingMoreForId, setLoadingMoreForId] = useState<string | null>(null);
 
     // Calculate Global Loading State for Progress Bar
     const isGlobalLoading = useMemo(() => {
@@ -674,7 +675,7 @@ function Dashboard() {
     };
 
     const handleMoreLikeThis = async (id: string) => {
-        updateActiveSession({ isRefining: true });
+        setLoadingMoreForId(id);
 
         const selectedFindings = activeSession.researchResults?.filter(r =>
             activeSession.selectedResearchIds?.includes(r.id)
@@ -693,18 +694,19 @@ function Dashboard() {
                 customStyle?.nativeFormat,
                 selectedProvider
             );
-            const twoNew = moreIdeas.slice(0, 2);
+            const twoNew = moreIdeas.slice(0, 2).map(idea => ({ ...idea, parentId: id }));
 
             setSessions(prev => prev.map(s => {
                 if (s.id === activeSessionId) {
-                    return { ...s, ideas: [...s.ideas, ...twoNew], isRefining: false };
+                    return { ...s, ideas: [...s.ideas, ...twoNew] };
                 }
                 return s;
             }));
         } catch (e) {
             console.error("Error fetching more ideas", e);
             showToast("Failed to generate more concepts", "error");
-            updateActiveSession({ isRefining: false });
+        } finally {
+            setLoadingMoreForId(null);
         }
     };
 
@@ -964,6 +966,7 @@ function Dashboard() {
                                 onIdeaDecision={handleIdeaDecision}
                                 onMoreLikeThis={handleMoreLikeThis}
                                 onMoveToDrafts={throttledMoveToDrafts}
+                                loadingMoreForId={loadingMoreForId}
                             />
                             </div>
                         )}

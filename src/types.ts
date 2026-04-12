@@ -8,6 +8,7 @@ export interface Idea {
   flow?: string[]; // New field for X Article outline
   userFeedback?: string;
   isApproved: boolean;
+  parentId?: string; // set when generated via "More like this"
 }
 
 export interface Draft {
