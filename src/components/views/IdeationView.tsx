@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Session } from '../../types';
 import IdeaCard from '../IdeaCard';
 import { ChevronRight, Loader2, Mail, CheckCircle, Circle } from 'lucide-react';
@@ -42,6 +42,27 @@ const IdeationView: React.FC<Props> = ({
 
   const isNewsletterReady = isNewsletter && activeSession.selectedNewsletterSubjectLine && activeSession.ideas.some(i => i.isApproved);
   const isStandardReady = !isNewsletter && activeSession.ideas.some(i => i.isApproved);
+
+  // Pulse the Drafting button each time a new idea is approved
+  const approvedCount = activeSession.ideas.filter(i => i.isApproved).length;
+  const prevApprovedRef = useRef(approvedCount); // initialise to current so mount doesn't trigger
+  const isMountedRef = useRef(false);
+  const [draftingPulse, setDraftingPulse] = useState(false);
+
+  useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
+      prevApprovedRef.current = approvedCount;
+      return;
+    }
+    if (approvedCount > prevApprovedRef.current) {
+      setDraftingPulse(true);
+      const t = setTimeout(() => setDraftingPulse(false), 2200); // 2 × ping cycles
+      prevApprovedRef.current = approvedCount;
+      return () => clearTimeout(t);
+    }
+    prevApprovedRef.current = approvedCount;
+  }, [approvedCount]);
 
   return (
     <div className="space-y-8">
@@ -91,13 +112,19 @@ const IdeationView: React.FC<Props> = ({
 
       {/* Floating Drafting button — vertically centred on the right edge */}
       {(isStandardReady || isNewsletterReady) && (
-        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center justify-end animate-in fade-in slide-in-from-right-4 duration-300">
-          <button
-            onClick={onMoveToDrafts}
-            className="relative flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black pl-5 pr-4 py-3 rounded-l-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:pr-6 active:pr-4 transition-all duration-200"
-          >
-            Drafting <ChevronRight size={16} />
-          </button>
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className="relative flex items-center justify-end">
+            {/* Ripple ring — fires each time approvedCount increases */}
+            {draftingPulse && (
+              <span className="absolute inset-0 rounded-l-full bg-black/25 dark:bg-white/25 animate-ping pointer-events-none" />
+            )}
+            <button
+              onClick={onMoveToDrafts}
+              className="relative flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black pl-5 pr-4 py-3 rounded-l-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:pr-6 active:pr-4 transition-all duration-200"
+            >
+              Drafting <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
       )}
 
