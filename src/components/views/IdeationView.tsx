@@ -89,12 +89,19 @@ const IdeationView: React.FC<Props> = ({
         <div />
       </div>
 
-      {/* Floating Drafting button — appears when idea is approved, stays visible while scrolling */}
+      {/* Floating Drafting button — vertically centred on the right edge */}
       {(isStandardReady || isNewsletterReady) && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in zoom-in-90 duration-300">
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center justify-end animate-in fade-in slide-in-from-right-4 duration-300">
+          {/* Soft blur gradient that feathers the left edge of the button — light & dark */}
+          <div className="absolute right-0 inset-y-0 w-36 pointer-events-none dark:hidden"
+            style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9))' }}
+          />
+          <div className="absolute right-0 inset-y-0 w-36 pointer-events-none hidden dark:block"
+            style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.9))' }}
+          />
           <button
             onClick={onMoveToDrafts}
-            className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-5 py-3 rounded-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-105 active:scale-95 transition-all duration-200"
+            className="relative flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black pl-5 pr-4 py-3 rounded-l-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:pr-6 active:pr-4 transition-all duration-200"
           >
             Drafting <ChevronRight size={16} />
           </button>
