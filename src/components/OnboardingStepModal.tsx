@@ -425,7 +425,6 @@ const OnboardingStepModal: React.FC<Props> = ({
                                     : 'bg-transparent border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
                             }`}
                         >
-                            <span className="text-base leading-none">{option.emoji}</span>
                             <span className={`text-sm font-medium ${active ? 'text-white' : 'text-zinc-800 dark:text-zinc-200'}`}>
                                 {option.label}
                             </span>
