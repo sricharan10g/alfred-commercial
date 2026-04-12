@@ -93,16 +93,14 @@ const IdeationView: React.FC<Props> = ({
       {/* Floating Drafting button — vertically centred on the right edge */}
       {(isStandardReady || isNewsletterReady) && (
         <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 animate-in fade-in slide-in-from-right-4 duration-300">
-          {/* drafting-invite: continuously floats left/right to beckon the user.
-              Pauses instantly on hover so clicking feels stable. */}
-          <div className="drafting-invite">
-            <button
-              onClick={onMoveToDrafts}
-              className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black pl-5 pr-4 py-3 rounded-l-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:pr-6 active:pr-4 transition-all duration-200"
-            >
-              Drafting <ChevronRight size={16} />
-            </button>
-          </div>
+          {/* drafting-invite animates padding-right so the button breathes outward
+              from the right edge — no gap, same motion as the hover effect */}
+          <button
+            onClick={onMoveToDrafts}
+            className="drafting-invite flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black pl-5 pr-4 py-3 rounded-l-full text-sm font-semibold shadow-xl hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-95 transition-colors duration-200"
+          >
+            Drafting <ChevronRight size={16} />
+          </button>
         </div>
       )}
 
