@@ -181,7 +181,7 @@ const Sidebar: React.FC<Props> = ({
     <>
       {/* Header */}
       <div
-        className={`p-6 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${showCollapsedContent && !mobile ? 'justify-center' : 'justify-between'}`}
+        className={`p-5 border-b border-zinc-200/30 dark:border-zinc-800/30 flex items-center transition-colors duration-300 ease-in-out ${showCollapsedContent && !mobile ? 'justify-center' : 'justify-between'}`}
         style={mobile ? { paddingTop: 'calc(env(safe-area-inset-top) + 24px)' } : {}}
       >
         {(!showCollapsedContent || mobile) && (
@@ -223,7 +223,7 @@ const Sidebar: React.FC<Props> = ({
       {/* New Brief button — grid-rows animation (no max-height jank) */}
       <div className={`shrink-0 grid transition-all duration-300 ease-in-out ${showNewBrief ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">
-          <div className="p-4">
+          <div className="px-4 pt-3 pb-2">
             <button
               onClick={() => mobile ? handleMobileAction(onNewSession) : onNewSession()}
               className={`w-full flex items-center justify-center gap-2 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black rounded-lg font-semibold transition-all ${showCollapsedContent && !mobile ? 'p-3' : 'px-4 py-2.5 text-sm'}`}
