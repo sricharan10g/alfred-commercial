@@ -118,6 +118,19 @@ function Dashboard() {
         try { localStorage.setItem('alfred_guest_brief_count', String(getGuestBriefCount() + 1)); } catch {}
     };
 
+    // On first mount as a guest, seed the counter to 1 to account for the
+    // auto-created initial session that is never passed through handleNewSession.
+    useEffect(() => {
+        if (!user) {
+            try {
+                if (!localStorage.getItem('alfred_guest_brief_count')) {
+                    localStorage.setItem('alfred_guest_brief_count', '1');
+                }
+            } catch {}
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Onboarding
     const [onboardingState, setOnboardingState] = useLocalStorage<OnboardingState>('alfred_onboarding', {
         steps: { formats: false, audience: false, tone: false, samples: false, pillars: false, referral: false },
@@ -322,7 +335,7 @@ function Dashboard() {
     const handleNewSession = () => {
         // Guest limit — show auth modal once 5 briefs have been created
         if (!user && getGuestBriefCount() >= 5) {
-            requireAuth("You've used your 5 free briefs. Sign up to keep going — it's completely free!");
+            requireAuth("just sign up & keep going — so that you won't lose your work");
             return;
         }
 
