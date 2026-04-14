@@ -9,6 +9,12 @@ const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX_ENTRIES = 1000;
 
+// Guest session tracking (in-memory; resets on server restart which is acceptable).
+// Guests get 40 generations — same as the free tier — before being asked to sign up.
+const guestSessionMap = new Map<string, number>(); // sessionId → generation count
+const GUEST_GENERATION_LIMIT = 40;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // Periodic cleanup — runs at most once per minute
 let lastCleanup = 0;
 function cleanupRateLimitMap() {
@@ -205,13 +211,30 @@ export async function POST(req: NextRequest) {
 
     // userId is lifted out so it's accessible in the main processing block
     let userId = 'unknown';
+    let isGuest = false;
 
-    // Auth guard — verify Appwrite JWT (cached to avoid round-trips)
+    // Auth: prefer Appwrite JWT; fall back to guest session ID for unauthenticated users.
     const authenticatedUserId = await verifyJwt(req);
-    if (!authenticatedUserId) {
-        return jsonResponse({ error: 'Unauthorized. Please log in to use Alfred.' }, 401);
+    if (authenticatedUserId) {
+        userId = authenticatedUserId;
+    } else {
+        const guestId = req.headers.get('x-guest-session-id') ?? '';
+        if (UUID_RE.test(guestId)) {
+            // Valid guest — check and increment generation budget
+            const used = guestSessionMap.get(guestId) ?? 0;
+            if (used >= GUEST_GENERATION_LIMIT) {
+                return jsonResponse({
+                    error: "You've used your free generation quota. Sign up to continue — it's free!",
+                    reason: 'guest_limit',
+                }, 402);
+            }
+            guestSessionMap.set(guestId, used + 1);
+            userId = `guest:${guestId}`;
+            isGuest = true;
+        } else {
+            return jsonResponse({ error: 'Unauthorized. Please log in to use Alfred.' }, 401);
+        }
     }
-    userId = authenticatedUserId;
 
     // Rate limiting — 20 requests per minute per user
     cleanupRateLimitMap();
@@ -267,19 +290,22 @@ export async function POST(req: NextRequest) {
         const payload = validation.data;
         featureMethod = payload.feature;
 
-        // Usage check — enforce monthly limits and feature gating
+        // Usage check — enforce monthly limits and feature gating (authenticated users only;
+        // guests are already counted above via guestSessionMap before validation)
         const format = 'format' in payload ? (payload as any).format as string : undefined;
-        const usageCheck = await checkAndIncrementUsage(userId, format);
-        if (!usageCheck.allowed) {
-            return jsonResponse({
-                error: usageCheck.reason === 'feature_gated'
-                    ? `${format || 'This format'} is only available on paid plans. Upgrade to Starter or Pro to unlock.`
-                    : `You've used all ${usageCheck.monthlyLimit} generations this month. Upgrade to continue.`,
-                reason: usageCheck.reason,
-                plan: usageCheck.plan,
-                remaining: usageCheck.remaining,
-                monthlyLimit: usageCheck.monthlyLimit,
-            }, 402);
+        if (!isGuest) {
+            const usageCheck = await checkAndIncrementUsage(userId, format);
+            if (!usageCheck.allowed) {
+                return jsonResponse({
+                    error: usageCheck.reason === 'feature_gated'
+                        ? `${format || 'This format'} is only available on paid plans. Upgrade to Starter or Pro to unlock.`
+                        : `You've used all ${usageCheck.monthlyLimit} generations this month. Upgrade to continue.`,
+                    reason: usageCheck.reason,
+                    plan: usageCheck.plan,
+                    remaining: usageCheck.remaining,
+                    monthlyLimit: usageCheck.monthlyLimit,
+                }, 402);
+            }
         }
 
         if (payload.feature === 'createStyleFromDescription') promptLength = payload.description.length;

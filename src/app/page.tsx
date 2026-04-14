@@ -10,7 +10,6 @@ import { FORMAT_LIBRARY, PAID_ONLY_FORMATS } from '@/constants';
 import { Moon, Sun, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { account } from '@/services/appwrite';
-import AuthView from '@/components/views/AuthView';
 import EmailVerificationView from '@/components/views/EmailVerificationView';
 import PasswordResetView from '@/components/views/PasswordResetView';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
@@ -30,6 +29,7 @@ const OnboardingStepModal = dynamic(() => import('@/components/OnboardingStepMod
 const OnboardingCompletionModal = dynamic(() => import('@/components/OnboardingCompletionModal'), { ssr: false });
 const PaywallModal = dynamic(() => import('@/components/PaywallModal'), { ssr: false });
 const VantaClouds = dynamic(() => import('@/components/ui/VantaClouds'), { ssr: false });
+const AuthModal = dynamic(() => import('@/components/AuthModal'), { ssr: false });
 
 // Helper to create a new empty session
 const createNewSession = (): Session => ({
@@ -92,6 +92,31 @@ function Dashboard() {
     // Usage tracking + Paywall
     const [userUsage, setUserUsage] = useState<{ plan: string; monthCount: number; monthlyLimit: number; remaining: number } | null>(null);
     const [paywallInfo, setPaywallInfo] = useState<{ reason: 'monthly_limit' | 'feature_gated'; format?: string } | null>(null);
+
+    // Auth modal — shown when a guest hits the brief limit or generation quota
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authModalReason, setAuthModalReason] = useState('');
+
+    // Close auth modal as soon as the user signs in
+    useEffect(() => {
+        if (user && showAuthModal) setShowAuthModal(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
+
+    // Helper: require auth with a contextual reason message
+    const requireAuth = (reason: string) => {
+        setAuthModalReason(reason);
+        setShowAuthModal(true);
+    };
+
+    // Guest brief count — tracks total briefs ever created before sign-up.
+    // Stored separately from sessions so deletions don't reset the counter.
+    const getGuestBriefCount = (): number => {
+        try { return parseInt(localStorage.getItem('alfred_guest_brief_count') || '0', 10) || 0; } catch { return 0; }
+    };
+    const incGuestBriefCount = () => {
+        try { localStorage.setItem('alfred_guest_brief_count', String(getGuestBriefCount() + 1)); } catch {}
+    };
 
     // Onboarding
     const [onboardingState, setOnboardingState] = useLocalStorage<OnboardingState>('alfred_onboarding', {
@@ -180,11 +205,17 @@ function Dashboard() {
                         }, 1500);
                     }
                 } else {
-                    // New user or empty account — ensure we don't show stale data
-                    // from a previously logged-in account.
-                    const fresh = createNewSession();
-                    setSessions([fresh]);
-                    setActiveSessionId(fresh.id);
+                    // New user or empty account.
+                    // If local sessions exist they belong to this guest — keep them so they
+                    // migrate to the new account. The cloud-save effect will push them up
+                    // once isHydratedRef is set. Stale data from a previous user is already
+                    // cleared by that user's logout handler, so this is safe.
+                    setSessions(prev => {
+                        if (prev.length > 0) return prev; // preserve guest sessions
+                        const fresh = createNewSession();
+                        setActiveSessionId(fresh.id);
+                        return [fresh];
+                    });
                     setCustomStyles([]);
                     setResearchProfiles([]);
                     setGuardrails({ dos: '', donts: '' });
@@ -193,6 +224,11 @@ function Dashboard() {
                 console.warn('[sync] Hydration failed:', e);
             } finally {
                 isHydratedRef.current = true;
+                // Clear guest-only tracking now that we have a real authenticated account
+                try {
+                    localStorage.removeItem('alfred_guest_session');
+                    localStorage.removeItem('alfred_guest_brief_count');
+                } catch {}
             }
         }
         hydrate();
@@ -284,6 +320,12 @@ function Dashboard() {
     };
 
     const handleNewSession = () => {
+        // Guest limit — show auth modal once 5 briefs have been created
+        if (!user && getGuestBriefCount() >= 5) {
+            requireAuth("You've used your 5 free briefs. Sign up to keep going — it's completely free!");
+            return;
+        }
+
         // Don't create multiple empty briefs — reuse an existing empty one
         const existingEmpty = sessions.find(s => s.brief === '' && s.step === 'BRIEF' && s.ideas.length === 0);
         if (existingEmpty) {
@@ -293,6 +335,9 @@ function Dashboard() {
             ));
             return;
         }
+
+        if (!user) incGuestBriefCount(); // track before creating
+
         const newSession = createNewSession();
         setSessions(prev => {
             // Clean up any BRIEF-only sessions with no ideas (junk typed but never submitted)
@@ -654,10 +699,13 @@ function Dashboard() {
 
         } catch (e: any) {
             console.error(e);
-            if (e instanceof ApiError && e.status === 402 && e.reason) {
-                setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: activeSession.writingFormat });
-                // Refresh usage count in the background
-                fetchUsage().then(d => { if (d) setUserUsage(d); });
+            if (e instanceof ApiError && e.status === 402) {
+                if (e.reason === 'guest_limit') {
+                    requireAuth("You've used your free generation quota. Sign up to continue — it's free!");
+                } else if (e.reason) {
+                    setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: activeSession.writingFormat });
+                    fetchUsage().then(d => { if (d) setUserUsage(d); });
+                }
             } else {
                 showToast("Failed to generate ideas", "error");
             }
@@ -775,9 +823,13 @@ function Dashboard() {
 
         } catch (e: any) {
             console.error("Error generating drafts for idea", idea.id, e);
-            if (e instanceof ApiError && e.status === 402 && e.reason) {
-                setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: currentSession.writingFormat });
-                fetchUsage().then(d => { if (d) setUserUsage(d); });
+            if (e instanceof ApiError && e.status === 402) {
+                if (e.reason === 'guest_limit') {
+                    requireAuth("You've used your free generation quota. Sign up to continue — it's free!");
+                } else if (e.reason) {
+                    setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: currentSession.writingFormat });
+                    fetchUsage().then(d => { if (d) setUserUsage(d); });
+                }
             } else {
                 showToast("Failed to generate drafts", "error");
             }
@@ -850,9 +902,13 @@ function Dashboard() {
 
         } catch (e: any) {
             console.error("Refine failed", e);
-            if (e instanceof ApiError && e.status === 402 && e.reason) {
-                setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: activeSession.writingFormat });
-                fetchUsage().then(d => { if (d) setUserUsage(d); });
+            if (e instanceof ApiError && e.status === 402) {
+                if (e.reason === 'guest_limit') {
+                    requireAuth("You've used your free generation quota. Sign up to continue — it's free!");
+                } else if (e.reason) {
+                    setPaywallInfo({ reason: e.reason as 'monthly_limit' | 'feature_gated', format: activeSession.writingFormat });
+                    fetchUsage().then(d => { if (d) setUserUsage(d); });
+                }
             } else {
                 showToast("Failed to refine draft", "error");
             }
@@ -1054,6 +1110,15 @@ function Dashboard() {
                 userName={user?.name}
             />
 
+            {/* Auth modal — appears when a guest hits the brief or generation limit */}
+            {showAuthModal && !user && (
+                <AuthModal
+                    reason={authModalReason}
+                    onClose={() => setShowAuthModal(false)}
+                    defaultMode="signup"
+                />
+            )}
+
             {/* Onboarding step modal */}
             <OnboardingStepModal
                 step={onboardingStep}
@@ -1138,15 +1203,13 @@ function AppGate() {
         );
     }
 
-    if (!user) {
-        return <AuthView />;
-    }
-
     // Logged in but email not yet verified → show verification screen
-    if (!user.emailVerification) {
+    if (user && !user.emailVerification) {
         return <EmailVerificationView />;
     }
 
+    // Everyone gets the Dashboard — guest or authenticated.
+    // The Dashboard shows an auth modal when a guest hits their free limits.
     return <Dashboard />;
 }
 

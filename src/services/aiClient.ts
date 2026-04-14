@@ -30,10 +30,28 @@ async function getJWT(): Promise<string | null> {
     }
 }
 
+// Stable UUID for this browser/device, used to track guest generation quota.
+// Stored in localStorage so it persists across page loads (but not incognito sessions).
+function getGuestSessionId(): string {
+    if (typeof window === 'undefined') return '';
+    let id = localStorage.getItem('alfred_guest_session');
+    if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem('alfred_guest_session', id);
+    }
+    return id;
+}
+
 async function post<T>(feature: string, body: any): Promise<T> {
     const jwt = await getJWT();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (jwt) headers['x-appwrite-user-jwt'] = jwt;
+    if (jwt) {
+        headers['x-appwrite-user-jwt'] = jwt;
+    } else {
+        // No active session — send guest ID so the API can track guest quota
+        const guestId = getGuestSessionId();
+        if (guestId) headers['x-guest-session-id'] = guestId;
+    }
 
     const res = await fetch('/api/ai/generate', {
         method: 'POST',
