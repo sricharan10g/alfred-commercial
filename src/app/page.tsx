@@ -335,7 +335,7 @@ function Dashboard() {
     const handleNewSession = () => {
         // Guest limit — show auth modal once 5 briefs have been created
         if (!user && getGuestBriefCount() >= 5) {
-            requireAuth("just sign up & keep going — so that you won't lose your work");
+            requireAuth("Just sign up & keep going — so that you won't lose your work");
             return;
         }
 
