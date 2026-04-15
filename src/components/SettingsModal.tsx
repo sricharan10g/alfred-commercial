@@ -311,7 +311,7 @@ const SettingsModal: React.FC<Props> = ({
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">{user?.name || 'No name set'}</p>
+                            <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">{user?.name || 'Guest'}</p>
                             {userUsage && (
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${planColor}`}>
                                     {planLabel}
