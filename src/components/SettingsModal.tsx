@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CustomStyle, ResearchProfile, AIProvider } from '../types';
-import { X, Trash2, History, Palette, Pencil, Globe, Plus, Cpu, User, LogOut, Loader2, Zap } from 'lucide-react';
+import { X, Trash2, History, Palette, Pencil, Globe, Plus, Cpu, User, LogOut, Loader2, Zap, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from './ui/Toast';
 
@@ -30,6 +30,7 @@ interface Props {
   onProviderChange: (provider: AIProvider) => void;
   // Style creation
   onCreateStyle?: () => void;
+  onSignUp?: () => void;
 }
 
 const AI_PROVIDERS: { id: AIProvider; name: string; description: string; model: string; comingSoon?: boolean }[] = [
@@ -45,7 +46,8 @@ const SettingsModal: React.FC<Props> = ({
     onClearHistory,
     researchProfiles, onAddResearchProfile, onUpdateResearchProfile, onDeleteResearchProfile,
     selectedProvider, onProviderChange,
-    onCreateStyle
+    onCreateStyle,
+    onSignUp,
 }) => {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
@@ -397,16 +399,26 @@ const SettingsModal: React.FC<Props> = ({
                     </section>
                 )}
 
-                {/* Sign out — flat */}
+                {/* Sign out / Sign up — flat */}
                 <section className="flex items-center justify-end pt-2 border-t border-zinc-100/50 dark:border-zinc-800/30">
-                    <button
-                        onClick={handleLogout}
-                        disabled={isLoggingOut}
-                        className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-black dark:hover:text-white transition-colors disabled:opacity-50 font-medium"
-                    >
-                        {isLoggingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
-                        Sign out
-                    </button>
+                    {user ? (
+                        <button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-black dark:hover:text-white transition-colors disabled:opacity-50 font-medium"
+                        >
+                            {isLoggingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
+                            Sign out
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => { onClose(); onSignUp?.(); }}
+                            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-black dark:hover:text-white transition-colors font-medium"
+                        >
+                            <UserPlus size={14} />
+                            Sign up
+                        </button>
+                    )}
                 </section>
               </div>
           )}

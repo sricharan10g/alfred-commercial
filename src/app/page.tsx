@@ -966,6 +966,8 @@ function Dashboard() {
                     setSettingsInitialTab('general');
                     setIsSettingsOpen(true);
                 }}
+                isGuest={!user}
+                onSignUp={() => requireAuth('Sign up to save your work and unlock more features.')}
                 onLogout={async () => {
                     // Clear all user-specific data before logging out so the next
                     // account doesn't see stale localStorage from the previous user.
@@ -1083,6 +1085,10 @@ function Dashboard() {
                     setEditingStyle(null);
                     setIsSettingsOpen(false);
                     setIsStyleUploadOpen(true);
+                }}
+                onSignUp={() => {
+                    setIsSettingsOpen(false);
+                    requireAuth('Sign up to save your work and unlock more features.');
                 }}
             />
 

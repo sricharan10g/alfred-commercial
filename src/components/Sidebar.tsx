@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { Session, OnboardingState } from '../types';
-import { Command, Plus, X, ShieldCheck, Settings, PanelLeftClose, Menu, Sun, Moon, LogOut } from 'lucide-react';
+import { Command, Plus, X, ShieldCheck, Settings, PanelLeftClose, Menu, Sun, Moon, LogOut, UserPlus } from 'lucide-react';
 import OnboardingChecklist from './OnboardingChecklist';
 
 interface Props {
@@ -15,6 +15,8 @@ interface Props {
   onOpenGuardrails: () => void;
   onOpenSettings: () => void;
   onLogout: () => void;
+  isGuest?: boolean;
+  onSignUp?: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onboardingState: OnboardingState;
@@ -37,6 +39,8 @@ const Sidebar: React.FC<Props> = ({
   onOpenGuardrails,
   onOpenSettings,
   onLogout,
+  isGuest = false,
+  onSignUp,
   theme,
   onToggleTheme,
   onboardingState,
@@ -340,15 +344,27 @@ const Sidebar: React.FC<Props> = ({
             style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
           <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Settings</span>
         </button>
-        <button
-          onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
-          className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20`}
-          title="Sign Out"
-        >
-          <LogOut size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
-            style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
-          <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Sign Out</span>
-        </button>
+        {isGuest ? (
+          <button
+            onClick={() => mobile ? handleMobileAction(onSignUp ?? (() => {})) : onSignUp?.()}
+            className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900`}
+            title="Sign Up"
+          >
+            <UserPlus size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
+              style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
+            <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Sign Up</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => mobile ? handleMobileAction(onLogout) : onLogout()}
+            className={`w-full flex items-center gap-2 py-2 text-sm font-medium transition-colors rounded-md ${mobile ? 'text-zinc-700 dark:text-zinc-300 px-2' : 'text-zinc-500 px-0'} hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20`}
+            title="Sign Out"
+          >
+            <LogOut size={20} className="shrink-0 transition-[margin-left] duration-300 ease-in-out"
+              style={!mobile ? { marginLeft: showCollapsedContent ? '9px' : '8px' } : {}} />
+            <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'} ${tf(mobile)}`}>Sign Out</span>
+          </button>
+        )}
         <div className={`flex items-center gap-2 px-2 pt-2 flex-wrap overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${(showCollapsedContent && !mobile) ? 'max-h-0 opacity-0' : 'max-h-[40px] opacity-100'} ${tf(mobile)}`}>
           <Link href="/privacy" target="_blank" className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors">Privacy</Link>
           <span className="text-zinc-700 text-[10px]">·</span>
